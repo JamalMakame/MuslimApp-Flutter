@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Azkar &amp; Duas — Islamic Companion</title>
+<!-- Google Fonts: Plus Jakarta Sans & Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            canvas: "#F8F6F1",
+            ink: "#12211D",
+            emerald: {
+              DEFAULT: "#0E6B5C",
+              deep: "#0A4A3F",
+              800: "#0E6B5C",
+              900: "#0A4A3F"
+            },
+            gold: {
+              DEFAULT: "#C9A24B",
+              tint: "#F4EBD7"
+            },
+            sage: {
+              DEFAULT: "#5F7169",
+              muted: "#5F7169"
+            },
+            hairline: "#E4E0D5"
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    body {
+      background-color: #F8F6F1;
+      color: #12211D;
+      font-family: 'Manrope', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      font-size: 22px;
+      line-height: 1;
+      display: inline-block;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .ornament-star {
+      opacity: 0.08;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex justify-center bg-[#F8F6F1] antialiased selection:bg-[#F4EBD7] selection:text-[#12211D]">
+<!-- Mobile Shell (Max-w-md 393px typical mobile profile) -->
+<main class="w-full max-w-[393px] min-h-screen relative flex flex-col pb-28">
+<!-- Top App Bar (Shared Component Pattern) -->
+<header class="flex justify-between items-center w-full px-6 pt-5 pb-3 bg-transparent">
+<!-- Location Context & Subtitle as top anchor -->
+<div class="flex items-center gap-1.5 text-stone-600">
+<span class="material-symbols-outlined text-[#0E6B5C]" data-icon="location_on">location_on</span>
+<span class="font-headline text-xs font-semibold text-emerald-900 tracking-tight">Zanzibar, Tanzania</span>
+</div>
+<!-- Quick Actions (Search & Notifications) -->
+<div class="flex items-center gap-2">
+<button aria-label="Search Adhkar" class="w-9 h-9 rounded-full bg-white border border-[#E4E0D5] flex items-center justify-center text-stone-600 hover:text-emerald-700 transition-colors duration-200 active:scale-95 shadow-sm" type="button">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="Notifications" class="w-9 h-9 rounded-full bg-white border border-[#E4E0D5] flex items-center justify-center text-stone-600 hover:text-emerald-700 transition-colors duration-200 active:scale-95 shadow-sm" type="button">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+</div>
+</header>
+<!-- Page Title & Header Info -->
+<section class="px-6 pt-2 pb-4">
+<div class="flex items-baseline justify-between">
+<div>
+<h1 class="font-headline text-[22px] font-bold text-[#12211D] tracking-tight leading-snug">Azkar &amp; Duas</h1>
+<p class="font-body text-[13px] text-[#5F7169] mt-0.5">Remembrance for every moment</p>
+</div>
+<!-- Saved / Bookmarked Category Pill -->
+<button class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F4EBD7] text-[#C9A24B] border border-[#C9A24B]/20 text-[11px] font-semibold active:scale-95 transition-transform duration-200" type="button">
+<span class="material-symbols-outlined text-[15px] fill-icon" data-icon="bookmark">bookmark</span>
+<span class="text-[#12211D] font-medium">Saved</span>
+</button>
+</div>
+</section>
+<!-- Daily Progress Tracker Card -->
+<section class="px-6 mb-5">
+<div class="bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm relative overflow-hidden">
+<!-- Subtle 8-pointed star decorative motif in background -->
+<div class="absolute -right-4 -bottom-4 ornament-star pointer-events-none text-[#C9A24B]">
+<span class="material-symbols-outlined text-[80px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+<div class="flex items-start justify-between mb-2.5">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B]">
+<span class="material-symbols-outlined text-[18px]" data-icon="wb_twilight">wb_twilight</span>
+</div>
+<div>
+<span class="font-body text-[10px] font-bold uppercase tracking-wider text-[#5F7169]">Daily Progress</span>
+<h2 class="font-headline text-[13px] font-bold text-[#12211D]">Morning Adhkar</h2>
+</div>
+</div>
+<span class="font-label text-xs font-semibold text-[#0E6B5C] bg-[#F8F6F1] px-2 py-0.5 rounded-full border border-[#E4E0D5] tabular-nums">
+            12 / 35
+          </span>
+</div>
+<!-- Custom Progress Bar (approx 34% filled) -->
+<div class="w-full bg-[#F8F6F1] rounded-full h-2 overflow-hidden border border-[#E4E0D5] p-[1px]">
+<div class="bg-gradient-to-r from-[#0E6B5C] to-[#C9A24B] h-full rounded-full transition-all duration-300" style="width: 34.2%;"></div>
+</div>
+<div class="flex items-center justify-between mt-2 pt-1">
+<span class="font-body text-[11px] text-[#5F7169] flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-[#0E6B5C]" data-icon="check_circle">check_circle</span>
+            34% completed
+          </span>
+<a class="font-body text-[11px] font-semibold text-[#0E6B5C] hover:text-[#0A4A3F] flex items-center gap-0.5" href="#">
+            Continue recitation
+            <span class="material-symbols-outlined text-[14px]" data-icon="chevron_right">chevron_right</span>
+</a>
+</div>
+</div>
+</section>
+<!-- Categories Section Title -->
+<div class="px-6 mb-3 flex items-center justify-between">
+<span class="font-body text-[11px] font-bold uppercase tracking-[0.08em] text-[#5F7169]">Categories</span>
+<span class="font-body text-[11px] text-[#5F7169]">10 collections</span>
+</div>
+<!-- 2-Column Categories Bento Grid -->
+<section class="px-6 grid grid-cols-2 gap-3.5">
+<!-- 1. Morning Adhkar -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="wb_sunny">wb_sunny</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Morning Adhkar</h3>
+<span class="font-body text-[12px] text-[#5F7169]">35 supplications</span>
+</a>
+<!-- 2. Evening Adhkar -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="bedtime">bedtime</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Evening Adhkar</h3>
+<span class="font-body text-[12px] text-[#5F7169]">45 supplications</span>
+</a>
+<!-- 3. After Prayer -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="volunteer_activism">volunteer_activism</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">After Prayer</h3>
+<span class="font-body text-[12px] text-[#5F7169]">21 supplications</span>
+</a>
+<!-- 4. Sleep & Night -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="nights_stay">nights_stay</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Sleep &amp; Night</h3>
+<span class="font-body text-[12px] text-[#5F7169]">19 supplications</span>
+</a>
+<!-- 5. Upon Waking -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="alarm">alarm</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Upon Waking</h3>
+<span class="font-body text-[12px] text-[#5F7169]">8 supplications</span>
+</a>
+<!-- 6. Adhan & Mosque -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="campaign">campaign</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Adhan &amp; Mosque</h3>
+<span class="font-body text-[12px] text-[#5F7169]">12 supplications</span>
+</a>
+<!-- 7. Travel & Journey -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="flight_takeoff">flight_takeoff</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Travel &amp; Journey</h3>
+<span class="font-body text-[12px] text-[#5F7169]">14 supplications</span>
+</a>
+<!-- 8. Ruqyah — Quran -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="shield">shield</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Ruqyah — Quran</h3>
+<span class="font-body text-[12px] text-[#5F7169]">11 supplications</span>
+</a>
+<!-- 9. Ruqyah — Sunnah -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="menu_book">menu_book</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Ruqyah — Sunnah</h3>
+<span class="font-body text-[12px] text-[#5F7169]">17 supplications</span>
+</a>
+<!-- 10. Gratitude & Praise -->
+<a class="group bg-white rounded-[16px] p-4 border border-[#E4E0D5] shadow-sm flex flex-col items-center text-center transition-all duration-200 hover:-translate-y-0.5 active:scale-[0.98]" href="#">
+<div class="w-12 h-12 rounded-full bg-[#F4EBD7] flex items-center justify-center text-[#C9A24B] mb-3 group-hover:scale-105 transition-transform duration-200">
+<span class="material-symbols-outlined text-[24px]" data-icon="favorite">favorite</span>
+</div>
+<h3 class="font-headline text-[14px] font-semibold text-[#12211D] leading-tight mb-1">Gratitude &amp; Praise</h3>
+<span class="font-body text-[12px] text-[#5F7169]">9 supplications</span>
+</a>
+</section>
+<!-- Quick Digital Tasbeeh Shortcut Banner -->
+<div class="px-6 mt-5">
+<div class="bg-gradient-to-r from-[#0E6B5C] to-[#0A4A3F] rounded-[16px] p-4 text-white flex items-center justify-between shadow-sm relative overflow-hidden">
+<div class="relative z-10">
+<span class="text-[10px] font-bold uppercase tracking-wider text-[#C9A24B]">Instant Dhikr</span>
+<h4 class="font-headline text-sm font-bold mt-0.5">SubhanAllah wa bihamdihi</h4>
+<p class="text-[11px] text-white/80 mt-0.5">Tap to open interactive counter</p>
+</div>
+<button aria-label="Open Tasbeeh" class="relative z-10 w-10 h-10 rounded-full bg-[#C9A24B] text-[#12211D] flex items-center justify-center font-bold text-xs shadow-md active:scale-95 transition-transform duration-200" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="fingerprint">fingerprint</span>
+</button>
+<!-- Star Motif Background -->
+<div class="absolute -right-2 -bottom-2 ornament-star text-white pointer-events-none">
+<span class="material-symbols-outlined text-[64px]" data-icon="star">star</span>
+</div>
+</div>
+</div>
+<!-- Floating Pill Bottom Navigation (Mandatory Semantic Shell) -->
+<!-- Destination 3: Azkar is ACTIVE -->
+<nav aria-label="Main Navigation" class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2">
+<div class="w-full mx-6 mb-4 rounded-full bg-white/95 backdrop-blur-md shadow-xl shadow-emerald-950/5 ring-1 ring-stone-200/50 flex justify-around items-center p-1.5">
+<!-- 1. Home (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 hover:text-emerald-800 transition-colors duration-200 px-3 py-2 text-xs font-medium ease-out active:scale-95" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="mosque">mosque</span>
+<span class="font-label text-xs tracking-wide">Home</span>
+</a>
+<!-- 2. Quran (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 hover:text-emerald-800 transition-colors duration-200 px-3 py-2 text-xs font-medium ease-out active:scale-95" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="menu_book">menu_book</span>
+<span class="font-label text-xs tracking-wide">Quran</span>
+</a>
+<!-- 3. Azkar (Active: Deep Emerald Pill) -->
+<a aria-current="page" class="flex items-center gap-2 bg-emerald-800 text-white rounded-full px-4 py-2 text-xs font-semibold ease-out active:scale-95 shadow-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="fingerprint">fingerprint</span>
+<span class="font-label text-xs font-semibold tracking-wide">Azkar</span>
+</a>
+</div>
+</nav>
+</main>
+<script>
+    // Subtle touch feedback for category cards
+    document.querySelectorAll('a[href="#"]').forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
+    });
+  </script>
+</body></html>

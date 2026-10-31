@@ -1,0 +1,95 @@
+import 'package:get/get.dart';
+
+import '../controllers/app_controller.dart';
+import '../controllers/azkar_controller.dart';
+import '../controllers/home_controller.dart';
+import '../controllers/qibla_controller.dart';
+import '../controllers/quran_controller.dart';
+import '../controllers/reader_controller.dart';
+import '../controllers/settings_controller.dart';
+import '../controllers/tasbeeh_controller.dart';
+import '../ui/screens/azkar_categories_screen.dart';
+import '../ui/screens/azkar_detail_screen.dart';
+import '../ui/screens/home_screen.dart';
+import '../ui/screens/onboarding_screen.dart';
+import '../ui/screens/qibla_screen.dart';
+import '../ui/screens/quran_index_screen.dart';
+import '../ui/screens/quran_reader_screen.dart';
+import '../ui/screens/settings_screen.dart';
+import '../ui/screens/splash_screen.dart';
+import '../ui/screens/tasbeeh_screen.dart';
+
+abstract class Routes {
+  static const splash = '/splash';
+  static const onboarding = '/onboarding';
+  static const home = '/home';
+  static const quran = '/quran';
+  static const qibla = '/qibla';
+  static const azkar = '/azkar';
+  static const tasbeeh = '/tasbeeh';
+  static const settings = '/settings';
+  // Dynamic: '/reader/1', '/azkar-detail/catMorning'
+  static String reader(int surah) => '/reader/$surah';
+  static String azkarDetail(String bucket) => '/azkar-detail/$bucket';
+}
+
+/// Everything the app needs up-front (storage-backed prefs, boot
+/// orchestrator) is bound once at app level.
+class AppBinding extends Bindings {
+  @override
+  void dependencies() {
+    Get.put(SettingsController(), permanent: true);
+    Get.put(AppController(), permanent: true);
+  }
+}
+
+class AppPages {
+  static final pages = <GetPage>[
+    GetPage(name: Routes.splash, page: () => const SplashScreen()),
+    GetPage(name: Routes.onboarding, page: () => const OnboardingScreen()),
+    GetPage(
+      name: Routes.home,
+      page: () => const HomeScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => HomeController())),
+    ),
+    GetPage(
+      name: Routes.quran,
+      page: () => const QuranIndexScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => QuranController())),
+    ),
+    GetPage(
+      name: Routes.azkar,
+      page: () => const AzkarCategoriesScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => AzkarController())),
+    ),
+    GetPage(name: Routes.settings, page: () => const SettingsScreen()),
+    GetPage(
+      name: Routes.qibla,
+      page: () => const QiblaScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => QiblaController())),
+    ),
+    GetPage(
+      name: Routes.tasbeeh,
+      page: () => const TasbeehScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => TasbeehController())),
+    ),
+    GetPage(
+      name: '/reader/:surah',
+      page: () => QuranReaderScreen(surah: int.parse(Get.parameters['surah']!)),
+      binding: BindingsBuilder(() {
+        final n = int.parse(Get.parameters['surah']!);
+        Get.lazyPut(() => ReaderController(n), tag: 'reader_$n');
+      }),
+    ),
+    GetPage(
+      name: '/azkar-detail/:bucket',
+      page: () => AzkarDetailScreen(bucket: Get.parameters['bucket']!),
+      binding: BindingsBuilder(() {
+        Get.lazyPut(
+          () => AzkarDetailController(Get.parameters['bucket']!),
+          tag: 'azkar_${Get.parameters['bucket']}',
+        );
+      }),
+    ),
+  ];
+}

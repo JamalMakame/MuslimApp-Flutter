@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Settings — Deen Islamic Companion</title>
+<!-- Google Fonts: Plus Jakarta Sans & Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              800: "#0E6B5C",
+              900: "#0A4A3F"
+            },
+            stone: {
+              100: "#F8F6F1",
+              200: "#E4E0D5",
+              600: "#5F7169",
+              900: "#12211D"
+            },
+            gold: {
+              500: "#C9A24B",
+              100: "#F4EBD7"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    /* Material symbol helper */
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+      user-select: none;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Subtle custom touch feedback */
+    .touch-ripple {
+      transition: background-color 150ms ease-out, transform 150ms ease-out;
+    }
+    .touch-ripple:active {
+      background-color: rgba(228, 224, 213, 0.45);
+    }
+    /* Switch transition */
+    .switch-knob {
+      transition: transform 200ms cubic-bezier(0.4, 0, 0.2, 1), background-color 200ms ease;
+    }
+    body {
+      background-color: #F8F6F1;
+      color: #12211D;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen bg-[#F8F6F1] font-body text-[#12211D] flex flex-col items-center selection:bg-[#F4EBD7] selection:text-[#0E6B5C]">
+<!-- Mobile Shell Wrapper -->
+<div class="w-full max-w-lg min-h-screen flex flex-col justify-between relative pb-28">
+<!-- Top App Bar & Context Header -->
+<header class="w-full px-6 pt-5 pb-3">
+<!-- Back Navigation & Action Bar -->
+<div class="flex items-center justify-between mb-4">
+<button aria-label="Go back" class="w-10 h-10 -ml-2 rounded-full flex items-center justify-center text-[#12211D] hover:bg-[#E4E0D5]/40 active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[24px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Subtle Top Brand Mark / Status Shield -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-[#FFFFFF] border border-[#E4E0D5] shadow-xs">
+<span class="material-symbols-outlined text-[#C9A24B] text-[15px] fill" data-icon="verified_user">verified_user</span>
+<span class="font-label text-[11px] font-semibold tracking-wide text-[#5F7169]">Private &amp; Offline</span>
+</div>
+</div>
+<!-- Screen Title & Privacy Anchor -->
+<div>
+<h1 class="font-headline text-[22px] font-bold text-[#12211D] tracking-tight">Settings</h1>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-[#5F7169] text-[15px]" data-icon="lock">lock</span>
+<p class="font-body text-[13px] text-[#5F7169]">Your preferences stay on this device</p>
+</div>
+</div>
+</header>
+<!-- Main Settings Groups -->
+<main class="w-full px-6 space-y-6 mt-1">
+<!-- SECTION 1: PRAYER -->
+<section>
+<div class="px-1 pb-2">
+<span class="font-label text-[11px] font-semibold uppercase tracking-wider text-[#5F7169]">PRAYER</span>
+</div>
+<div class="bg-[#FFFFFF] rounded-xl border border-[#E4E0D5] shadow-xs overflow-hidden">
+<!-- Row 1: Calculation method -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Calculation method</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">Umm al-Qura</span>
+</div>
+<div class="flex items-center gap-1 text-[#5F7169] shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 2: Madhab (Asr) -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Madhab (Asr)</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">Shafi'i</span>
+</div>
+<div class="flex items-center gap-1 text-[#5F7169] shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 3: Prayer notifications (Interactive Switch) -->
+<div class="flex items-center justify-between px-4 py-3.5">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Prayer notifications</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">Adhan audio &amp; gentle reminders</span>
+</div>
+<!-- Switch Toggle ON -->
+<button aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-[#0E6B5C] transition-colors duration-200 ease-in-out focus:outline-none" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); this.classList.toggle('bg-[#0E6B5C]'); this.classList.toggle('bg-[#CBD5E1]'); this.querySelector('.switch-knob').classList.toggle('translate-x-5'); this.querySelector('.switch-knob').classList.toggle('translate-x-0');" role="switch" type="button">
+<span class="switch-knob pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+</button>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 4: Location -->
+<div class="flex items-start justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex flex-col pr-4">
+<div class="flex items-center gap-1.5">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Location</span>
+<span class="inline-flex items-center px-1.5 py-0.2 rounded text-[10px] font-semibold bg-[#F4EBD7] text-[#0E6B5C]">GPS</span>
+</div>
+<p class="font-body text-[12px] font-medium text-[#12211D] mt-0.5">Zanzibar, TZ</p>
+<div class="flex items-center gap-1 mt-1 text-[#5F7169]">
+<span class="material-symbols-outlined text-[13px] text-[#0E6B5C]" data-icon="shield">shield</span>
+<span class="font-label text-[11px] text-[#5F7169]">Calculated on-device — never uploaded</span>
+</div>
+</div>
+<div class="flex items-center text-[#5F7169] shrink-0 pt-0.5">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 2: APPEARANCE -->
+<section>
+<div class="px-1 pb-2">
+<span class="font-label text-[11px] font-semibold uppercase tracking-wider text-[#5F7169]">APPEARANCE</span>
+</div>
+<div class="bg-[#FFFFFF] rounded-xl border border-[#E4E0D5] shadow-xs overflow-hidden">
+<!-- Row 1: Language -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Language</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">العربية · Kiswahili</span>
+</div>
+<div class="flex items-center gap-1.5 text-[#5F7169] shrink-0">
+<span class="font-body text-[13px] font-medium text-[#12211D]">English</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 2: Theme Segmented Control -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between px-4 py-3.5 gap-3">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Theme</span>
+<!-- 3-Segment Pill Control -->
+<div class="inline-flex p-1 bg-[#F8F6F1] border border-[#E4E0D5] rounded-full self-start sm:self-auto" id="theme-segmented-control">
+<button class="theme-btn px-3.5 py-1 text-xs font-semibold rounded-full text-[#5F7169] transition-all hover:text-[#12211D]" onclick="selectTheme(this)" type="button">
+                Light
+              </button>
+<button class="theme-btn px-3.5 py-1 text-xs font-semibold rounded-full bg-[#0E6B5C] text-white shadow-xs transition-all" onclick="selectTheme(this)" type="button">
+                System
+              </button>
+<button class="theme-btn px-3.5 py-1 text-xs font-semibold rounded-full text-[#5F7169] transition-all hover:text-[#12211D]" onclick="selectTheme(this)" type="button">
+                Dark
+              </button>
+</div>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 3: Text size -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Text size</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">Adjust Arabic &amp; translation scales</span>
+</div>
+<div class="flex items-center gap-1.5 text-[#5F7169] shrink-0">
+<span class="font-body text-[13px] font-medium text-[#12211D]">Medium</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+</section>
+<!-- SECTION 3: QURAN & AUDIO -->
+<section>
+<div class="px-1 pb-2">
+<span class="font-label text-[11px] font-semibold uppercase tracking-wider text-[#5F7169]">QURAN &amp; AUDIO</span>
+</div>
+<div class="bg-[#FFFFFF] rounded-xl border border-[#E4E0D5] shadow-xs overflow-hidden">
+<!-- Row 1: Default reciter -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Default reciter</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">High quality streaming &amp; cache</span>
+</div>
+<div class="flex items-center gap-1.5 text-[#5F7169] shrink-0">
+<span class="font-body text-[13px] font-medium text-[#12211D]">Mishary Alafasy</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 2: Ayah-by-ayah audio (Interactive Switch OFF) -->
+<div class="flex items-center justify-between px-4 py-3.5">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Ayah-by-ayah audio</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">Sync highlight while recitation plays</span>
+</div>
+<!-- Switch Toggle OFF -->
+<button aria-checked="false" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-[#CBD5E1] transition-colors duration-200 ease-in-out focus:outline-none" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); this.classList.toggle('bg-[#0E6B5C]'); this.classList.toggle('bg-[#CBD5E1]'); this.querySelector('.switch-knob').classList.toggle('translate-x-5'); this.querySelector('.switch-knob').classList.toggle('translate-x-0');" role="switch" type="button">
+<span class="switch-knob pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out translate-x-0"></span>
+</button>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 3: Show translations (Interactive Switch ON) -->
+<div class="flex items-center justify-between px-4 py-3.5">
+<div class="flex flex-col pr-4">
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Show translations</span>
+<span class="font-body text-[12px] text-[#5F7169] mt-0.5">Display English meaning below ayah</span>
+</div>
+<!-- Switch Toggle ON -->
+<button aria-checked="true" class="relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent bg-[#0E6B5C] transition-colors duration-200 ease-in-out focus:outline-none" onclick="this.setAttribute('aria-checked', this.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); this.classList.toggle('bg-[#0E6B5C]'); this.classList.toggle('bg-[#CBD5E1]'); this.querySelector('.switch-knob').classList.toggle('translate-x-5'); this.querySelector('.switch-knob').classList.toggle('translate-x-0');" role="switch" type="button">
+<span class="switch-knob pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out translate-x-5"></span>
+</button>
+</div>
+</div>
+</section>
+<!-- SECTION 4: DATA & PRIVACY -->
+<section>
+<div class="px-1 pb-2">
+<span class="font-label text-[11px] font-semibold uppercase tracking-wider text-[#5F7169]">DATA &amp; PRIVACY</span>
+</div>
+<div class="bg-[#FFFFFF] rounded-xl border border-[#E4E0D5] shadow-xs overflow-hidden">
+<!-- Row 1: Clear local data (Destructive Warning) -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer hover:bg-stone-50 transition-colors" role="button" tabindex="0">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-[#A34D3C]" data-icon="delete">delete</span>
+<div class="flex flex-col">
+<span class="font-headline text-[14px] font-semibold text-[#A34D3C]">Clear local data</span>
+<span class="font-body text-[12px] text-[#5F7169]">Reset bookmarks, counter history &amp; caches</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-[20px] text-[#A34D3C]" data-icon="chevron_right">chevron_right</span>
+</div>
+<div class="h-px bg-[#E4E0D5]/70 mx-4"></div>
+<!-- Row 2: Privacy policy -->
+<div class="flex items-center justify-between px-4 py-3.5 touch-ripple cursor-pointer" role="button" tabindex="0">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-[20px] text-[#5F7169]" data-icon="policy">policy</span>
+<span class="font-headline text-[14px] font-semibold text-[#12211D]">Privacy policy</span>
+</div>
+<div class="flex items-center text-[#5F7169] shrink-0">
+<span class="material-symbols-outlined text-[20px]" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Privacy Callout / Reassurance Banner -->
+<div class="mt-3.5 p-3.5 rounded-xl bg-[#F4EBD7]/60 border border-[#E4E0D5] flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-[#FFFFFF] flex items-center justify-center shrink-0 border border-[#E4E0D5]/60 shadow-xs">
+<span class="material-symbols-outlined text-[#C9A24B] text-[18px] fill" data-icon="verified_user">verified_user</span>
+</div>
+<p class="font-body text-[12px] text-[#12211D] leading-relaxed">
+            All data is stored locally — no account, no tracking
+          </p>
+</div>
+</section>
+<!-- Calm Centered Footer -->
+<footer class="pt-6 pb-4 text-center">
+<div class="inline-flex items-center justify-center mb-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#C9A24B] mr-2 opacity-60"></span>
+<span class="font-body text-[13px] font-semibold text-[#5F7169]">Deen v1.0.0</span>
+<span class="w-1.5 h-1.5 rounded-full bg-[#C9A24B] ml-2 opacity-60"></span>
+</div>
+<p class="font-body text-[12px] italic text-[#5F7169]/80">Made with reverence</p>
+</footer>
+</main>
+<!-- Floating Pill Bottom Navigation Shell (Destination Anchor) -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2">
+<div class="w-full bg-white/95 backdrop-blur-md rounded-full mx-6 mb-4 shadow-xl shadow-emerald-950/5 ring-1 ring-stone-200/50 p-1.5 flex items-center justify-between">
+<!-- Destination 1: Home (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 px-3 py-2 text-xs font-medium hover:text-emerald-800 transition-colors duration-200 active:scale-95" href="#home">
+<span class="material-symbols-outlined text-[20px]" data-icon="mosque">mosque</span>
+<span class="font-label text-xs font-semibold tracking-wide">Home</span>
+</a>
+<!-- Destination 2: Quran (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 px-3 py-2 text-xs font-medium hover:text-emerald-800 transition-colors duration-200 active:scale-95" href="#quran">
+<span class="material-symbols-outlined text-[20px]" data-icon="menu_book">menu_book</span>
+<span class="font-label text-xs font-semibold tracking-wide">Quran</span>
+</a>
+<!-- Destination 3: Azkar (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 px-3 py-2 text-xs font-medium hover:text-emerald-800 transition-colors duration-200 active:scale-95" href="#azkar">
+<span class="material-symbols-outlined text-[20px]" data-icon="fingerprint">fingerprint</span>
+<span class="font-label text-xs font-semibold tracking-wide">Azkar</span>
+</a>
+<!-- Destination 4: Settings (Active Destination) -->
+<a class="flex items-center gap-2 bg-emerald-800 text-white rounded-full px-4 py-2 text-xs font-semibold shadow-xs active:scale-95 transition-all" href="#settings">
+<span class="material-symbols-outlined text-[18px]" data-icon="tune">tune</span>
+<span class="font-label text-xs font-semibold tracking-wide">Settings</span>
+</a>
+</div>
+</nav>
+</div>
+<!-- Interactive script for segmented theme control -->
+<script>
+    function selectTheme(btn) {
+      const container = document.getElementById('theme-segmented-control');
+      const buttons = container.querySelectorAll('.theme-btn');
+      
+      buttons.forEach(b => {
+        b.className = 'theme-btn px-3.5 py-1 text-xs font-semibold rounded-full text-[#5F7169] transition-all hover:text-[#12211D]';
+      });
+      
+      btn.className = 'theme-btn px-3.5 py-1 text-xs font-semibold rounded-full bg-[#0E6B5C] text-white shadow-xs transition-all';
+    }
+  </script>
+</body></html>

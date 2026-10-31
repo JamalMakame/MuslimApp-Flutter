@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>The Holy Quran - Islamic Companion</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              700: '#0E6B5C',
+              800: '#0E6B5C',
+              900: '#0A4A3F',
+            },
+            stone: {
+              200: '#E4E0D5',
+              400: '#5F7169',
+              600: '#5F7169',
+              800: '#12211D',
+              900: '#12211D',
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"],
+            arabic: ["Amiri", "serif"]
+          }
+        },
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    body {
+      background-color: #F8F6F1;
+      color: #12211D;
+      font-family: 'Manrope', sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .custom-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen flex justify-center bg-[#F8F6F1] text-[#12211D]">
+<!-- Mobile Container (Max 393px width constraint) -->
+<div class="w-full max-w-[393px] min-h-screen flex flex-col relative pb-28 select-none bg-[#F8F6F1]">
+<!-- Top Decorative / Status Bar Spacer & App Bar Header -->
+<header class="px-5 pt-3 pb-2 sticky top-0 bg-[#F8F6F1]/95 backdrop-blur-md z-30 transition-all">
+<div class="flex items-center justify-between h-11">
+<!-- Bookmark / Collections button -->
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#5F7169] hover:text-[#0E6B5C] hover:bg-[#E4E0D5]/40 transition-colors" title="Saved Bookmarks">
+<span class="material-symbols-outlined text-[20px]" data-icon="bookmark_border">bookmark_border</span>
+</button>
+<!-- Centered App Headline with delicate 8-pointed star ornament motif -->
+<div class="flex flex-col items-center justify-center">
+<div class="flex items-center gap-1.5 opacity-90 mb-0.5">
+<svg class="text-[#C9A24B]" fill="none" height="12" viewbox="0 0 24 24" width="12">
+<path d="M12 2L14.4 7.6L20 6.4L17.2 11.5L22 14.5L16.2 16.2L16.5 22L12 18.5L7.5 22L7.8 16.2L2 14.5L6.8 11.5L4 6.4L9.6 7.6L12 2Z" fill="#C9A24B"></path>
+</svg>
+<span class="text-[9.5px] font-semibold tracking-[0.2em] uppercase text-[#C9A24B]">Al-Qur'an Al-Kareem</span>
+<svg class="text-[#C9A24B]" fill="none" height="12" viewbox="0 0 24 24" width="12">
+<path d="M12 2L14.4 7.6L20 6.4L17.2 11.5L22 14.5L16.2 16.2L16.5 22L12 18.5L7.5 22L7.8 16.2L2 14.5L6.8 11.5L4 6.4L9.6 7.6L12 2Z" fill="#C9A24B"></path>
+</svg>
+</div>
+<h1 class="font-headline text-[19px] font-bold text-[#12211D] tracking-tight leading-none">The Holy Quran</h1>
+</div>
+<!-- Settings / Quick options -->
+<button class="w-9 h-9 rounded-full flex items-center justify-center text-[#5F7169] hover:text-[#0E6B5C] hover:bg-[#E4E0D5]/40 transition-colors" title="Quran Settings">
+<span class="material-symbols-outlined text-[20px]" data-icon="tune">tune</span>
+</button>
+</div>
+<!-- Search Bar -->
+<div class="mt-3 relative">
+<div class="flex items-center w-full h-[44px] bg-[#FFFFFF] rounded-[12px] border border-[#E4E0D5] px-3.5 shadow-sm transition-all focus-within:border-[#0E6B5C] focus-within:ring-1 focus-within:ring-[#0E6B5C]">
+<span class="material-symbols-outlined text-[#5F7169] text-[20px] mr-2.5 shrink-0" data-icon="search">search</span>
+<input class="w-full bg-transparent text-[13.5px] text-[#12211D] placeholder-[#5F7169] focus:outline-none font-body border-0 p-0 ring-0 focus:ring-0" placeholder="Search surah or ayah" type="text"/>
+<button class="flex items-center justify-center text-[#5F7169] hover:text-[#0E6B5C] transition-colors p-1" title="Voice Search">
+<span class="material-symbols-outlined text-[19px]" data-icon="mic">mic</span>
+</button>
+</div>
+</div>
+<!-- Segmented Control ('Surahs' vs 'Ayat') -->
+<div class="mt-3 bg-[#E4E0D5]/50 p-1 rounded-xl flex items-center border border-[#E4E0D5]">
+<button class="flex-1 py-1.5 px-3 bg-[#0E6B5C] text-white text-[12.5px] font-semibold rounded-[9px] shadow-sm flex items-center justify-center gap-1.5 transition-all">
+<span class="material-symbols-outlined text-[15px]" data-icon="auto_stories">auto_stories</span>
+<span>Surahs</span>
+</button>
+<button class="flex-1 py-1.5 px-3 text-[#5F7169] hover:text-[#12211D] text-[12.5px] font-medium rounded-[9px] flex items-center justify-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-[15px]" data-icon="format_quote">format_quote</span>
+<span>Ayat</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="px-5 pt-3 space-y-4">
+<!-- Last Read Ribbon Card -->
+<div class="bg-white rounded-[14px] p-3.5 border border-[#E4E0D5] shadow-sm hover:border-[#C9A24B]/60 transition-all cursor-pointer group">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<!-- Icon with Gold Bookmark motif -->
+<div class="w-10 h-10 rounded-full bg-[#F4EBD7] flex items-center justify-center shrink-0 border border-[#C9A24B]/30">
+<span class="material-symbols-outlined text-[#C9A24B] text-[20px]" data-icon="bookmark" data-weight="fill" style="font-variation-settings: 'FILL' 1;">bookmark</span>
+</div>
+<!-- Details -->
+<div class="flex flex-col">
+<span class="text-[9.5px] font-bold text-[#5F7169] tracking-wider uppercase font-label">CONTINUE READING</span>
+<h2 class="text-[14px] font-bold text-[#12211D] group-hover:text-[#0E6B5C] transition-colors leading-snug">
+                Al-Baqarah, Ayah 152
+              </h2>
+<span class="text-[11.5px] font-medium text-[#5F7169]">Juz 2 · Quarter 1 · Page 23</span>
+</div>
+</div>
+<!-- Action Link -->
+<div class="flex items-center gap-1 text-[#0E6B5C] font-semibold text-[12px] pl-2 shrink-0">
+<span>Resume</span>
+<span class="material-symbols-outlined text-[18px] group-hover:translate-x-0.5 transition-transform" data-icon="chevron_right">chevron_right</span>
+</div>
+</div>
+</div>
+<!-- Quick Index Indicator Strip / Meta -->
+<div class="flex items-center justify-between pt-1 pb-0.5">
+<div class="flex items-center gap-2">
+<span class="text-[11px] font-bold uppercase tracking-wider text-[#5F7169] font-label">ALL SURAHS (114)</span>
+<span class="inline-block w-1 h-1 rounded-full bg-[#E4E0D5]"></span>
+<span class="text-[11px] text-[#5F7169] font-medium">30 Juz</span>
+</div>
+<div class="flex items-center gap-1 text-[11px] font-medium text-[#0E6B5C] cursor-pointer hover:underline">
+<span class="material-symbols-outlined text-[14px]" data-icon="sort">sort</span>
+<span>Order: Revelation</span>
+</div>
+</div>
+<!-- Surah List Container -->
+<section class="space-y-2.5 pb-4">
+<!-- Surah 1: Al-Fatihah -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">1</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">Al-Fatihah</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">The Opening</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">7 ayahs · Order 5</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلْفَاتِحَة</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<!-- Kaaba Glyph -->
+<rect fill="currentColor" fill-opacity="0.2" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5" width="14" x="5" y="6"></rect>
+<line stroke="currentColor" stroke-width="1.5" x1="5" x2="19" y1="10" y2="10"></line>
+</svg>
+<span>Makki</span>
+</span>
+</div>
+</article>
+<!-- Surah 2: Al-Baqarah -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99] relative overflow-hidden">
+<!-- Subtle Left Accent to indicate active bookmark region -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-[#C9A24B]"></div>
+<div class="flex items-center gap-3.5 pl-1">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">2</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">Al-Baqarah</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">The Cow</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">286 ayahs · Order 87</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلْبَقَرَة</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<!-- Mosque Dome Glyph -->
+<path d="M12 3C8.5 7 5 9 5 13H19C19 9 15.5 7 12 3Z" fill="currentColor"></path>
+<rect fill="currentColor" fill-opacity="0.2" height="6" rx="1" width="14" x="5" y="14"></rect>
+</svg>
+<span>Madani</span>
+</span>
+</div>
+</article>
+<!-- Surah 3: Aal-Imran -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">3</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">Aal-Imran</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">Family of Imran</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">200 ayahs · Order 89</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">آلِ عِمْرَان</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<path d="M12 3C8.5 7 5 9 5 13H19C19 9 15.5 7 12 3Z" fill="currentColor"></path>
+<rect fill="currentColor" fill-opacity="0.2" height="6" rx="1" width="14" x="5" y="14"></rect>
+</svg>
+<span>Madani</span>
+</span>
+</div>
+</article>
+<!-- Surah 4: An-Nisa -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">4</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">An-Nisa</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">The Women</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">176 ayahs · Order 92</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلنِّسَاء</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<path d="M12 3C8.5 7 5 9 5 13H19C19 9 15.5 7 12 3Z" fill="currentColor"></path>
+<rect fill="currentColor" fill-opacity="0.2" height="6" rx="1" width="14" x="5" y="14"></rect>
+</svg>
+<span>Madani</span>
+</span>
+</div>
+</article>
+<!-- Surah 5: Al-Ma'idah -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">5</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">Al-Ma'idah</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">The Table Spread</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">120 ayahs · Order 112</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلْمَائِدَة</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<path d="M12 3C8.5 7 5 9 5 13H19C19 9 15.5 7 12 3Z" fill="currentColor"></path>
+<rect fill="currentColor" fill-opacity="0.2" height="6" rx="1" width="14" x="5" y="14"></rect>
+</svg>
+<span>Madani</span>
+</span>
+</div>
+</article>
+<!-- Architectural Jump Separator: Juz 30 (Amma) -->
+<div class="py-2.5 flex items-center justify-center">
+<div class="h-[1px] bg-[#E4E0D5] flex-grow"></div>
+<div class="mx-3 px-3 py-1 bg-[#F4EBD7]/80 rounded-full border border-[#C9A24B]/30 flex items-center gap-1.5 text-[11px] font-semibold text-[#8A6B1F]">
+<svg fill="none" height="10" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="10">
+<polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8 12 2"></polygon>
+</svg>
+<span class="font-label tracking-wide uppercase">Juz 30 · 'Amma</span>
+<svg fill="none" height="10" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="10">
+<polygon points="12 2 15 8 22 9 17 14 18 21 12 18 6 21 7 14 2 9 9 8 12 2"></polygon>
+</svg>
+</div>
+<div class="h-[1px] bg-[#E4E0D5] flex-grow"></div>
+</div>
+<!-- Surah 112: Al-Ikhlas -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">112</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">Al-Ikhlas</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">Sincerity</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">4 ayahs · Order 22</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلْإِخْلَاص</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<rect fill="currentColor" fill-opacity="0.2" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5" width="14" x="5" y="6"></rect>
+<line stroke="currentColor" stroke-width="1.5" x1="5" x2="19" y1="10" y2="10"></line>
+</svg>
+<span>Makki</span>
+</span>
+</div>
+</article>
+<!-- Surah 113: Al-Falaq -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">113</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">Al-Falaq</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">Daybreak</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">5 ayahs · Order 20</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلْفَلَق</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<rect fill="currentColor" fill-opacity="0.2" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5" width="14" x="5" y="6"></rect>
+<line stroke="currentColor" stroke-width="1.5" x1="5" x2="19" y1="10" y2="10"></line>
+</svg>
+<span>Makki</span>
+</span>
+</div>
+</article>
+<!-- Surah 114: An-Nas -->
+<article class="bg-white rounded-[12px] p-3.5 border border-[#E4E0D5] shadow-xs flex items-center justify-between hover:border-[#0E6B5C]/40 transition-all cursor-pointer active:scale-[0.99]">
+<div class="flex items-center gap-3.5">
+<!-- Number Badge -->
+<div class="w-9 h-9 rounded-full bg-[#FAF8F2] border-[1.5px] border-[#C9A24B]/60 flex items-center justify-center shrink-0">
+<span class="text-[13px] font-bold text-[#0E6B5C] font-body tabular-nums">114</span>
+</div>
+<!-- Title & Info -->
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-[14.5px] font-bold text-[#12211D] font-headline">An-Nas</h3>
+<span class="text-[12px] text-[#5F7169] font-normal italic">Mankind</span>
+</div>
+<p class="text-[11.5px] text-[#5F7169] font-medium mt-0.5">6 ayahs · Order 21</p>
+</div>
+</div>
+<!-- Arabic Name & Classification Pill -->
+<div class="flex flex-col items-end gap-1.5">
+<span class="font-arabic text-[18px] text-[#12211D] leading-tight font-bold tracking-normal">ٱلنَّاس</span>
+<span class="inline-flex items-center gap-1 bg-[#F4EBD7] text-[#8A6B1F] text-[10.5px] font-semibold px-2 py-0.5 rounded-full">
+<svg fill="currentColor" height="10" viewbox="0 0 24 24" width="10">
+<rect fill="currentColor" fill-opacity="0.2" height="13" rx="1.5" stroke="currentColor" stroke-width="1.5" width="14" x="5" y="6"></rect>
+<line stroke="currentColor" stroke-width="1.5" x1="5" x2="19" y1="10" y2="10"></line>
+</svg>
+<span>Makki</span>
+</span>
+</div>
+</article>
+</section>
+</main>
+<!-- Floating Pill Bottom Navigation Shell (JSON Component Execution) -->
+<!-- Destination count: 3 | Labels: Home, Quran, Azkar | Active intent: Quran -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2 pointer-events-none">
+<div class="pointer-events-auto bg-white/95 dark:bg-stone-900/95 rounded-full mx-6 mb-4 shadow-xl shadow-emerald-950/5 ring-1 ring-stone-200/50 dark:ring-stone-800 flex items-center justify-between p-1.5 w-full max-w-[340px]">
+<!-- Tab 1: Home (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 ease-out active:scale-95" href="#home">
+<span class="material-symbols-outlined text-[19px]" data-icon="mosque">mosque</span>
+<span class="font-label text-xs font-semibold tracking-wide">Home</span>
+</a>
+<!-- Tab 2: Quran (Active Semantic Match) -->
+<a class="flex items-center gap-2 bg-emerald-800 dark:bg-emerald-700 text-white rounded-full px-4 py-2 text-xs font-semibold ease-out duration-200 active:scale-95 shadow-sm" href="#quran">
+<span class="material-symbols-outlined text-[19px]" data-icon="menu_book">menu_book</span>
+<span class="font-label text-xs font-semibold tracking-wide">Quran</span>
+</a>
+<!-- Tab 3: Azkar (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 ease-out active:scale-95" href="#azkar">
+<span class="material-symbols-outlined text-[19px]" data-icon="fingerprint">fingerprint</span>
+<span class="font-label text-xs font-semibold tracking-wide">Azkar</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Morning Adhkar — Companion</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            canvas: "#F8F6F1",
+            ink: "#12211D",
+            emerald: {
+              700: "#0A4A3F",
+              800: "#0E6B5C",
+              900: "#07322B",
+            },
+            gold: {
+              DEFAULT: "#C9A24B",
+              muted: "#8A6B1F",
+              tint: "#F4EBD7"
+            },
+            sage: {
+              DEFAULT: "#5F7169",
+              light: "#E4F2EC"
+            },
+            hairline: "#E4E0D5"
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"],
+            quran: ["Amiri", "serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+    }
+    body {
+      background-color: #F8F6F1;
+      color: #12211D;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    /* Subtle custom touch scroll */
+    ::-webkit-scrollbar {
+      display: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen bg-canvas text-ink font-body antialiased flex justify-center selection:bg-gold-tint selection:text-ink">
+<!-- Mobile Simulator Frame (max-w-[420px] on web, full-width on mobile) -->
+<div class="w-full max-w-[420px] min-h-screen bg-canvas relative flex flex-col border-x border-hairline/60 shadow-2xl shadow-emerald-950/5">
+<!-- Sticky App Header -->
+<header class="sticky top-0 z-40 bg-canvas/95 backdrop-blur-md pt-3 pb-0 px-5 border-b-0 transition-all">
+<div class="flex items-center justify-between pb-3">
+<!-- Back Navigation Button -->
+<button aria-label="Go back" class="w-9 h-9 rounded-full bg-white border border-hairline flex items-center justify-center text-ink hover:text-emerald-800 transition-colors active:scale-95 shadow-xs" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Screen Headline & Progress Metadata -->
+<div class="text-center px-2 flex-1">
+<h1 class="font-headline text-[17px] font-bold text-ink tracking-tight">Morning Adhkar</h1>
+<p class="font-body text-[11px] font-medium text-sage tracking-normal mt-0.5">12 of 35 completed · 23 remaining</p>
+</div>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-1.5">
+<button aria-label="Audio Recitation" class="w-9 h-9 rounded-full bg-white border border-hairline flex items-center justify-center text-ink hover:text-emerald-800 transition-colors active:scale-95 shadow-xs" type="button">
+<span class="material-symbols-outlined text-[19px]" data-icon="volume_up">volume_up</span>
+</button>
+<button aria-label="Display Settings" class="w-9 h-9 rounded-full bg-white border border-hairline flex items-center justify-center text-ink hover:text-emerald-800 transition-colors active:scale-95 shadow-xs" type="button">
+<span class="material-symbols-outlined text-[19px]" data-icon="tune">tune</span>
+</button>
+</div>
+</div>
+<!-- Linear Micro Progress Bar with Manuscript Gold Tip -->
+<div class="w-full h-[3px] bg-hairline rounded-full overflow-visible relative mt-1">
+<div class="h-full bg-emerald-800 rounded-full transition-all duration-300 relative" style="width: 34%;">
+<div class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 w-2 h-2 rounded-full bg-gold border border-white shadow-xs"></div>
+</div>
+</div>
+</header>
+<!-- Sub-header Utility Bar: Fast Mode / Audio Autoplay Strip -->
+<section class="px-5 pt-3 pb-1">
+<div class="bg-white/80 rounded-xl px-3.5 py-2.5 border border-hairline flex items-center justify-between shadow-2xs">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-gold text-[18px]" data-icon="auto_stories">auto_stories</span>
+<span class="font-label text-xs font-semibold text-ink">Recitation Mode</span>
+<span class="text-[10px] uppercase tracking-wider font-semibold text-sage bg-canvas px-2 py-0.5 rounded-md border border-hairline">Sunnah</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="font-body text-[11px] text-sage font-medium">Auto-advance</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-8 h-4.5 bg-hairline peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-800"></div>
+</label>
+</div>
+</div>
+</section>
+<!-- Main Recitation Canvas / Adhkar Stack -->
+<main class="flex-1 px-5 pt-3 pb-28 space-y-4">
+<!-- CARD 1: ACTIVE IN-PROGRESS (Repeat 3 times, 2 remaining) -->
+<article class="bg-white rounded-2xl p-5 border border-hairline shadow-xs relative transition-all duration-200" id="adhkar-card-1">
+<!-- Card Header Info Row -->
+<div class="flex items-center justify-between gap-2 mb-3.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label text-[11px] font-bold text-gold-muted bg-gold-tint px-2.5 py-0.5 rounded-full border border-gold/20">01 / 35</span>
+<span class="font-label text-[11px] font-semibold text-sage flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-gold" data-icon="repeat">repeat</span>
+              Repeat 3x
+            </span>
+<span class="text-hairline">·</span>
+<span class="font-body text-[11px] text-sage">Muslim 2723</span>
+</div>
+<div class="flex items-center gap-1 text-sage">
+<button aria-label="Bookmark" class="p-1 hover:text-emerald-800 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark">bookmark</span>
+</button>
+<button aria-label="Share supplication" class="p-1 hover:text-emerald-800 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="share">share</span>
+</button>
+</div>
+</div>
+<!-- Arabic Supplication (Authentic Uthmanic style typesetting) -->
+<div class="py-2 text-right" dir="rtl">
+<p class="font-quran text-[21px] leading-[2.1] font-normal text-ink text-justify" style="text-align-last: right;">
+            أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ وَالْحَمْدُ لِلَّهِ، لَا إِلَهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ
+          </p>
+</div>
+<!-- Transliteration -->
+<div class="mt-2.5 pt-2.5 border-t border-hairline/60">
+<p class="font-body text-[13px] italic font-normal text-sage leading-relaxed">
+            "Aṣbaḥnā wa-aṣbaḥa al-mulku lillāh, wal-ḥamdu lillāh, lā ilāha illallāh waḥdahu lā sharīka lah, lahul-mulku wa lahul-ḥamd, wa huwa 'alā kulli shay'in qadīr."
+          </p>
+</div>
+<!-- English Translation -->
+<div class="mt-2">
+<p class="font-body text-[13px] text-ink/80 leading-relaxed font-normal">
+            We have reached the morning and at this very time unto Allah belongs all sovereignty, and all praise is for Allah. None has the right to be worshipped but Allah alone, without partner; to Him belongs all dominion and praise, and He is over all things omnipotent.
+          </p>
+</div>
+<!-- Virtue / Reference Callout -->
+<div class="mt-3.5 bg-canvas rounded-xl p-3 border-l-2 border-l-gold border-r border-t border-b border-hairline/70 flex items-start gap-2">
+<span class="material-symbols-outlined text-gold text-[16px] mt-0.5 shrink-0" data-icon="lightbulb">lightbulb</span>
+<p class="font-body text-[11px] leading-snug text-sage">
+            Recite once upon waking to affirm devotion and invoke divine protection against darkness throughout the day.
+          </p>
+</div>
+<!-- Interactive Decrement Counter Button -->
+<div class="mt-4">
+<button class="w-full bg-emerald-800 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-xl py-3 px-4 flex items-center justify-between shadow-md shadow-emerald-950/15 transition-all cursor-pointer group" onclick="decrementCounter(this, 1)" type="button">
+<div class="flex items-center gap-2.5">
+<!-- Mini Circular Ring Graphic -->
+<div class="relative w-7 h-7 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90" viewbox="0 0 36 36">
+<path class="text-emerald-900" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="currentColor" stroke-width="3.5"></path>
+<path class="text-gold stroke-current" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke-dasharray="66, 100" stroke-linecap="round" stroke-width="3.5"></path>
+</svg>
+<span class="material-symbols-outlined text-[13px] text-white absolute" data-icon="touch_app">touch_app</span>
+</div>
+<span class="font-label text-xs font-semibold tracking-wider uppercase text-emerald-100/90 group-hover:text-white">Tap to Count</span>
+</div>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline text-2xl font-bold tabular-nums text-white" id="count-value-1">2</span>
+<span class="font-body text-[11px] text-emerald-200/80 font-medium">/ 3 left</span>
+</div>
+</button>
+</div>
+</article>
+<!-- CARD 2: SINGLE RECITATION (1 of 1 pending) -->
+<article class="bg-white rounded-2xl p-5 border border-hairline shadow-xs relative transition-all duration-200" id="adhkar-card-2">
+<div class="flex items-center justify-between gap-2 mb-3.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label text-[11px] font-bold text-gold-muted bg-gold-tint px-2.5 py-0.5 rounded-full border border-gold/20">02 / 35</span>
+<span class="font-label text-[11px] font-semibold text-sage flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-gold" data-icon="looks_one">looks_one</span>
+              Repeat 1x
+            </span>
+<span class="text-hairline">·</span>
+<span class="font-body text-[11px] text-sage">Al-Bukhari 6306</span>
+</div>
+<div class="flex items-center gap-1 text-sage">
+<button aria-label="Bookmark" class="p-1 hover:text-emerald-800 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark">bookmark</span>
+</button>
+<button aria-label="Share supplication" class="p-1 hover:text-emerald-800 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="share">share</span>
+</button>
+</div>
+</div>
+<div class="py-2 text-right" dir="rtl">
+<p class="font-quran text-[21px] leading-[2.1] font-normal text-ink text-justify" style="text-align-last: right;">
+            اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا، وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ
+          </p>
+</div>
+<div class="mt-2.5 pt-2.5 border-t border-hairline/60">
+<p class="font-body text-[13px] italic font-normal text-sage leading-relaxed">
+            "Allāhumma bika aṣbaḥnā wa-bika amsaynā, wa-bika naḥyā wa-bika namūtu wa-ilaykan-nushūr."
+          </p>
+</div>
+<div class="mt-2">
+<p class="font-body text-[13px] text-ink/80 leading-relaxed font-normal">
+            O Allah, by You we enter the morning and by You we enter the evening, by You we live and by You we die, and unto You is the final resurrection.
+          </p>
+</div>
+<div class="mt-4">
+<button class="w-full bg-emerald-800 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-xl py-3 px-4 flex items-center justify-between shadow-md shadow-emerald-950/15 transition-all cursor-pointer group" onclick="decrementCounter(this, 2)" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-emerald-200" data-icon="touch_app">touch_app</span>
+<span class="font-label text-xs font-semibold tracking-wider uppercase text-emerald-100/90 group-hover:text-white">Tap to Complete</span>
+</div>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline text-2xl font-bold tabular-nums text-white" id="count-value-2">1</span>
+<span class="font-body text-[11px] text-emerald-200/80 font-medium">remaining</span>
+</div>
+</button>
+</div>
+</article>
+<!-- CARD 3: COMPLETED STATE (Muted green treatment) -->
+<article class="bg-white/90 rounded-2xl p-5 border border-emerald-800/20 shadow-2xs relative">
+<div class="flex items-center justify-between gap-2 mb-3.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label text-[11px] font-bold text-emerald-800 bg-sage-light px-2.5 py-0.5 rounded-full border border-emerald-800/20 flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px] fill font-bold" data-icon="check">check</span>
+              03 / 35
+            </span>
+<span class="font-label text-[11px] font-semibold text-emerald-800">Completed (3/3)</span>
+<span class="text-hairline">·</span>
+<span class="font-body text-[11px] text-sage">At-Tirmidhi 3388</span>
+</div>
+<div class="flex items-center gap-1 text-sage">
+<button aria-label="Completed item info" class="p-1 text-emerald-800" type="button">
+<span class="material-symbols-outlined text-[18px] fill" data-icon="check_circle">check_circle</span>
+</button>
+</div>
+</div>
+<div class="py-1 text-right" dir="rtl">
+<p class="font-quran text-[20px] leading-[2.1] font-normal text-ink/80 text-justify" style="text-align-last: right;">
+            بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ
+          </p>
+</div>
+<div class="mt-2.5 pt-2 border-t border-hairline/60">
+<p class="font-body text-[13px] text-sage leading-relaxed font-normal">
+            In the name of Allah with whose name nothing on earth or in the heavens can cause harm, and He is the All-Hearing, the All-Knowing.
+          </p>
+</div>
+<!-- Completed Counter Action State -->
+<div class="mt-4">
+<div class="w-full bg-sage-light/70 text-emerald-800 border border-emerald-800/20 rounded-xl py-3 px-4 flex items-center justify-center gap-2 font-headline font-semibold text-xs tracking-wide">
+<span class="material-symbols-outlined text-[18px] text-emerald-800 fill" data-icon="verified">verified</span>
+            Done (3 of 3 completed)
+          </div>
+</div>
+</article>
+<!-- CARD 4: SAYYID AL-ISTIGHFAR (Next queued recitation) -->
+<article class="bg-white rounded-2xl p-5 border border-hairline shadow-xs relative" id="adhkar-card-4">
+<div class="flex items-center justify-between gap-2 mb-3.5">
+<div class="flex items-center gap-2 flex-wrap">
+<span class="font-label text-[11px] font-bold text-gold-muted bg-gold-tint px-2.5 py-0.5 rounded-full border border-gold/20">04 / 35</span>
+<span class="font-label text-[11px] font-semibold text-sage flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px] text-gold" data-icon="crown">crown</span>
+              Chief Supplication
+            </span>
+<span class="text-hairline">·</span>
+<span class="font-body text-[11px] text-sage">Al-Bukhari 6306</span>
+</div>
+<div class="flex items-center gap-1 text-sage">
+<button aria-label="Bookmark" class="p-1 hover:text-emerald-800 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="bookmark">bookmark</span>
+</button>
+<button aria-label="Share supplication" class="p-1 hover:text-emerald-800 transition-colors" type="button">
+<span class="material-symbols-outlined text-[18px]" data-icon="share">share</span>
+</button>
+</div>
+</div>
+<div class="py-2 text-right" dir="rtl">
+<p class="font-quran text-[21px] leading-[2.1] font-normal text-ink text-justify" style="text-align-last: right;">
+            اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَى عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ...
+          </p>
+</div>
+<div class="mt-2.5 pt-2.5 border-t border-hairline/60">
+<p class="font-body text-[13px] text-ink/80 leading-relaxed font-normal">
+            O Allah, You are my Lord, there is no deity worthy of worship except You. You created me and I am Your slave, and I abide by Your covenant and promise as best I can...
+          </p>
+</div>
+<div class="mt-4">
+<button class="w-full bg-emerald-800 hover:bg-emerald-700 active:scale-[0.98] text-white rounded-xl py-3 px-4 flex items-center justify-between shadow-md shadow-emerald-950/15 transition-all cursor-pointer group" onclick="decrementCounter(this, 4)" type="button">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px] text-emerald-200" data-icon="touch_app">touch_app</span>
+<span class="font-label text-xs font-semibold tracking-wider uppercase text-emerald-100/90 group-hover:text-white">Tap to Count</span>
+</div>
+<div class="flex items-baseline gap-1.5">
+<span class="font-headline text-2xl font-bold tabular-nums text-white" id="count-value-4">1</span>
+<span class="font-body text-[11px] text-emerald-200/80 font-medium">/ 1 left</span>
+</div>
+</button>
+</div>
+</article>
+</main>
+<!-- FLOATING PILL BOTTOM NAVIGATION (Aligned with Shared Components JSON) -->
+<!-- Destination count: 3, label_texts: ['Home', 'Quran', 'Azkar'], active: 'Azkar' -->
+<nav aria-label="Bottom Navigation" class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2 pointer-events-none">
+<div class="pointer-events-auto w-full max-w-[370px] mx-auto bg-white/95 dark:bg-stone-900/95 rounded-full px-3 py-2 flex items-center justify-around shadow-xl shadow-emerald-950/10 ring-1 ring-stone-200/50 backdrop-blur-md">
+<!-- Tab 1: Home (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 ease-out active:scale-95" href="#home">
+<span class="material-symbols-outlined text-[20px]" data-icon="mosque">mosque</span>
+<span class="font-label text-xs font-semibold tracking-wide">Home</span>
+</a>
+<!-- Tab 2: Quran (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 ease-out active:scale-95" href="#quran">
+<span class="material-symbols-outlined text-[20px]" data-icon="menu_book">menu_book</span>
+<span class="font-label text-xs font-semibold tracking-wide">Quran</span>
+</a>
+<!-- Tab 3: Azkar (ACTIVE - Mapped to Current Adhkar Recitation Journey) -->
+<a class="flex items-center gap-2 bg-emerald-800 dark:bg-emerald-700 text-white rounded-full px-4 py-2 text-xs font-semibold ease-out duration-200 active:scale-95 shadow-sm" href="#azkar">
+<span class="material-symbols-outlined text-[20px] fill" data-icon="fingerprint">fingerprint</span>
+<span class="font-label text-xs font-semibold tracking-wide">Azkar</span>
+</a>
+</div>
+</nav>
+</div>
+<!-- Interactive Counter decrement handler -->
+<script>
+    function decrementCounter(btn, id) {
+      const counterEl = document.getElementById('count-value-' + id);
+      if (!counterEl) return;
+      
+      let count = parseInt(counterEl.textContent.trim(), 10);
+      if (isNaN(count) || count <= 0) return;
+
+      // Haptic-like pulse animation
+      btn.classList.add('scale-[0.97]');
+      setTimeout(() => btn.classList.remove('scale-[0.97]'), 120);
+
+      count -= 1;
+      counterEl.textContent = count;
+
+      if (count === 0) {
+        // Transform button into Done state
+        btn.classList.remove('bg-emerald-800', 'hover:bg-emerald-700', 'text-white', 'shadow-md', 'shadow-emerald-950/15');
+        btn.classList.add('bg-sage-light/80', 'text-emerald-800', 'border', 'border-emerald-800/20', 'cursor-default');
+        btn.disabled = true;
+        btn.innerHTML = `
+          <div class="w-full flex items-center justify-center gap-2 py-0.5">
+            <span class="material-symbols-outlined text-[18px] text-emerald-800 fill">check_circle</span>
+            <span class="font-headline font-semibold text-xs tracking-wide text-emerald-800">Recitation Completed</span>
+          </div>
+        `;
+
+        // Update card border to completed tint
+        const parentCard = document.getElementById('adhkar-card-' + id);
+        if (parentCard) {
+          parentCard.classList.add('border-emerald-800/30', 'bg-white/95');
+        }
+      }
+    }
+  </script>
+</body></html>

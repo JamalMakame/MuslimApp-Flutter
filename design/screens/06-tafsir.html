@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tafsir Modal - Surah Al-Fatihah</title>
+<!-- Typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              DEFAULT: '#0E6B5C',
+              850: '#0E6B5C',
+              900: '#0A4A3F',
+            },
+            gold: {
+              DEFAULT: '#C9A24B',
+              tint: '#F4EBD7',
+            },
+            ivory: '#F8F6F1',
+            ink: '#12211D',
+            sage: '#5F7169',
+            hairline: '#E4E0D5',
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"],
+            arabic: ["Amiri", "serif"],
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .custom-scroll::-webkit-scrollbar {
+      width: 4px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #E4E0D5;
+      border-radius: 9999px;
+    }
+    .hide-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .hide-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-stone-900 text-ink antialiased font-body flex justify-center items-center min-h-screen p-0 m-0">
+<!-- Mobile Viewport Wrapper (393px × 852px) -->
+<div class="relative w-full max-w-[393px] h-[852px] bg-ivory overflow-hidden shadow-2xl flex flex-col select-none">
+<!-- ============================================== -->
+<!-- BACKGROUND SCREEN: Mushaf Reader (Al-Fatihah)   -->
+<!-- ============================================== -->
+<div class="absolute inset-0 flex flex-col justify-between bg-ivory overflow-hidden">
+<!-- Reader Header Bar -->
+<header class="flex justify-between items-center w-full px-6 py-4 max-w-lg mx-auto bg-transparent">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-emerald-850" data-icon="arrow_back">arrow_back</span>
+<span class="font-headline text-base font-semibold text-emerald-900">Al-Fatihah</span>
+</div>
+<div class="flex items-center gap-4 text-stone-600">
+<span class="material-symbols-outlined" data-icon="bookmark">bookmark</span>
+<span class="material-symbols-outlined" data-icon="tune">tune</span>
+</div>
+</header>
+<!-- Mushaf Page Canvas -->
+<div class="px-5 py-2 flex-1 flex flex-col items-center">
+<!-- Surah Outer Frame Card -->
+<div class="w-full bg-white rounded-xl border border-hairline p-5 shadow-sm relative">
+<!-- Subtle Decorative Header Ribbon -->
+<div class="border border-gold/40 rounded-lg p-3 text-center mb-6 bg-gold-tint/30 relative">
+<span class="font-headline text-xs tracking-widest text-emerald-900 font-bold uppercase block">Surah Al-Fatihah</span>
+<span class="text-[11px] text-sage font-medium">The Opening · 7 Verses · Makki</span>
+</div>
+<!-- Bismillah Calligraphy -->
+<div class="text-center font-arabic text-2xl text-emerald-900 mb-6">
+            بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ
+          </div>
+<!-- Ayah Stream Text (Simulated Mushaf Page) -->
+<div class="font-arabic text-xl text-ink leading-[2.4] text-right space-y-4">
+<p>
+<span>الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-gold text-gold text-xs font-headline mx-1">١</span>
+<span>الرَّحْمَٰنِ الرَّحِيمِ</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-gold text-gold text-xs font-headline mx-1">٢</span>
+<span>مَالِكِ يَوْمِ الدِّينِ</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-gold text-gold text-xs font-headline mx-1">٣</span>
+<!-- Highlighted Active Ayah 4 -->
+<span class="bg-gold-tint/70 text-emerald-900 rounded px-1.5 py-0.5 border border-gold/30">
+                إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ
+                <span class="inline-flex items-center justify-center w-6 h-6 rounded-full bg-emerald-850 text-white text-xs font-headline mr-1">٤</span>
+</span>
+<span>اهْدِنَا الصِّرَاطَ الْمُسْتَقِيمَ</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-gold text-gold text-xs font-headline mx-1">٥</span>
+<span>صِرَاطَ الَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ الْمَغْضُوبِ عَلَيْهِمْ وَلَا الضَّالِّينَ</span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-gold text-gold text-xs font-headline mx-1">٧</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Faint Audio Bar Footer behind Scrim -->
+<div class="p-4 mx-5 mb-5 bg-white/70 rounded-xl border border-hairline flex items-center justify-between">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-emerald-850" data-icon="play_circle">play_circle</span>
+<span class="text-xs text-ink font-medium">Mishary Rashid Alafasy</span>
+</div>
+<span class="text-xs text-sage font-headline">00:48 / 01:12</span>
+</div>
+</div>
+<!-- ============================================== -->
+<!-- SCRIM OVERLAY (Deep 40% Scrim as required)      -->
+<!-- ============================================== -->
+<div class="absolute inset-0 bg-stone-950/40 backdrop-blur-[0.5px] transition-opacity duration-300 z-30"></div>
+<!-- ============================================== -->
+<!-- BOTTOM SHEET MODAL (72% Viewport Height)       -->
+<!-- Pure White Surface, 20px Top Radius, Elev.     -->
+<!-- ============================================== -->
+<div class="absolute bottom-0 left-0 right-0 h-[73%] bg-white rounded-t-[20px] shadow-2xl z-40 flex flex-col border-t border-hairline">
+<!-- Grab Handle -->
+<div class="w-full pt-3 pb-1 flex justify-center shrink-0">
+<div class="w-12 h-1.5 bg-stone-300 rounded-full"></div>
+</div>
+<!-- Sheet Header Row -->
+<div class="px-6 pt-2 pb-4 shrink-0">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="w-1.5 h-1.5 rounded-full bg-gold"></span>
+<span class="text-[11px] font-semibold tracking-wider uppercase text-sage font-headline">
+              TAFSIR · IBN KATHIR
+            </span>
+</div>
+<!-- Close button -->
+<button class="w-8 h-8 rounded-full bg-ivory flex items-center justify-center text-sage hover:text-ink active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="close">close</span>
+</button>
+</div>
+<!-- Verse Title & Callout Bar -->
+<div class="bg-ivory rounded-xl p-3.5 border border-hairline flex items-center justify-between gap-3">
+<!-- Ayah Label Badge -->
+<div class="flex flex-col">
+<span class="text-[11px] font-semibold uppercase tracking-wider text-sage">SURAH 1</span>
+<div class="flex items-center gap-1.5">
+<span class="font-headline font-bold text-base text-ink">Ayah 4</span>
+<span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-gold-tint text-gold border border-gold/30">Makki</span>
+</div>
+</div>
+<!-- Prominent Calligraphy Ayah Text -->
+<div class="text-right flex items-center gap-2">
+<span class="font-arabic text-xl font-bold text-emerald-850 leading-relaxed" dir="rtl">
+              إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ
+            </span>
+<span class="inline-flex items-center justify-center w-6 h-6 rounded-full border border-gold text-gold text-xs font-headline font-bold shrink-0">
+              ٤
+            </span>
+</div>
+</div>
+</div>
+<!-- Hairline divider border below header -->
+<div class="w-full h-px bg-hairline shrink-0"></div>
+<!-- Scrollable Tafsir Content Area -->
+<div class="flex-1 overflow-y-auto px-6 py-4 custom-scroll space-y-5">
+<!-- Section 1: English Translation -->
+<section class="bg-gold-tint/25 border-l-2 border-gold rounded-r-lg p-3.5">
+<p class="font-body text-sm font-medium text-ink italic leading-relaxed">
+            “It is You we worship and You we ask for help.”
+          </p>
+<span class="block mt-1.5 text-[11px] font-semibold text-sage uppercase tracking-wider">Sahih International</span>
+</section>
+<!-- Section 2: Tafsir Commentary -->
+<section class="space-y-2.5">
+<div class="flex items-center justify-between">
+<span class="text-[11px] font-semibold text-sage uppercase tracking-widest font-headline">
+              COMMENTARY
+            </span>
+<span class="text-xs text-emerald-850 font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" data-icon="auto_stories">auto_stories</span>
+              Full Exegesis
+            </span>
+</div>
+<div class="font-body text-sm text-ink leading-[1.75] space-y-3.5">
+<p class="text-justify text-stone-800">
+              Linguistically, worship encompasses the utmost humility, submissiveness, and love. In the Shari'ah, it is an expression of complete obedience combining absolute reverence with sincere affection.
+            </p>
+<p class="text-justify text-stone-800">
+              The shift in tone from the third person in previous verses to direct address (‘You we worship’) conveys profound intimacy and devotion. Serving Allah comes before asking for His assistance, indicating that obedience is the precondition for divine aid.
+            </p>
+</div>
+</section>
+<!-- Section 3: Alternate Tafsirs -->
+<section class="pt-2 pb-1 space-y-2.5">
+<span class="text-[11px] font-semibold text-sage uppercase tracking-widest font-headline block">
+            ALTERNATE TAFSIRS
+          </span>
+<div class="flex items-center gap-2 overflow-x-auto hide-scrollbar pb-1">
+<!-- Active Tab -->
+<button class="shrink-0 px-3.5 py-1.5 rounded-full bg-emerald-850 text-white text-xs font-semibold shadow-sm">
+              Ibn Kathir
+            </button>
+<!-- Inactive Ivory Pill Chips -->
+<button class="shrink-0 px-3.5 py-1.5 rounded-full bg-ivory border border-hairline text-stone-700 text-xs font-medium hover:border-gold/50 active:scale-95 transition-all">
+              Al-Jalalayn
+            </button>
+<button class="shrink-0 px-3.5 py-1.5 rounded-full bg-ivory border border-hairline text-stone-700 text-xs font-medium hover:border-gold/50 active:scale-95 transition-all">
+              As-Sa'di
+            </button>
+<button class="shrink-0 px-3.5 py-1.5 rounded-full bg-ivory border border-hairline text-stone-700 text-xs font-medium hover:border-gold/50 active:scale-95 transition-all">
+              Al-Muyassar
+            </button>
+<button class="shrink-0 px-3.5 py-1.5 rounded-full bg-ivory border border-hairline text-stone-700 text-xs font-medium hover:border-gold/50 active:scale-95 transition-all">
+              Al-Qurtubi
+            </button>
+</div>
+</section>
+</div>
+<!-- Pinned Sheet Footer -->
+<footer class="p-4 px-6 bg-white border-t border-hairline shrink-0 flex items-center gap-3">
+<!-- Tertiary Button: Copy / Share -->
+<button class="h-12 px-4 rounded-xl flex items-center justify-center gap-1.5 text-emerald-850 font-semibold text-sm hover:bg-ivory active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="share">share</span>
+<span>Share</span>
+</button>
+<button class="h-12 px-3 rounded-xl flex items-center justify-center gap-1.5 text-emerald-850 font-semibold text-sm hover:bg-ivory active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-lg" data-icon="content_copy">content_copy</span>
+<span>Copy</span>
+</button>
+<!-- Primary Action: Emerald Fill Done Button (48px high, rounded-xl) -->
+<button class="flex-1 h-12 rounded-xl bg-emerald-850 text-white font-headline font-semibold text-sm tracking-wide flex items-center justify-center shadow-md shadow-emerald-950/10 hover:bg-emerald-900 active:scale-95 transition-all" type="button">
+          Done
+        </button>
+</footer>
+</div>
+</div>
+</body></html>

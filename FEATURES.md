@@ -1,0 +1,123 @@
+# Deen — Current Features & Architecture
+
+_Last updated: Phase 1 rebuild (local-first, no auth, no backend)._
+
+Deen is a Flutter Islamic companion app. All core data is bundled locally;
+nothing requires an account or a server. Remote calls are optional
+enhancements (ayah audio streaming, remote search, remote tafsir).
+
+## Stack
+
+- **State / DI / navigation:** GetX (`GetMaterialApp`, `GetxController`,
+  `Obx`, `Get.toNamed`)
+- **Persistence:** `get_storage` key-value store
+- **Prayer times:** `adhan` (on-device calculation)
+- **Location:** `geolocator` + `geocoding`
+- **Compass:** `flutter_compass`
+- **Notifications:** `flutter_local_notifications` (local only; permission
+  deferred until the user enables prayer notifications)
+- **Audio:** `audioplayers` (streams per-surah mp3quran URLs)
+- **Hijri dates:** `hijri`; formatting via `intl`
+- **Fonts (bundled):** Plus Jakarta Sans, Manrope, Amiri
+- **Sharing:** `share_plus`
+
+## Localization
+
+Three UI locales via GetX map translations: English (`en`, default),
+Arabic (`ar` — RTL), Swahili (`sw`). Scripture (Quran/Azkar Arabic) is
+always RTL regardless of UI direction. Quran translation selectable:
+English (Sahih Intl.), Swahili (Al-Barwani), or Arabic-only.
+
+## Routes (`lib/app/routes/app_pages.dart`)
+
+| Route | Screen | Controller |
+|---|---|---|
+| `/splash` | Splash | AppController (boot orchestrator) |
+| `/onboarding` | Onboarding | — |
+| `/home` | Prayer dashboard | HomeController |
+| `/quran` | Quran index | QuranController |
+| `/reader/:surah` | Mushaf reader | ReaderController |
+| `/azkar` | Azkar categories | AzkarController |
+| `/azkar-detail/:bucket` | Dhikr list + counters | AzkarDetailController |
+| `/tasbeeh` | Digital tasbeeh | TasbeehController |
+| `/qibla` | Compass | QiblaController |
+| `/settings` | Settings | SettingsController (permanent) |
+
+Navigation shell: floating 4-slot pill — Home / Quran / Azkar / Settings.
+Qibla & Tasbeeh reachable from Home and Azkar respectively.
+
+## Screens
+
+- **Splash** — gold emblem + progress hairline; initializes services in
+  parallel, then routes to onboarding (first run) or home.
+- **Onboarding** — language pills, prayer location (GPS or manual city
+  lookup), calculation method; privacy copy ("100% On-Device").
+- **Home** — emerald hero card with next-prayer countdown, prayer tiles
+  (current prayer highlighted gold), sunrise row, Qibla card, daily
+  inspiration cards, Hijri + Gregorian dates.
+- **Quran index** — search field, Surahs/Ayat segment, continue-reading
+  card (last-read persisted), 114 surah tiles with gold-ring numbers,
+  Makki/Madani chips, revelation order, sort toggle, Juz-30 divider.
+- **Reader** — mushaf-style card with gold frame; flowing RTL Arabic with
+  gold ayah medallions; basmala cartouche (suppressed for Al-Fatihah,
+  where ayah 1 is the basmala, and At-Tawbah which has none); translation
+  section with per-ayah TAFSIR links; Juz/Page chips; text-size and
+  translation toggles; audio bar (Alafasy) with play/pause/seek/speed.
+- **Tafsir sheet** — modal bottom sheet: ayah text, Sahih Intl. quote,
+  Ibn Kathir commentary (remote w/ graceful offline state), Share/Copy/Done.
+- **Azkar categories** — daily progress card, 11-collection grid
+  (39 source categories mapped to display buckets), Instant Dhikr card.
+- **Azkar detail** — numbered dhikr cards (Arabic + source + repeat),
+  TAP TO COMPLETE buttons, auto-advance toggle, completion states,
+  persisted daily progress.
+- **Tasbeeh** — phrase picker (5 adhkar), Arabic + transliteration +
+  meaning, large progress-ring dial, lap/cycle, daily total, streak,
+  haptics toggle — all persisted.
+- **Qibla** — painted compass dial (gold ticks, Kaaba marker, emerald
+  needle), bearing + distance to Makkah, calibration chip, geodesic
+  fallback section, compass-unavailable state on sensorless devices.
+- **Settings** — Prayer (method/madhab/notifications/location),
+  Appearance (language/theme/text size), Quran & Audio (reciter, ayah
+  audio, translations, translation language), Data & Privacy (clear
+  local data, privacy sheet), version footer.
+
+## Services (`lib/app/services/`)
+
+- `storage_service` — get_storage wrapper, typed keys
+- `location_service` — GPS + city-name geocoding → `PlaceInfo`
+- `prayer_service` — `adhan`-based `PrayerDay` (slots, current/next,
+  countdown, Hijri/Gregorian dates)
+- `notification_service` — tz-scheduled daily prayer reminders
+- `quran_service` — bundled surah/ayah data + translations, remote
+  search/tafsir with local cache, audio URL building
+- `azkar_service` — bundled azkar.json → 10 display buckets + Other,
+  daily-done persistence
+
+## Bundled data (`assets/json/`)
+
+`surahs.json` (114 merged metadata), `quran_ar_uthmani.json`,
+`quran_en_sahih.json`, `quran_sw_barwani.json`, `azkar.json`,
+`quran_meta.json`, `chapters_en.json`.
+
+## Remote endpoints (optional)
+
+- `api.quran.com` — search, tafsir (fallback cache in storage)
+- `server8.mp3quran.net/afs` — Alafasy per-surah audio
+- `api.alquran.cloud` — meta (superseded by bundled data)
+
+## Design
+
+Stitch-generated spec: `design/DESIGN.md`, artifacts in
+`design/screens/` (11 PNG + HTML), mapping in `design/DESIGN_INDEX.md`.
+Emerald `#0E6B5C` / gold `#C9A24B` / ivory `#F8F6F1` palette.
+
+## Tests
+
+- `integration_test/app_test.dart` — full Phase-1 flow (onboarding →
+  home → qibla → quran → reader → tafsir → azkar → detail → tasbeeh →
+  settings → ar/en locale round-trip).
+- `integration_test/locale_test.dart` — locale switch.
+- `integration_test/tour_test.dart` — per-screen screenshot tour.
+- `test/widget_test.dart` — theme token smoke test.
+
+`flutter analyze`: clean.

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Tasbeeh · Digital Dhikr Counter</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              DEFAULT: '#0E6B5C',
+              depth: '#0A4A3F',
+              850: '#0b564a',
+              900: '#0A4A3F',
+              950: '#062923',
+            },
+            gold: {
+              manuscript: '#C9A24B',
+              tint: '#F4EBD7',
+              border: '#E8D8B0',
+            },
+            ivory: {
+              DEFAULT: '#F8F6F1',
+              canvas: '#F8F6F1',
+            },
+            ink: '#12211D',
+            sage: {
+              muted: '#5F7169',
+              light: '#E2E8E5',
+            },
+            hairline: '#E4E0D5',
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"],
+            arabic: ["Amiri", "serif"],
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .circular-progress-circle {
+      transition: stroke-dashoffset 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .tap-dial-active {
+      transform: scale(0.976);
+      transition: transform 0.08s ease-out;
+    }
+    /* Hide scrollbars for pill pager */
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-ivory text-ink font-body min-h-screen flex flex-col antialiased selection:bg-gold-tint selection:text-ink pb-28">
+<!-- Top App Navigation Anchor -->
+<header class="w-full max-w-lg mx-auto pt-6 pb-2 px-6 flex items-center justify-between z-20">
+<div class="flex items-center gap-3">
+<button aria-label="Back" class="w-10 h-10 rounded-full bg-white border border-hairline flex items-center justify-center text-sage-muted hover:text-emerald hover:border-emerald/40 transition-all duration-200 active:scale-95 shadow-sm shadow-emerald-950/5" type="button">
+<span class="material-symbols-outlined text-[20px]">arrow_back</span>
+</button>
+<div>
+<h1 class="font-headline font-bold text-lg text-ink leading-tight tracking-tight">Tasbeeh</h1>
+<p class="font-body text-xs text-sage-muted">Tap circle to recite</p>
+</div>
+</div>
+<!-- Trailing Action Cluster -->
+<div class="flex items-center gap-2">
+<!-- Haptic Vibration Toggle -->
+<button aria-label="Toggle haptic vibration" class="w-10 h-10 rounded-full bg-white border border-hairline flex items-center justify-center text-emerald hover:border-emerald/40 transition-all duration-200 active:scale-95 shadow-sm shadow-emerald-950/5" id="vibrateBtn" title="Haptic Feedback Active" type="button">
+<span class="material-symbols-outlined text-[19px]">vibration</span>
+</button>
+<!-- History / Logs Icon -->
+<button aria-label="View Dhikr History" class="w-10 h-10 rounded-full bg-white border border-hairline flex items-center justify-center text-sage-muted hover:text-emerald hover:border-emerald/40 transition-all duration-200 active:scale-95 shadow-sm shadow-emerald-950/5" title="Daily History" type="button">
+<span class="material-symbols-outlined text-[19px]">history</span>
+</button>
+</div>
+</header>
+<!-- Main Content Body -->
+<main class="w-full max-w-lg mx-auto px-6 flex-1 flex flex-col items-center justify-start space-y-5 pt-1">
+<!-- Active Phrase Display Card -->
+<section class="w-full text-center pt-2 pb-1 relative">
+<!-- Subtle manuscript ornament line -->
+<div class="flex items-center justify-center gap-2 mb-1.5 opacity-60">
+<span class="h-[1px] w-8 bg-gold-manuscript"></span>
+<span class="material-symbols-outlined text-gold-manuscript text-[14px]">star</span>
+<span class="h-[1px] w-8 bg-gold-manuscript"></span>
+</div>
+<!-- Phrase Title in English -->
+<h2 class="font-headline text-[22px] font-bold text-ink tracking-tight" id="phraseEnglish">SubhanAllah</h2>
+<!-- Calligraphy Representation -->
+<div class="my-1.5 py-0.5">
+<p class="font-arabic text-[30px] font-bold text-emerald leading-relaxed select-none tracking-wide dir-rtl" id="phraseArabic" lang="ar">
+          سُبْحَانَ اللَّهِ
+        </p>
+</div>
+<!-- Transliteration & English Translation -->
+<p class="font-body text-xs text-sage-muted flex items-center justify-center gap-1.5">
+<span class="italic text-stone-600 font-medium" id="phraseTranslit">Subḥān Allāh</span>
+<span class="text-hairline font-bold">·</span>
+<span class="text-sage-muted" id="phraseMeaning">‘Glory be to Allah’</span>
+</p>
+</section>
+<!-- Large Circular Tap Dial Section -->
+<section class="relative flex flex-col items-center justify-center py-2 select-none">
+<!-- Ambient Outer Decorative Halo -->
+<div class="relative flex items-center justify-center">
+<!-- Interactive Dial Button Surface -->
+<button aria-label="Increment Dhikr Counter" class="relative group outline-none focus:outline-none transition-transform duration-100 ease-out cursor-pointer active:scale-[0.97]" id="counterDialBtn" type="button">
+<!-- Outer Shadow Base Card (White circle pedestal) -->
+<div class="w-[236px] h-[236px] rounded-full bg-white shadow-xl shadow-emerald-950/10 border border-hairline flex items-center justify-center relative p-3">
+<!-- 8-Pointed Islamic Geometric Motif in background (6% opacity) -->
+<div class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-[0.06] text-emerald-depth overflow-hidden">
+<svg fill="currentColor" height="210" viewbox="0 0 100 100" width="210">
+<rect height="50" rx="3" width="50" x="25" y="25"></rect>
+<rect height="50" rx="3" transform="rotate(45 50 50)" width="50" x="25" y="25"></rect>
+</svg>
+</div>
+<!-- SVG Ring Progress Indicators -->
+<svg class="w-full h-full -rotate-90 pointer-events-none z-10" viewbox="0 0 220 220">
+<!-- Dial Track Ring (Hairline border) -->
+<circle cx="110" cy="110" fill="none" r="96" stroke="#E4E0D5" stroke-width="2.5"></circle>
+<!-- Subtle Inner Secondary Guide Ring at 95% radius -->
+<circle cx="110" cy="110" fill="none" opacity="0.45" r="88" stroke="#C9A24B" stroke-dasharray="3 3" stroke-width="0.75"></circle>
+<!-- Active Gold Progress Arc -->
+<!-- Circumference = 2 * PI * 96 ≈ 603.18 -->
+<circle class="circular-progress-circle" cx="110" cy="110" fill="none" id="progressRing" r="96" stroke="#C9A24B" stroke-dasharray="603.18" stroke-dashoffset="108.57" stroke-linecap="round" stroke-width="5"></circle>
+</svg>
+<!-- Center Content Overlay Inside Dial -->
+<div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none text-center z-20">
+<!-- Counter Number Tabular -->
+<span class="font-headline font-bold text-[58px] leading-none text-emerald tracking-tight tabular-nums transition-transform duration-75" id="counterDisplay">
+                27
+              </span>
+<!-- Target Micro Label -->
+<div class="mt-1 flex items-center gap-1">
+<span class="font-label text-[11px] font-bold uppercase tracking-[0.16em] text-sage-muted">
+                  OF <span id="targetLabelDisplay">33</span>
+</span>
+</div>
+<!-- Tap Indicator / Micro Ripple Prompt -->
+<div class="mt-3 flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-ivory/80 border border-hairline/70">
+<span class="w-1.5 h-1.5 rounded-full bg-gold-manuscript animate-pulse"></span>
+<span class="font-label text-[10px] uppercase font-semibold tracking-wider text-sage-muted">Tap</span>
+</div>
+</div>
+</div>
+</button>
+</div>
+<!-- Quick Reset Prompt underneath Dial -->
+<div class="mt-3 flex items-center gap-6">
+<button aria-label="Decrement by 1" class="text-xs font-label text-sage-muted hover:text-ink px-2 py-1 rounded transition-colors flex items-center gap-1" id="quickMinusBtn" type="button">
+<span class="material-symbols-outlined text-[15px]">remove</span>
+<span>1 Step</span>
+</button>
+<span class="text-hairline">|</span>
+<button aria-label="Reset counter to zero" class="text-xs font-label text-sage-muted hover:text-emerald px-2 py-1 rounded transition-colors flex items-center gap-1 group" id="resetCounterBtn" type="button">
+<span class="material-symbols-outlined text-[15px] group-hover:rotate-180 transition-transform duration-300">replay</span>
+<span>Reset</span>
+</button>
+</div>
+</section>
+<!-- Horizontal Phrase Pager Tabs -->
+<section class="w-full">
+<div class="flex items-center justify-between mb-2 px-1">
+<span class="font-label text-[11px] font-bold uppercase tracking-[0.08em] text-sage-muted">Select Recitation</span>
+<span class="font-label text-[11px] text-sage-muted">5 Duas</span>
+</div>
+<div class="flex items-center gap-2 overflow-x-auto no-scrollbar py-1 px-0.5">
+<!-- 1. SubhanAllah (Active) -->
+<button class="phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-emerald text-white shadow-sm shadow-emerald-950/15" data-arabic="سُبْحَانَ اللَّهِ" data-meaning="‘Glory be to Allah’" data-name="SubhanAllah" data-phrase-id="1" data-translit="Subḥān Allāh" type="button">
+          SubhanAllah
+        </button>
+<!-- 2. Alhamdulillah -->
+<button class="phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-white border border-hairline text-ink hover:border-emerald/40 hover:text-emerald" data-arabic="الْحَمْدُ لِلَّهِ" data-meaning="‘All praise is due to Allah’" data-name="Alhamdulillah" data-phrase-id="2" data-translit="Al-ḥamdu lillāh" type="button">
+          Alhamdulillah
+        </button>
+<!-- 3. Allahu Akbar -->
+<button class="phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-white border border-hairline text-ink hover:border-emerald/40 hover:text-emerald" data-arabic="اللَّهُ أَكْبَرُ" data-meaning="‘Allah is the Greatest’" data-name="Allahu Akbar" data-phrase-id="3" data-translit="Allāhu Akbar" type="button">
+          Allahu Akbar
+        </button>
+<!-- 4. La ilaha illallah -->
+<button class="phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-white border border-hairline text-ink hover:border-emerald/40 hover:text-emerald" data-arabic="لَا إِلٰهَ إِلَّا اللَّهُ" data-meaning="‘None has the right to be worshipped but Allah’" data-name="La ilaha illallah" data-phrase-id="4" data-translit="Lā ilāha illā Allāh" type="button">
+          La ilaha illallah
+        </button>
+<!-- 5. Astaghfirullah -->
+<button class="phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-white border border-hairline text-ink hover:border-emerald/40 hover:text-emerald" data-arabic="أَسْتَغْفِرُ اللَّهَ" data-meaning="‘I seek the forgiveness of Allah’" data-name="Astaghfirullah" data-phrase-id="5" data-translit="Astaghfiru Allāh" type="button">
+          Astaghfirullah
+        </button>
+</div>
+</section>
+<!-- Controls Bar & Target Parameters -->
+<section class="w-full grid grid-cols-2 gap-3 pt-1">
+<!-- Target Picker Card / Pill -->
+<div class="bg-white border border-hairline rounded-2xl p-3 flex items-center justify-between shadow-sm shadow-emerald-950/5">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-gold-tint flex items-center justify-center text-gold-manuscript">
+<span class="material-symbols-outlined text-[18px]">adjust</span>
+</div>
+<div>
+<span class="font-label block text-[10px] font-bold uppercase tracking-wider text-sage-muted">Goal</span>
+<span class="font-headline text-xs font-bold text-ink" id="targetTextSummary">33 counts</span>
+</div>
+</div>
+<button aria-label="Toggle goal limit 33, 99, 100, free" class="w-7 h-7 rounded-full bg-ivory border border-hairline flex items-center justify-center text-sage-muted hover:text-emerald transition-colors" id="cycleTargetBtn" type="button">
+<span class="material-symbols-outlined text-[16px]">swap_vert</span>
+</button>
+</div>
+<!-- Lap / Cycle Counter Card -->
+<div class="bg-white border border-hairline rounded-2xl p-3 flex items-center justify-between shadow-sm shadow-emerald-950/5">
+<div class="flex items-center gap-2.5">
+<div class="w-8 h-8 rounded-full bg-emerald/10 flex items-center justify-center text-emerald">
+<span class="material-symbols-outlined text-[18px]">repeat</span>
+</div>
+<div>
+<span class="font-label block text-[10px] font-bold uppercase tracking-wider text-sage-muted">Completed</span>
+<span class="font-headline text-xs font-bold text-ink" id="lapBadge">Lap 2 (66 total)</span>
+</div>
+</div>
+<span class="px-2 py-0.5 rounded-full bg-gold-tint font-label text-[10px] font-bold text-ink">
+          ×33
+        </span>
+</div>
+</section>
+<!-- Daily Progress / Stats Summary Card -->
+<section class="w-full bg-white border border-hairline rounded-2xl p-4 shadow-sm shadow-emerald-950/5 flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-ivory border border-hairline flex items-center justify-center text-emerald">
+<span class="material-symbols-outlined text-[20px]">bolt</span>
+</div>
+<div>
+<p class="font-headline font-semibold text-xs text-ink">2,847 total dhikr today</p>
+<p class="font-body text-[11px] text-sage-muted">Sat 31 Oct 2026 · 9 Jumada al-Ula</p>
+</div>
+</div>
+<!-- Streak Badge in Gold Tint -->
+<div class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-gold-tint border border-gold-border/40 text-ink">
+<span class="material-symbols-outlined text-[14px] text-gold-manuscript">verified</span>
+<span class="font-label text-[11px] font-bold tracking-tight">7-Day Streak</span>
+</div>
+</section>
+</main>
+<!-- Shared Bottom Navigation Bar Component (Azkar Active) -->
+<!-- Executed precisely per Shared Components JSON specification -->
+<nav class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2">
+<div class="w-full flex justify-around items-center bg-white/95 dark:bg-stone-900/95 rounded-full mx-6 mb-4 shadow-xl shadow-emerald-950/5 ring-1 ring-stone-200/50 dark:ring-stone-800 p-1.5 backdrop-blur-md">
+<!-- 1. Home Destination (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 active:scale-95" href="#home">
+<span class="material-symbols-outlined text-[20px]">mosque</span>
+<span class="font-label text-xs font-semibold tracking-wide">Home</span>
+</a>
+<!-- 2. Quran Destination (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 active:scale-95" href="#quran">
+<span class="material-symbols-outlined text-[20px]">menu_book</span>
+<span class="font-label text-xs font-semibold tracking-wide">Quran</span>
+</a>
+<!-- 3. Azkar Destination (ACTIVE - Matches Current Context) -->
+<a class="flex items-center gap-2 bg-emerald-800 dark:bg-emerald-700 text-white rounded-full px-4 py-2 text-xs font-semibold hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 active:scale-95 shadow-sm" href="#azkar">
+<span class="material-symbols-outlined text-[20px] fill">fingerprint</span>
+<span class="font-label text-xs font-semibold tracking-wide">Azkar</span>
+</a>
+</div>
+</nav>
+<!-- Interactive Logic for Tactile Counter & Audio Haptics -->
+<script>
+    (function initTasbeeh() {
+      let count = 27;
+      let target = 33;
+      let lap = 2;
+      let hapticsEnabled = true;
+
+      const circumference = 2 * Math.PI * 96; // 603.18578
+      const progressRing = document.getElementById('progressRing');
+      const counterDisplay = document.getElementById('counterDisplay');
+      const targetLabelDisplay = document.getElementById('targetLabelDisplay');
+      const targetTextSummary = document.getElementById('targetTextSummary');
+      const counterDialBtn = document.getElementById('counterDialBtn');
+      const quickMinusBtn = document.getElementById('quickMinusBtn');
+      const resetCounterBtn = document.getElementById('resetCounterBtn');
+      const cycleTargetBtn = document.getElementById('cycleTargetBtn');
+      const lapBadge = document.getElementById('lapBadge');
+      const vibrateBtn = document.getElementById('vibrateBtn');
+
+      const phraseButtons = document.querySelectorAll('.phrase-pill-btn');
+      const phraseEnglish = document.getElementById('phraseEnglish');
+      const phraseArabic = document.getElementById('phraseArabic');
+      const phraseTranslit = document.getElementById('phraseTranslit');
+      const phraseMeaning = document.getElementById('phraseMeaning');
+
+      function updateUI() {
+        // Tabular numeral update
+        counterDisplay.textContent = count;
+        targetLabelDisplay.textContent = target;
+        targetTextSummary.textContent = `${target} counts`;
+        lapBadge.textContent = `Lap ${lap} (${(lap - 1) * target + count} total)`;
+
+        // SVG Circular Stroke calculation
+        const progress = Math.min(count / target, 1);
+        const offset = circumference - (progress * circumference);
+        progressRing.style.strokeDashoffset = offset;
+      }
+
+      function triggerHapticFeedback(isCompletion = false) {
+        if (!hapticsEnabled || !navigator.vibrate) return;
+        if (isCompletion) {
+          navigator.vibrate([40, 60, 40]);
+        } else {
+          navigator.vibrate(15);
+        }
+      }
+
+      function incrementCount() {
+        count++;
+        if (count >= target) {
+          triggerHapticFeedback(true);
+          // Auto roll over to next lap or reset
+          if (count > target) {
+            lap++;
+            count = 1;
+          }
+        } else {
+          triggerHapticFeedback(false);
+        }
+        updateUI();
+      }
+
+      function decrementCount() {
+        if (count > 0) {
+          count--;
+          triggerHapticFeedback(false);
+          updateUI();
+        }
+      }
+
+      function resetCounter() {
+        count = 0;
+        triggerHapticFeedback(false);
+        updateUI();
+      }
+
+      // Event Listeners
+      counterDialBtn.addEventListener('click', (e) => {
+        incrementCount();
+      });
+
+      quickMinusBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        decrementCount();
+      });
+
+      resetCounterBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        resetCounter();
+      });
+
+      // Target cycler (33 -> 99 -> 100 -> 33)
+      cycleTargetBtn.addEventListener('click', () => {
+        if (target === 33) target = 99;
+        else if (target === 99) target = 100;
+        else target = 33;
+        updateUI();
+      });
+
+      // Toggle vibration state
+      vibrateBtn.addEventListener('click', () => {
+        hapticsEnabled = !hapticsEnabled;
+        if (hapticsEnabled) {
+          vibrateBtn.classList.remove('text-stone-400');
+          vibrateBtn.classList.add('text-emerald');
+        } else {
+          vibrateBtn.classList.remove('text-emerald');
+          vibrateBtn.classList.add('text-stone-400');
+        }
+      });
+
+      // Switch Phrase
+      phraseButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Update active pill state
+          phraseButtons.forEach(b => {
+            b.className = 'phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-white border border-hairline text-ink hover:border-emerald/40 hover:text-emerald';
+          });
+          btn.className = 'phrase-pill-btn flex-shrink-0 px-4 py-2 rounded-full text-xs font-semibold tracking-wide transition-all duration-200 bg-emerald text-white shadow-sm shadow-emerald-950/15';
+
+          // Update texts
+          phraseEnglish.textContent = btn.dataset.name;
+          phraseArabic.textContent = btn.dataset.arabic;
+          phraseTranslit.textContent = btn.dataset.translit;
+          phraseMeaning.textContent = btn.dataset.meaning;
+
+          // Soft reset for fresh phrase
+          count = 0;
+          updateUI();
+        });
+      });
+
+      // Initialize
+      updateUI();
+    })();
+  </script>
+</body></html>

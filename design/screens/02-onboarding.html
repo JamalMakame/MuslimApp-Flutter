@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deen — Setup &amp; Onboarding</title>
+<!-- Google Fonts: Plus Jakarta Sans & Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            // Semantic Design System tokens
+            canvas: "#F8F6F1",        /* Ivory Canvas app background */
+            surface: "#FFFFFF",       /* Pure Surface cards & sheets */
+            ink: "#12211D",           /* Primary deep text */
+            sage: "#5F7169",          /* Secondary muted text */
+            hairline: "#E4E0D5",      /* 1px borders */
+            gold: {
+              DEFAULT: "#C9A24B",     /* Manuscript Gold accent */
+              tint: "#F4EBD7",        /* Gold Tint highlight */
+              muted: "#DFC286"
+            },
+            emerald: {
+              DEFAULT: "#0E6B5C",     /* Deep Emerald primary */
+              depth: "#0A4A3F",       /* Emerald Depth */
+              tint: "#E7F3F0"
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"]
+          },
+          fontSize: {}
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Subtle respectful paper texture feel */
+    body {
+      background-color: #F8F6F1;
+      color: #12211D;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen bg-canvas text-ink font-body selection:bg-gold-tint selection:text-emerald flex flex-col justify-between antialiased">
+<!-- Main Container: Focused Onboarding Canvas (Single linear journey, Shell suppressed as per semantic mandate) -->
+<main class="w-full max-w-lg mx-auto px-6 pt-10 pb-8 flex-1 flex flex-col justify-between">
+<!-- TOP SECTION: Centered, Calm & Reverent -->
+<header class="flex flex-col items-center text-center pt-2 pb-6">
+<!-- 8-Pointed Star Manuscript Motif (Manuscript Gold #C9A24B, thin line <=10% opacity backdrop with clean gold center) -->
+<div class="relative w-14 h-14 mb-4 flex items-center justify-center">
+<!-- Subtle 8-pointed star geometry using layered thin squares -->
+<div class="absolute inset-0 border border-gold/40 rounded-sm rotate-0 transition-transform duration-700 ease-out"></div>
+<div class="absolute inset-0 border border-gold/40 rounded-sm rotate-45 transition-transform duration-700 ease-out"></div>
+<div class="w-8 h-8 rounded-full bg-gold-tint flex items-center justify-center text-gold">
+<span class="material-symbols-outlined text-[20px]" data-icon="auto_awesome">auto_awesome</span>
+</div>
+</div>
+<!-- App Wordmark + Subtle Mosque Dome Glyph -->
+<div class="flex items-center gap-2 mb-2">
+<h1 class="font-headline text-3xl font-extrabold tracking-tight text-ink">
+          Deen
+        </h1>
+<span class="material-symbols-outlined text-gold text-2xl" data-icon="mosque" title="Deen Companion">mosque</span>
+</div>
+<!-- Subtitle / Tagline -->
+<p class="font-body text-sm font-medium text-sage max-w-xs leading-relaxed mb-3">
+        Your quiet, private companion for prayer &amp; reflection.
+      </p>
+<!-- Local-First Privacy Guarantee Badge -->
+<div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gold-tint text-ink border border-gold/30">
+<span class="material-symbols-outlined text-xs text-gold" data-icon="shield">shield</span>
+<span class="font-label text-[11px] font-semibold tracking-wide text-ink">100% On-Device · No Sign-Up Needed</span>
+</div>
+</header>
+<!-- MIDDLE SECTION: Three Stacked White Cards (16px radius, hairline border, soft clean elevation) -->
+<section class="space-y-4 my-2">
+<!-- CARD 1: LANGUAGE & LOCALE -->
+<div class="bg-surface rounded-xl p-5 border border-hairline shadow-sm shadow-ink/5">
+<div class="flex items-center justify-between mb-3">
+<div>
+<span class="block font-label text-[11px] font-bold tracking-[0.08em] uppercase text-sage">LANGUAGE &amp; LOCALE</span>
+<h2 class="font-headline text-base font-semibold text-ink mt-0.5">Select Language</h2>
+</div>
+<span class="material-symbols-outlined text-sage/70 text-lg" data-icon="translate">translate</span>
+</div>
+<!-- Segmented 3-Pill Selector -->
+<div aria-label="App Language" class="grid grid-cols-3 gap-2 pt-1" id="languageSelector" role="radiogroup">
+<!-- Arabic Option -->
+<button aria-checked="false" class="lang-pill py-2.5 px-3 rounded-lg border border-hairline bg-canvas/60 text-ink text-sm font-medium hover:border-gold/50 transition-all duration-200 text-center active:scale-95" onclick="selectLanguage(this, 'العربية')" role="radio" type="button">
+            العربية
+          </button>
+<!-- English Option (Default Selected) -->
+<button aria-checked="true" class="lang-pill py-2.5 px-3 rounded-lg bg-emerald text-white text-sm font-bold shadow-sm shadow-emerald/20 transition-all duration-200 text-center active:scale-95 border border-emerald" onclick="selectLanguage(this, 'English')" role="radio" type="button">
+            English
+          </button>
+<!-- Kiswahili Option -->
+<button aria-checked="false" class="lang-pill py-2.5 px-3 rounded-lg border border-hairline bg-canvas/60 text-ink text-sm font-medium hover:border-gold/50 transition-all duration-200 text-center active:scale-95" onclick="selectLanguage(this, 'Kiswahili')" role="radio" type="button">
+            Kiswahili
+          </button>
+</div>
+</div>
+<!-- CARD 2: PRAYER LOCATION & PRIVACY -->
+<div class="bg-surface rounded-xl p-5 border border-hairline shadow-sm shadow-ink/5">
+<div class="flex items-start justify-between mb-2">
+<div>
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-gold text-sm" data-icon="location_on">location_on</span>
+<span class="font-label text-[11px] font-bold tracking-[0.08em] uppercase text-sage">ACCURACY &amp; PRIVACY</span>
+</div>
+<h2 class="font-headline text-base font-semibold text-ink mt-0.5">Prayer Location</h2>
+</div>
+<span class="px-2 py-0.5 rounded-full text-[10px] font-semibold bg-emerald-tint text-emerald">Offline GPS</span>
+</div>
+<p class="font-body text-xs text-sage leading-relaxed mb-4">
+          Prayer times are calculated directly on your device. Your exact coordinates never leave this phone.
+        </p>
+<!-- Actions Cluster -->
+<div class="space-y-2.5">
+<!-- Secondary Button: Use Current Location -->
+<button class="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-hairline bg-surface text-ink hover:bg-canvas/50 hover:border-stone-300 font-label text-xs font-semibold tracking-wide transition-all duration-200 active:scale-[0.99]" id="locDetectBtn" onclick="handleLocationDetect()" type="button">
+<span class="material-symbols-outlined text-emerald text-base" data-icon="my_location">my_location</span>
+<span id="locStatusText">Use current location</span>
+</button>
+<div class="flex items-center justify-between pt-1 px-1">
+<!-- Tertiary Emerald Link: Set Manually -->
+<button class="font-label text-xs font-semibold text-emerald hover:text-emerald-depth underline-offset-4 hover:underline transition-colors flex items-center gap-1" onclick="handleManualLocationModal()" type="button">
+<span>Set location manually</span>
+<span class="material-symbols-outlined text-xs" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Reassuring Privacy Pill -->
+<div class="flex items-center gap-1 text-[11px] text-sage font-medium bg-canvas px-2.5 py-1 rounded-full border border-hairline">
+<span class="material-symbols-outlined text-[13px] text-sage" data-icon="lock">lock</span>
+<span>Zero cloud logs</span>
+</div>
+</div>
+</div>
+</div>
+<!-- CARD 3: CALCULATION METHOD -->
+<div class="bg-surface rounded-xl p-5 border border-hairline shadow-sm shadow-ink/5">
+<div class="flex items-center justify-between mb-2">
+<div>
+<span class="block font-label text-[11px] font-bold tracking-[0.08em] uppercase text-sage">ASTRONOMICAL CALCULATION</span>
+<h2 class="font-headline text-base font-semibold text-ink mt-0.5">Calculation Method</h2>
+</div>
+<span class="material-symbols-outlined text-gold text-lg" data-icon="explore">explore</span>
+</div>
+<!-- Interactive Picker Row (Tappable sheet trigger) -->
+<button class="w-full mt-1.5 p-3 rounded-xl border border-hairline bg-canvas/40 hover:bg-gold-tint/40 hover:border-gold/40 flex items-center justify-between transition-all duration-200 text-left group active:scale-[0.99]" onclick="toggleMethodPicker()" type="button">
+<div class="flex items-center gap-3">
+<div class="w-7 h-7 rounded-full bg-gold-tint flex items-center justify-center text-gold">
+<span class="material-symbols-outlined text-sm" data-icon="mosque">mosque</span>
+</div>
+<div>
+<div class="flex items-center gap-1.5">
+<span class="font-headline text-xs font-bold text-ink group-hover:text-emerald transition-colors" id="selectedMethodTitle">
+                  Umm al-Qura University (Makkah)
+                </span>
+<span class="material-symbols-outlined text-sage text-xs cursor-help" data-icon="info" title="Standard Fajr 18.5°, Isha 90 min">info</span>
+</div>
+<span class="font-body text-[11px] text-sage">Standard Hijri astronomical calendar</span>
+</div>
+</div>
+<span class="material-symbols-outlined text-sage group-hover:text-ink text-base transition-transform group-hover:translate-x-0.5" data-icon="expand_more">expand_more</span>
+</button>
+<!-- Brief subtext -->
+<p class="font-body text-[11px] text-sage/90 mt-2.5 px-0.5 leading-normal">
+          Recommended for your region. Can be changed anytime in settings.
+        </p>
+<!-- Dropdown Selector List (Hidden by default, expandable) -->
+<div class="hidden mt-3 pt-3 border-t border-hairline space-y-1.5 transition-all" id="methodList">
+<div class="p-2 text-xs rounded-lg hover:bg-gold-tint cursor-pointer font-medium text-ink flex items-center justify-between" onclick="selectMethod('Umm al-Qura University (Makkah)')">
+<span>Umm al-Qura University (Makkah)</span>
+<span class="material-symbols-outlined text-emerald text-sm" data-icon="check">check</span>
+</div>
+<div class="p-2 text-xs rounded-lg hover:bg-canvas cursor-pointer font-medium text-sage flex items-center justify-between" onclick="selectMethod('Muslim World League (MWL)')">
+<span>Muslim World League (MWL)</span>
+</div>
+<div class="p-2 text-xs rounded-lg hover:bg-canvas cursor-pointer font-medium text-sage flex items-center justify-between" onclick="selectMethod('Egyptian General Authority of Survey')">
+<span>Egyptian General Authority of Survey</span>
+</div>
+<div class="p-2 text-xs rounded-lg hover:bg-canvas cursor-pointer font-medium text-sage flex items-center justify-between" onclick="selectMethod('Islamic Society of North America (ISNA)')">
+<span>Islamic Society of North America (ISNA)</span>
+</div>
+</div>
+</div>
+</section>
+<!-- BOTTOM AREA: Grounded Primary Action & Subtle Policy Subtext -->
+<footer class="pt-6 pb-2">
+<!-- Full-Width Primary Emerald Button -->
+<button class="w-full h-12 bg-emerald hover:bg-emerald-depth text-white font-headline text-sm font-semibold tracking-wide rounded-xl shadow-md shadow-emerald/20 flex items-center justify-center gap-2 transition-all duration-200 active:scale-[0.98]" onclick="handleOnboardingContinue()" type="button">
+<span>Continue</span>
+<span class="material-symbols-outlined text-base" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<!-- Reassuring Device-Only Subline -->
+<p class="font-body text-[11px] text-sage text-center mt-3 leading-relaxed">
+        By continuing, you agree to local data processing on your device.
+      </p>
+</footer>
+</main>
+<!-- Interactive JavaScript logic for First-Run Setup -->
+<script>
+    // Language selection handler
+    function selectLanguage(button, lang) {
+      const allPills = document.querySelectorAll('.lang-pill');
+      allPills.forEach(pill => {
+        pill.classList.remove('bg-emerald', 'text-white', 'font-bold', 'border-emerald', 'shadow-sm', 'shadow-emerald/20');
+        pill.classList.add('border-hairline', 'bg-canvas/60', 'text-ink', 'font-medium');
+        pill.setAttribute('aria-checked', 'false');
+      });
+
+      button.classList.remove('border-hairline', 'bg-canvas/60', 'text-ink', 'font-medium');
+      button.classList.add('bg-emerald', 'text-white', 'font-bold', 'border-emerald', 'shadow-sm', 'shadow-emerald/20');
+      button.setAttribute('aria-checked', 'true');
+    }
+
+    // Toggle Calculation Method Dropdown
+    function toggleMethodPicker() {
+      const list = document.getElementById('methodList');
+      list.classList.toggle('hidden');
+    }
+
+    // Choose calculation method
+    function selectMethod(methodName) {
+      const titleElem = document.getElementById('selectedMethodTitle');
+      if (titleElem) {
+        titleElem.textContent = methodName;
+      }
+      toggleMethodPicker();
+    }
+
+    // Mock geolocation check (On-device simulation)
+    function handleLocationDetect() {
+      const btnText = document.getElementById('locStatusText');
+      btnText.textContent = "Detecting on-device...";
+      setTimeout(() => {
+        btnText.textContent = "Detected: Zanzibar, Tanzania";
+      }, 600);
+    }
+
+    // Manual location modal simulation
+    function handleManualLocationModal() {
+      const city = prompt("Enter your city or region name (processed offline):", "Zanzibar, Tanzania");
+      if (city) {
+        const btnText = document.getElementById('locStatusText');
+        btnText.textContent = `Set to: ${city}`;
+      }
+    }
+
+    // Continue navigation trigger
+    function handleOnboardingContinue() {
+      const btn = event.currentTarget;
+      btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-base" data-icon="refresh">refresh</span><span>Preparing Sanctuary...</span>`;
+      setTimeout(() => {
+        alert("Setup complete. Welcome to Deen — your prayers and reflections remain strictly local.");
+      }, 700);
+    }
+  </script>
+</body></html>

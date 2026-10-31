@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deen — Islamic Companion</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {},
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {},
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"]
+          },
+          fontSize: {}
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+    }
+    
+    /* Subtle breathing aura */
+    @keyframes gentleAura {
+      0%, 100% {
+        opacity: 0.12;
+        transform: scale(0.98);
+      }
+      50% {
+        opacity: 0.22;
+        transform: scale(1.03);
+      }
+    }
+
+    /* Slow geometric star rotation */
+    @keyframes slowOrbit {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Smooth loading progress shim */
+    @keyframes progressGlow {
+      0% {
+        width: 15%;
+        opacity: 0.7;
+      }
+      50% {
+        width: 68%;
+        opacity: 1;
+      }
+      100% {
+        width: 78%;
+        opacity: 0.9;
+      }
+    }
+
+    .animate-aura {
+      animation: gentleAura 7s ease-in-out infinite;
+    }
+
+    .animate-slow-spin {
+      animation: slowOrbit 180s linear infinite;
+    }
+
+    .animate-progress {
+      animation: progressGlow 3.5s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#0A4A3F] flex items-center justify-center min-h-screen m-0 p-0 antialiased selection:bg-[#C9A24B]/30 font-body">
+<!-- Mobile Canvas Device Shell (393px x 852px) -->
+<main class="relative w-full max-w-[393px] h-[852px] overflow-hidden flex flex-col justify-between items-center text-center select-none shadow-2xl">
+<!-- Background Layers: Deep Emerald Carpet Gradient & Manuscript Grain -->
+<div class="absolute inset-0 bg-gradient-to-b from-[#0E6B5C] via-[#0B5448] to-[#0A4A3F] -z-20"></div>
+<!-- Ambient Radial Light Core -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[340px] h-[340px] rounded-full bg-[#C9A24B] blur-[110px] animate-aura pointer-events-none -z-10"></div>
+<!-- Architectural Frame: Manuscript Gold Hairline Border Ornamentation -->
+<div class="absolute inset-4 rounded-xl border border-[#C9A24B]/15 pointer-events-none -z-10">
+<!-- 4 Corner Arabesque Accents -->
+<div class="absolute top-1.5 left-1.5 w-3 h-3 border-t border-l border-[#C9A24B]/40"></div>
+<div class="absolute top-1.5 right-1.5 w-3 h-3 border-t border-r border-[#C9A24B]/40"></div>
+<div class="absolute bottom-1.5 left-1.5 w-3 h-3 border-b border-l border-[#C9A24B]/40"></div>
+<div class="absolute bottom-1.5 right-1.5 w-3 h-3 border-b border-r border-[#C9A24B]/40"></div>
+</div>
+<!-- Top Status Space Buffer (Quiet Reverence) -->
+<header class="w-full pt-14 px-8 flex justify-center items-center">
+<div class="w-1.5 h-1.5 rounded-full bg-[#C9A24B]/40"></div>
+</header>
+<!-- Centered Composition: Geometric Star Rosette, Emblem & Title -->
+<section class="flex flex-col items-center justify-center my-auto px-6 relative w-full">
+<!-- Emblem & 8-Pointed Star Rosette Container -->
+<div class="relative w-52 h-52 flex items-center justify-center mb-8">
+<!-- Rotating 8-Pointed Islamic Geometric Rosette Motif -->
+<svg class="absolute inset-0 w-full h-full text-[#C9A24B] animate-slow-spin opacity-20 pointer-events-none" fill="none" stroke="currentColor" stroke-width="0.8" viewbox="0 0 200 200">
+<!-- Concentric Outer Ring -->
+<circle cx="100" cy="100" r="92" stroke-dasharray="2 4" stroke-width="0.6"></circle>
+<circle cx="100" cy="100" r="86" stroke-width="0.5"></circle>
+<!-- First Square -->
+<rect height="128" rx="2" transform="rotate(0 100 100)" width="128" x="36" y="36"></rect>
+<!-- Second Interlocking Square (45 degrees) -->
+<rect height="128" rx="2" transform="rotate(45 100 100)" width="128" x="36" y="36"></rect>
+<!-- Inner Guiding Web -->
+<polygon points="100,16 114,86 184,100 114,114 100,184 86,114 16,100 86,86" stroke-width="0.5"></polygon>
+<polygon points="160,40 120,80 160,160 80,120 40,160 80,80 40,40 120,80" stroke-width="0.3"></polygon>
+<circle cx="100" cy="100" r="54" stroke-width="0.75"></circle>
+</svg>
+<!-- Static Center Medallion Inner Ring -->
+<div class="absolute w-36 h-36 rounded-full border border-[#C9A24B]/35 flex items-center justify-center shadow-inner">
+<div class="w-32 h-32 rounded-full border border-[#C9A24B]/20 bg-[#0A4A3F]/50 flex items-center justify-center">
+<!-- Sacred Mosque Dome Glyph (Handcrafted Minimalist Manuscript Line Art) -->
+<svg class="w-16 h-16 text-[#C9A24B]" fill="none" stroke="currentColor" viewbox="0 0 64 64">
+<!-- Crescent & Finial -->
+<path d="M32 10V14" stroke-linecap="round" stroke-width="1.5"></path>
+<path d="M33.5 10C34.6 10 35.5 9.1 35.5 8C35.5 6.9 34.6 6 33.5 6C33.2 6 32.9 6.07 32.7 6.2C33.2 6.7 33.5 7.3 33.5 8C33.5 8.7 33.2 9.3 32.7 9.8C32.9 9.93 33.2 10 33.5 10Z" fill="currentColor"></path>
+<!-- Dome Arch Shape (Ogee Profile) -->
+<path d="M32 14C30 18 20 22 20 34C20 37 20.8 41 22 44H42C43.2 41 44 37 44 34C44 22 34 18 32 14Z" stroke-linejoin="round" stroke-width="1.6"></path>
+<!-- Inner Arch Ornament -->
+<path d="M32 23C30.5 26 25 29 25 36C25 39 25.8 42 27 44H37C38.2 42 39 39 39 36C39 29 33.5 26 32 23Z" opacity="0.45" stroke-width="0.9"></path>
+<!-- Central Mihrab Niche -->
+<path d="M29 44V37C29 35.3 30.3 34 32 34C33.7 34 35 35.3 35 37V44" stroke-linecap="round" stroke-width="1.2"></path>
+<!-- Mosque Base Tier -->
+<path d="M16 44H48" stroke-linecap="round" stroke-width="1.6"></path>
+<path d="M18 48H46" opacity="0.6" stroke-linecap="round" stroke-width="1.2"></path>
+<!-- Symmetric Flanking Minaret Spire Markers -->
+<path d="M15 44V34L17 31V44" stroke-linecap="round" stroke-width="1.1"></path>
+<path d="M49 44V34L47 31V44" stroke-linecap="round" stroke-width="1.1"></path>
+</svg>
+</div>
+</div>
+</div>
+<!-- App Title Typography -->
+<h1 class="font-headline text-[42px] leading-tight font-bold tracking-tight text-[#F8F6F1] drop-shadow-sm mb-2.5">
+        Deen
+      </h1>
+<!-- Tagline / Subtitle -->
+<p class="font-body text-[13px] tracking-[0.22em] uppercase font-medium text-[#F8F6F1]/70">
+        Prayer · Quran · Remembrance
+      </p>
+</section>
+<!-- Bottom Anchored Area: Hairline Progress & Reverent Status -->
+<footer class="w-full pb-14 px-10 flex flex-col items-center">
+<!-- Thin Manuscript Gold Hairline Progress Bar Container -->
+<div class="w-44 h-[2px] bg-[#C9A24B]/20 rounded-full overflow-hidden relative mb-4">
+<!-- Progress Indicator -->
+<div class="h-full bg-gradient-to-r from-[#C9A24B]/70 via-[#C9A24B] to-[#F8F6F1] rounded-full animate-progress shadow-[0_0_8px_rgba(201,162,75,0.7)]"></div>
+</div>
+<!-- Small Ivory Status Caption -->
+<span class="font-body text-[12px] font-normal tracking-wide text-[#F8F6F1]/60">
+        Preparing your prayer times…
+      </span>
+<!-- Hijri Year Sub-Marker -->
+<span class="mt-2 text-[10px] tracking-widest uppercase font-medium text-[#C9A24B]/40">
+        1448 AH
+      </span>
+</footer>
+</main>
+</body></html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Mushaf Reader — Surah Al-Fatihah</title>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts: Plus Jakarta Sans, Manrope, Amiri Quran/Arabic -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&amp;family=Amiri:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            emerald: {
+              700: '#0E6B5C',
+              800: '#0E6B5C',
+              900: '#0A4A3F',
+            },
+            stone: {
+              100: '#F8F6F1',
+              200: '#E4E0D5',
+              400: '#8A9991',
+              500: '#5F7169',
+              600: '#5F7169',
+              900: '#12211D',
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"],
+            quran: ["Amiri", "Amiri Quran", "serif"],
+          },
+        },
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 350, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill-icon {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Smooth scripture typography rendering */
+    .mushaf-text {
+      font-feature-settings: "cv01" on, "ss01" on;
+      word-spacing: 0.12em;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#F8F6F1] text-[#12211D] font-body min-h-screen flex flex-col justify-between selection:bg-[#F4EBD7] selection:text-[#12211D] antialiased">
+<!-- Mobile Viewport Wrapper (Max 393px width for accurate mobile preview fidelity) -->
+<div class="w-full max-w-[393px] mx-auto min-h-screen flex flex-col pb-28 relative">
+<!-- TOP APP BAR -->
+<header class="sticky top-0 z-40 bg-[#F8F6F1]/90 backdrop-blur-md px-5 pt-3 pb-2 flex items-center justify-between transition-colors">
+<!-- Back Chevron Action -->
+<button aria-label="Go back" class="w-10 h-10 -ml-1 rounded-full flex items-center justify-center text-[#12211D] hover:bg-[#E4E0D5]/50 active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[22px]" data-icon="chevron_left">chevron_left</span>
+</button>
+<!-- Center Title Cluster -->
+<div class="flex flex-col items-center text-center">
+<h1 class="font-headline font-bold text-[19px] text-[#12211D] tracking-tight leading-snug">
+          Al-Fatihah
+        </h1>
+<span class="font-body text-[11px] font-medium text-[#5F7169] tracking-normal">
+          Surah 1 · 7 ayahs · Makki
+        </span>
+</div>
+<!-- Right Action Cluster: Bookmark & Tafsir -->
+<div class="flex items-center gap-1 -mr-1">
+<button aria-label="Bookmark" class="w-10 h-10 rounded-full flex items-center justify-center text-[#C9A24B] hover:bg-[#F4EBD7] active:scale-95 transition-all" title="Bookmark Ayah">
+<span class="material-symbols-outlined text-[21px] fill-icon" data-icon="bookmark" data-weight="fill">bookmark</span>
+</button>
+<button aria-label="Tafsir" class="w-10 h-10 rounded-full flex items-center justify-center text-[#12211D] hover:bg-[#E4E0D5]/50 active:scale-95 transition-all" title="Open Tafsir">
+<span class="material-symbols-outlined text-[21px]" data-icon="menu_book">menu_book</span>
+</button>
+</div>
+</header>
+<!-- MAIN SCROLLABLE CONTENT CANVAS -->
+<main class="flex-1 px-4 space-y-4 pt-1">
+<!-- JUZ / PAGE METRIC CHIP BAR -->
+<section class="flex items-center justify-between px-1.5 text-xs text-[#5F7169]">
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center justify-center w-5 h-5 rounded-full bg-[#E4E0D5]/60 text-[#12211D] text-[10px] font-bold font-headline">1</span>
+<span class="font-headline font-semibold text-[11px] tracking-wider text-[#5F7169] uppercase">Juz 1 · Page 1</span>
+</div>
+<div class="flex items-center gap-2">
+<!-- Text Scale & Audio Settings toggles -->
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white border border-[#E4E0D5] text-[#12211D] text-[11px] font-semibold hover:border-[#C9A24B] transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[14px]" data-icon="format_size">format_size</span>
+<span>A+ A-</span>
+</button>
+<button class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#F4EBD7] text-[#8A6B1F] text-[11px] font-semibold hover:bg-[#edd8ad] transition-colors">
+<span class="material-symbols-outlined text-[13px]" data-icon="translate">translate</span>
+<span>Trans</span>
+</button>
+</div>
+</section>
+<!-- MUSHAF READING CANVAS (LUMINOUS SACRED SURACE) -->
+<article class="relative bg-white rounded-[22px] border border-[#E4E0D5] p-5 md:p-6 shadow-sm shadow-[#12211D]/5 overflow-hidden">
+<!-- Sacred Geometry Arabesque Watermark Overlay -->
+<div class="absolute inset-0 pointer-events-none opacity-[0.04] flex items-center justify-center">
+<svg fill="none" height="340" stroke="#C9A24B" stroke-width="0.8" viewbox="0 0 100 100" width="340">
+<rect height="50" transform="rotate(0 50 50)" width="50" x="25" y="25"></rect>
+<rect height="50" transform="rotate(45 50 50)" width="50" x="25" y="25"></rect>
+<circle cx="50" cy="50" r="38"></circle>
+<circle cx="50" cy="50" r="22" stroke-dasharray="1 2"></circle>
+<circle cx="50" cy="50" r="46"></circle>
+</svg>
+</div>
+<!-- Decorative Manuscript Gold Inner Frame -->
+<div class="absolute inset-2.5 border border-[#C9A24B]/20 rounded-[16px] pointer-events-none">
+<!-- Subtle Corner Accents -->
+<div class="absolute -top-1 -left-1 w-2.5 h-2.5 border-t border-l border-[#C9A24B]/50"></div>
+<div class="absolute -top-1 -right-1 w-2.5 h-2.5 border-t border-r border-[#C9A24B]/50"></div>
+<div class="absolute -bottom-1 -left-1 w-2.5 h-2.5 border-b border-l border-[#C9A24B]/50"></div>
+<div class="absolute -bottom-1 -right-1 w-2.5 h-2.5 border-b border-r border-[#C9A24B]/50"></div>
+</div>
+<!-- Surah Decorative Header Cartouche -->
+<div class="relative z-10 mx-auto max-w-[280px] mb-5 pt-1">
+<div class="relative bg-[#F8F6F1] border border-[#E4E0D5] rounded-xl py-2 px-3 text-center shadow-xs">
+<!-- Left & Right Gold Flourish lines -->
+<div class="flex items-center justify-between">
+<span class="w-6 h-[1px] bg-[#C9A24B]/40"></span>
+<div class="flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rotate-45 bg-[#C9A24B]"></span>
+<span class="font-headline text-[11px] font-bold tracking-widest text-[#0E6B5C] uppercase">Surah Al-Fātihah</span>
+<span class="w-1.5 h-1.5 rotate-45 bg-[#C9A24B]"></span>
+</div>
+<span class="w-6 h-[1px] bg-[#C9A24B]/40"></span>
+</div>
+<div class="text-[10px] text-[#5F7169] mt-0.5 font-medium">The Opening · Revelation 5</div>
+</div>
+</div>
+<!-- BASMALA CALLIGRAPHIC HEADER -->
+<div class="relative z-10 text-center my-4 py-2 border-b border-[#E4E0D5]/70">
+<div class="text-[#0E6B5C] font-quran text-[25px] sm:text-[27px] leading-relaxed tracking-wide select-none" dir="rtl" lang="ar">
+            بِسْمِ ٱللَّهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+          </div>
+</div>
+<!-- QURANIC SCRIPTURE (VERSES 1 - 7) -->
+<div class="relative z-10 text-justify text-right mushaf-text font-quran text-[21px] sm:text-[22px] leading-[2.6] text-[#12211D] px-1 select-text" dir="rtl" lang="ar">
+<!-- Ayah 1 -->
+<span>ٱلْحَمْدُ لِلَّهِ رَبِّ ٱلْعَٰلَمِينَ</span>
+<span aria-label="Ayah 1" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">١</span>
+</span>
+<!-- Ayah 2 -->
+<span>ٱلرَّحْمَٰنِ ٱلرَّحِيمِ</span>
+<span aria-label="Ayah 2" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">٢</span>
+</span>
+<!-- Ayah 3 -->
+<span>مَٰلِكِ يَوْمِ ٱلدِّينِ</span>
+<span aria-label="Ayah 3" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">٣</span>
+</span>
+<!-- Ayah 4 -->
+<span>إِيَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</span>
+<span aria-label="Ayah 4" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">٤</span>
+</span>
+<!-- Ayah 5 -->
+<span>ٱهْدِنَا ٱلصِّرَٰطَ ٱلْمُسْتَقِيمَ</span>
+<span aria-label="Ayah 5" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">٥</span>
+</span>
+<!-- Ayah 6 -->
+<span>صِرَٰطَ ٱلَّذِينَ أَنْعَمْتَ عَلَيْهِمْ</span>
+<span aria-label="Ayah 6" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">٦</span>
+</span>
+<!-- Ayah 7 -->
+<span>غَيْرِ ٱلْمَغْضُوبِ عَلَيْهِمْ وَلَا ٱلضَّآلِّينَ</span>
+<span aria-label="Ayah 7" class="inline-flex items-center justify-center align-middle w-6 h-6 rounded-full border border-[#C9A24B] bg-[#F4EBD7]/40 text-[#C9A24B] text-[11px] font-bold mx-1.5 select-none" dir="ltr">
+<span class="font-body font-bold text-[#8A6B1F]">٧</span>
+</span>
+</div>
+<!-- Scripture Footer Note -->
+<div class="relative z-10 mt-6 pt-3 border-t border-[#E4E0D5]/60 flex items-center justify-between text-[11px] text-[#5F7169]">
+<span class="flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-[#0E6B5C]"></span>
+            Hafs 'an 'Asim recitation
+          </span>
+<span class="italic font-serif">Al-Mushaf Ash-Sharif</span>
+</div>
+</article>
+<!-- AUDIO PLAYER CARD (STICKY EMBEDDED CONTROLLER) -->
+<section class="bg-white rounded-2xl border border-[#E4E0D5] p-4 shadow-sm shadow-[#12211D]/5 space-y-3.5">
+<!-- Reciter Meta & Live Wave Indicator -->
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-full bg-[#0E6B5C]/10 flex items-center justify-center text-[#0E6B5C]">
+<span class="material-symbols-outlined text-[20px]" data-icon="graphic_eq">graphic_eq</span>
+</div>
+<div>
+<p class="font-headline font-bold text-[14px] text-[#12211D] leading-tight">
+                Al-Fatihah — Full Surah
+              </p>
+<p class="text-[11px] font-medium text-[#5F7169]">
+                Mishary Rashid Alafasy
+              </p>
+</div>
+</div>
+<!-- Speed Chip -->
+<div class="flex items-center gap-1.5">
+<button class="bg-[#F4EBD7] text-[#8A6B1F] text-[11px] font-bold px-2 py-0.5 rounded-full hover:bg-[#ebd9b0] transition-colors">
+              1.0x
+            </button>
+<button class="text-[#5F7169] hover:text-[#0E6B5C] p-1 rounded-full" title="Playback repeat">
+<span class="material-symbols-outlined text-[18px]" data-icon="repeat">repeat</span>
+</button>
+</div>
+</div>
+<!-- Scrubber Progress Bar & Timestamps -->
+<div class="space-y-1.5">
+<div class="relative w-full h-2 bg-[#E4E0D5] rounded-full overflow-visible flex items-center cursor-pointer">
+<!-- Active emerald track (48% played) -->
+<div class="h-full bg-[#0E6B5C] rounded-full w-[48%] relative">
+<!-- Manuscript gold knob -->
+<span class="absolute -right-1.5 -top-1 w-3.5 h-3.5 rounded-full bg-[#C9A24B] border-2 border-white shadow-sm ring-1 ring-[#C9A24B]/30"></span>
+</div>
+</div>
+<div class="flex justify-between text-[11px] font-mono text-[#5F7169] tabular-nums px-0.5">
+<span>0:28</span>
+<span>0:58</span>
+</div>
+</div>
+<!-- Controls Row -->
+<div class="flex items-center justify-between pt-0.5 px-4">
+<!-- Ayah Previous -->
+<button aria-label="Previous Ayah" class="text-[#5F7169] hover:text-[#12211D] p-2 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[22px]" data-icon="skip_previous">skip_previous</span>
+</button>
+<!-- Replay -15s -->
+<button aria-label="Rewind 15 seconds" class="text-[#5F7169] hover:text-[#12211D] p-2 transition-colors active:scale-95 flex items-center">
+<span class="material-symbols-outlined text-[22px]" data-icon="replay_10">replay_10</span>
+</button>
+<!-- Central Primary Play/Pause Button -->
+<button aria-label="Pause recitation" class="w-12 h-12 rounded-full bg-[#0E6B5C] text-white flex items-center justify-center shadow-md shadow-[#0E6B5C]/25 hover:bg-[#0A4A3F] active:scale-95 transition-all">
+<span class="material-symbols-outlined text-[24px] fill-icon" data-icon="pause" data-weight="fill">pause</span>
+</button>
+<!-- Forward +15s -->
+<button aria-label="Fast forward 15 seconds" class="text-[#5F7169] hover:text-[#12211D] p-2 transition-colors active:scale-95 flex items-center">
+<span class="material-symbols-outlined text-[22px]" data-icon="forward_10">forward_10</span>
+</button>
+<!-- Ayah Next -->
+<button aria-label="Next Ayah" class="text-[#5F7169] hover:text-[#12211D] p-2 transition-colors active:scale-95">
+<span class="material-symbols-outlined text-[22px]" data-icon="skip_next">skip_next</span>
+</button>
+</div>
+</section>
+</main>
+<!-- FLOATING PILL BOTTOM NAV (SHARED COMPONENT) -->
+<!-- Destination count: 3 | Active Tab: Quran -->
+<nav aria-label="Primary navigation" class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2">
+<div class="bg-white/95 dark:bg-stone-900/95 rounded-full mx-6 mb-4 shadow-xl shadow-emerald-950/5 ring-1 ring-stone-200/50 dark:ring-stone-800 flex items-center justify-around w-full py-1.5 px-3 backdrop-blur-md">
+<!-- Tab 1: Home (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 active:scale-95" href="#home">
+<span class="material-symbols-outlined text-[19px]" data-icon="mosque">mosque</span>
+<span class="font-label tracking-wide">Home</span>
+</a>
+<!-- Tab 2: Quran (ACTIVE) -->
+<a aria-current="page" class="flex items-center gap-2 bg-emerald-800 dark:bg-emerald-700 text-white rounded-full px-4 py-2 text-xs font-semibold hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 active:scale-95" href="#quran">
+<span class="material-symbols-outlined text-[19px] fill-icon" data-icon="menu_book" data-weight="fill">menu_book</span>
+<span class="font-label tracking-wide">Quran</span>
+</a>
+<!-- Tab 3: Azkar (Inactive) -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 active:scale-95" href="#azkar">
+<span class="material-symbols-outlined text-[19px]" data-icon="fingerprint">fingerprint</span>
+<span class="font-label tracking-wide">Azkar</span>
+</a>
+</div>
+</nav>
+</div>
+</body></html>

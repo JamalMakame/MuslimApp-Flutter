@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Deen - Qibla Direction</title>
+<!-- Google Fonts: Plus Jakarta Sans & Manrope -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS CDN -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            deen: {
+              emerald: '#0E6B5C',
+              'emerald-depth': '#0A4A3F',
+              gold: '#C9A24B',
+              'gold-tint': '#F4EBD7',
+              ivory: '#F8F6F1',
+              surface: '#FFFFFF',
+              ink: '#12211D',
+              sage: '#5F7169',
+              hairline: '#E4E0D5',
+              mapland: '#EFEBE0',
+              mapsea: '#E5DFD1'
+            }
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          fontFamily: {
+            headline: ["Plus Jakarta Sans", "sans-serif"],
+            display: ["Plus Jakarta Sans", "sans-serif"],
+            body: ["Manrope", "sans-serif"],
+            label: ["Manrope", "sans-serif"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      line-height: 1;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    .material-symbols-outlined.fill {
+      font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    /* Gentle atmospheric compass drift */
+    @keyframes compass-idle {
+      0%, 100% { transform: rotate(0deg); }
+      50% { transform: rotate(1.2deg); }
+    }
+    .needle-subtle-drift {
+      animation: compass-idle 5s ease-in-out infinite;
+    }
+    /* Subtle pulsing ring for Qibla alignment */
+    @keyframes gold-halo {
+      0%, 100% { opacity: 0.25; transform: scale(1); }
+      50% { opacity: 0.65; transform: scale(1.14); }
+    }
+    .gold-pulse-ring {
+      animation: gold-halo 3s ease-in-out infinite;
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-[#F8F6F1] text-deen-ink font-body antialiased min-h-screen selection:bg-deen-gold-tint selection:text-deen-emerald flex justify-center pb-28">
+<!-- Mobile Viewport Wrapper (393px width constraint) -->
+<main class="w-full max-w-[393px] min-h-[852px] flex flex-col relative px-5 pt-3">
+<!-- TOP APP BAR -->
+<header class="flex items-center justify-between py-3 mb-2">
+<!-- Back Action -->
+<button aria-label="Go back" class="w-10 h-10 rounded-full bg-white border border-deen-hairline flex items-center justify-center text-deen-ink shadow-sm hover:text-deen-emerald active:scale-95 transition-all" type="button">
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_back">arrow_back</span>
+</button>
+<!-- Center / Right Status Meta Cluster -->
+<div class="flex items-center gap-2">
+<!-- Sensor Calibration Status Chip -->
+<div class="flex items-center gap-1.5 px-2.5 py-1 bg-white border border-deen-hairline rounded-full shadow-xs">
+<span class="relative flex h-2 w-2">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-deen-gold opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2 w-2 bg-deen-gold"></span>
+</span>
+<span class="font-label text-[11px] font-semibold text-deen-ink">Calibrated</span>
+</div>
+<!-- Location Badge -->
+<div class="flex items-center gap-1 px-3 py-1 bg-white border border-deen-hairline rounded-full shadow-xs">
+<span class="material-symbols-outlined text-deen-emerald text-[15px]" data-icon="location_on">location_on</span>
+<span class="font-headline text-[11px] font-semibold text-deen-ink">Zanzibar, Tanzania</span>
+</div>
+</div>
+</header>
+<!-- SCREEN TITLE & CONTEXT -->
+<section class="mt-1 mb-4">
+<div class="flex items-center gap-2 mb-1">
+<span class="font-label text-[11px] font-semibold uppercase tracking-[0.08em] text-deen-sage">Prayer Orientation</span>
+<span class="h-px flex-1 bg-deen-hairline max-w-[36px]"></span>
+</div>
+<div class="flex items-baseline justify-between">
+<h1 class="font-headline text-[24px] font-bold tracking-tight text-deen-ink leading-tight">Qibla Direction</h1>
+<span class="text-[12px] font-semibold text-deen-emerald bg-deen-gold-tint px-2.5 py-0.5 rounded-full">Bearing 256° WSW</span>
+</div>
+<p class="font-body text-[13px] text-deen-sage mt-0.5">Face the Kaaba for prayer from your current position</p>
+</section>
+<!-- CENTERPIECE COMPASS CARD -->
+<section class="relative bg-white rounded-[24px] border border-deen-hairline p-5 shadow-sm mb-4 overflow-hidden">
+<!-- Watermark 8-Pointed Star Pattern (Opac <= 10%) -->
+<div class="absolute -top-10 -right-10 w-44 h-44 opacity-[0.05] pointer-events-none text-deen-gold">
+<svg aria-hidden="true" class="w-full h-full fill-current" viewbox="0 0 100 100">
+<polygon points="50,0 64,36 100,50 64,64 50,100 36,64 0,50 36,36"></polygon>
+<polygon points="50,7 60,39 93,50 60,61 50,93 40,61 7,50 40,39" transform="rotate(45 50 50)"></polygon>
+</svg>
+</div>
+<!-- Live Compass Interactive Container -->
+<div class="flex flex-col items-center justify-center pt-2">
+<div class="relative w-[246px] h-[246px] rounded-full flex items-center justify-center">
+<!-- Outer Gold Hairline Border Ring -->
+<div class="absolute inset-0 rounded-full border border-deen-gold/40 shadow-inner"></div>
+<!-- Compass Disc Body -->
+<div class="relative w-[236px] h-[236px] rounded-full bg-[#F8F6F1] border border-deen-hairline shadow-xs flex items-center justify-center select-none">
+<!-- Circular Degree Dial (Rotatable canvas/ticks) -->
+<svg aria-hidden="true" class="absolute inset-0 w-full h-full" viewbox="0 0 240 240">
+<defs>
+<line id="tick-major" stroke="#C9A24B" stroke-linecap="round" stroke-width="1.5" x1="120" x2="120" y1="6" y2="15"></line>
+<line id="tick-minor" stroke="#C9A24B" stroke-opacity="0.6" stroke-width="0.8" x1="120" x2="120" y1="8" y2="13"></line>
+</defs>
+<!-- Circle track -->
+<circle cx="120" cy="120" fill="none" r="111" stroke="#E4E0D5" stroke-width="0.75"></circle>
+<circle cx="120" cy="120" fill="none" opacity="0.4" r="98" stroke="#C9A24B" stroke-dasharray="2 3" stroke-width="0.5"></circle>
+<!-- Degree Ticks generated around 360° -->
+<!-- Every 30° major ticks, every 10° minor ticks -->
+<g stroke="#C9A24B">
+<!-- 0 N -->
+<use href="#tick-major"></use>
+<use href="#tick-minor" transform="rotate(10 120 120)"></use>
+<use href="#tick-minor" transform="rotate(20 120 120)"></use>
+<!-- 30 -->
+<use href="#tick-major" transform="rotate(30 120 120)"></use>
+<use href="#tick-minor" transform="rotate(40 120 120)"></use>
+<use href="#tick-minor" transform="rotate(50 120 120)"></use>
+<!-- 60 -->
+<use href="#tick-major" transform="rotate(60 120 120)"></use>
+<use href="#tick-minor" transform="rotate(70 120 120)"></use>
+<use href="#tick-minor" transform="rotate(80 120 120)"></use>
+<!-- 90 E -->
+<use href="#tick-major" transform="rotate(90 120 120)"></use>
+<use href="#tick-minor" transform="rotate(100 120 120)"></use>
+<use href="#tick-minor" transform="rotate(110 120 120)"></use>
+<!-- 120 -->
+<use href="#tick-major" transform="rotate(120 120 120)"></use>
+<use href="#tick-minor" transform="rotate(130 120 120)"></use>
+<use href="#tick-minor" transform="rotate(140 120 120)"></use>
+<!-- 150 -->
+<use href="#tick-major" transform="rotate(150 120 120)"></use>
+<use href="#tick-minor" transform="rotate(160 120 120)"></use>
+<use href="#tick-minor" transform="rotate(170 120 120)"></use>
+<!-- 180 S -->
+<use href="#tick-major" transform="rotate(180 120 120)"></use>
+<use href="#tick-minor" transform="rotate(190 120 120)"></use>
+<use href="#tick-minor" transform="rotate(200 120 120)"></use>
+<!-- 210 -->
+<use href="#tick-major" transform="rotate(210 120 120)"></use>
+<use href="#tick-minor" transform="rotate(220 120 120)"></use>
+<use href="#tick-minor" transform="rotate(230 120 120)"></use>
+<!-- 240 -->
+<use href="#tick-major" transform="rotate(240 120 120)"></use>
+<use href="#tick-minor" transform="rotate(250 120 120)"></use>
+<!-- 270 W -->
+<use href="#tick-major" transform="rotate(270 120 120)"></use>
+<use href="#tick-minor" transform="rotate(280 120 120)"></use>
+<use href="#tick-minor" transform="rotate(290 120 120)"></use>
+<!-- 300 -->
+<use href="#tick-major" transform="rotate(300 120 120)"></use>
+<use href="#tick-minor" transform="rotate(310 120 120)"></use>
+<use href="#tick-minor" transform="rotate(320 120 120)"></use>
+<!-- 330 -->
+<use href="#tick-major" transform="rotate(330 120 120)"></use>
+<use href="#tick-minor" transform="rotate(340 120 120)"></use>
+<use href="#tick-minor" transform="rotate(350 120 120)"></use>
+</g>
+<!-- Radial crosshair lines -->
+<line stroke="#E4E0D5" stroke-dasharray="2 3" stroke-width="0.75" x1="120" x2="120" y1="28" y2="212"></line>
+<line stroke="#E4E0D5" stroke-dasharray="2 3" stroke-width="0.75" x1="28" x2="212" y1="120" y2="120"></line>
+</svg>
+<!-- Cardinal Typography Labels -->
+<span class="absolute top-4 left-1/2 -translate-x-1/2 font-headline text-[13px] font-bold text-deen-emerald flex flex-col items-center">
+              N
+              <span class="w-1 h-1 rounded-full bg-deen-gold -mt-0.5"></span>
+</span>
+<span class="absolute right-4.5 top-1/2 -translate-y-1/2 font-headline text-[12px] font-semibold text-deen-ink">E</span>
+<span class="absolute bottom-4 left-1/2 -translate-x-1/2 font-headline text-[12px] font-semibold text-deen-ink">S</span>
+<span class="absolute left-4.5 top-1/2 -translate-y-1/2 font-headline text-[12px] font-semibold text-deen-ink">W</span>
+<!-- SPECIFIC TARGET GLYPH: 256° Qibla Marker (West-Southwest) -->
+<!-- Calculation: radius ~100px from center (118, 118), angle 256° (where 0° is North / top) -->
+<div class="absolute" style="top: calc(50% + 24px); left: calc(50% - 98px); transform: translate(-50%, -50%);">
+<!-- Pulsing Ring -->
+<div class="absolute -inset-1.5 rounded-full border border-deen-gold gold-pulse-ring pointer-events-none"></div>
+<!-- Kaaba Marker Badge -->
+<div class="relative w-8 h-8 rounded-full bg-deen-surface border border-deen-gold shadow-sm flex items-center justify-center text-deen-ink z-10" title="Qibla 256° Target">
+<!-- Kaaba Minimal Architectural Icon -->
+<svg class="text-deen-emerald" fill="none" height="15" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" viewbox="0 0 24 24" width="15">
+<rect fill="#12211D" height="14" rx="1.5" width="14" x="5" y="5"></rect>
+<line stroke="#C9A24B" stroke-width="2" x1="5" x2="19" y1="9" y2="9"></line>
+<line stroke="#C9A24B" stroke-width="1" x1="8" x2="16" y1="13" y2="13"></line>
+</svg>
+</div>
+</div>
+<!-- COMPASS DUAL-POINT NEEDLE (Oriented toward 256° with breathing drift) -->
+<div class="absolute w-full h-full needle-subtle-drift flex items-center justify-center pointer-events-none" id="qiblaNeedle" style="transform: rotate(256deg);">
+<!-- Top Emerald Point toward Qibla Target -->
+<div class="relative w-7 h-[178px] flex flex-col items-center justify-between">
+<!-- Point A: Emerald Needle Head (facing Kaaba bearing) -->
+<div class="w-0 h-0 border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-b-[84px] border-b-deen-emerald relative">
+<!-- Spine accent in Manuscript Gold -->
+<div class="absolute -bottom-[84px] left-[-0.75px] w-[1.5px] h-[84px] bg-deen-gold"></div>
+<!-- Gold luminous tip -->
+<div class="absolute -bottom-1.5 left-[-3px] w-1.5 h-1.5 rounded-full bg-deen-gold shadow-xs"></div>
+</div>
+<!-- Point B: Counter-balance tail -->
+<div class="w-0 h-0 border-l-[6px] border-l-transparent border-r-[6px] border-r-transparent border-t-[72px] border-t-deen-sage/40 relative">
+<div class="absolute top-[-72px] left-[-0.5px] w-[1px] h-[72px] bg-deen-hairline"></div>
+</div>
+</div>
+</div>
+<!-- Center Pivot Core Pin (Manuscript Gold concentric rings) -->
+<div class="absolute w-7 h-7 rounded-full bg-white border border-deen-hairline shadow-md flex items-center justify-center z-20 pointer-events-none">
+<div class="w-4 h-4 rounded-full bg-deen-gold flex items-center justify-center shadow-inner">
+<div class="w-1.5 h-1.5 rounded-full bg-white"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Info Row Immediately Below Dial -->
+<div class="w-full flex items-center justify-between px-2 pt-5 border-t border-deen-hairline mt-4">
+<div class="flex flex-col">
+<span class="font-label text-[10px] font-semibold uppercase tracking-wider text-deen-sage">Current Qibla Bearing</span>
+<span class="font-headline text-[20px] font-bold text-deen-ink tabular-nums leading-snug">256°</span>
+</div>
+<div class="h-8 w-px bg-deen-hairline"></div>
+<div class="flex flex-col items-end">
+<span class="font-label text-[10px] font-semibold uppercase tracking-wider text-deen-sage">Distance to Makkah</span>
+<div class="flex items-center gap-1.5">
+<span class="font-headline text-[15px] font-bold text-deen-emerald tabular-nums">3,412 km</span>
+<span class="text-deen-sage text-xs">•</span>
+<span class="font-label text-[12px] font-semibold text-deen-sage">WSW</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- GUIDANCE & CALIBRATION TIP CARD -->
+<section class="bg-white rounded-[16px] border border-deen-hairline p-3.5 shadow-xs mb-4 flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-deen-gold-tint flex-shrink-0 flex items-center justify-center text-deen-gold border border-deen-gold/20">
+<span class="material-symbols-outlined text-[20px]" data-icon="screen_rotation">screen_rotation</span>
+</div>
+<div class="flex-1">
+<h2 class="font-headline text-[13px] font-bold text-deen-ink leading-tight">Phone Alignment Tip</h2>
+<p class="font-body text-[12px] text-deen-sage mt-0.5 leading-snug">
+          Hold your phone flat — rotate until the emerald needle aligns with the gold Kaaba marker.
+        </p>
+</div>
+</section>
+<!-- SENSOR FALLBACK & 2D MAP SECTION -->
+<section class="mb-5">
+<div class="flex items-center justify-between mb-2 px-1">
+<span class="font-label text-[11px] font-semibold uppercase tracking-[0.08em] text-deen-sage">NO COMPASS SENSOR?</span>
+<span class="font-label text-[11px] text-deen-sage">Geodesic Direction</span>
+</div>
+<!-- Stylized 2D Map Thumbnail Card -->
+<div class="bg-white rounded-[16px] border border-deen-hairline overflow-hidden shadow-xs">
+<!-- Cartographic Visual Surface -->
+<div class="relative h-[106px] w-full bg-[#E5DFD1] overflow-hidden" data-location="Zanzibar, Tanzania" style="">
+<!-- Stylized Landmass Contours (Ivory & Warm Beige) -->
+<svg class="absolute inset-0 w-full h-full text-[#EFEBE0]" fill="currentColor" preserveaspectratio="none" viewbox="0 0 360 110">
+<!-- Stylized East Africa & Arabian Sea coastlines -->
+<path d="M-10,110 L-10,15 C40,25 70,8 110,22 C140,32 170,10 200,30 C220,44 260,15 310,25 C340,30 370,10 380,5 L380,110 Z"></path>
+<path d="M120,-10 C150,20 190,10 230,0 C260,-5 290,12 340,-10 Z" fill="#E8E3D6" opacity="0.6"></path>
+</svg>
+<!-- Subtle Lat/Long Grid Lines -->
+<div class="absolute inset-0 bg-[linear-gradient(to_right,#E4E0D5_1px,transparent_1px),linear-gradient(to_bottom,#E4E0D5_1px,transparent_1px)] bg-[size:36px_28px] opacity-40"></div>
+<!-- Geodesic Arc SVG: Zanzibar (Bottom-Right/South) to Makkah (North-West) -->
+<svg class="absolute inset-0 w-full h-full" fill="none" viewbox="0 0 350 106">
+<!-- Dashed geodesic route line -->
+<path d="M 278 78 Q 190 28 84 26" stroke="#0E6B5C" stroke-dasharray="4 4" stroke-linecap="round" stroke-width="2.2"></path>
+<!-- Midpoint Direction Arrow in Manuscript Gold -->
+<polygon fill="#C9A24B" points="186,43 176,38 181,49"></polygon>
+</svg>
+<!-- Marker 1: Zanzibar Origin (Bottom-Right) -->
+<div class="absolute bottom-3 right-8 flex items-center gap-1.5 bg-white/90 backdrop-blur-xs px-2 py-0.5 rounded-full border border-deen-hairline shadow-xs">
+<span class="w-2 h-2 rounded-full bg-deen-emerald"></span>
+<span class="font-headline text-[10px] font-bold text-deen-ink">You (Zanzibar)</span>
+</div>
+<!-- Marker 2: Makkah Destination (North-West) -->
+<div class="absolute top-3 left-6 flex items-center gap-1.5 bg-deen-emerald text-white px-2 py-0.5 rounded-full shadow-xs">
+<!-- Kaaba Icon Glyph -->
+<span class="w-1.5 h-1.5 rounded-xs bg-deen-gold"></span>
+<span class="font-headline text-[10px] font-bold tracking-wide">Makkah Al-Mukarramah</span>
+</div>
+</div>
+<!-- Card Action Footer -->
+<div class="p-3 bg-white flex items-center justify-between">
+<div class="flex items-center gap-1.5 text-deen-sage">
+<span class="material-symbols-outlined text-[17px] text-deen-emerald" data-icon="explore">explore</span>
+<span class="font-body text-[12px] font-medium">Verify through visual landmarks</span>
+</div>
+<button class="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-deen-hairline hover:border-deen-emerald/50 rounded-[12px] text-deen-ink hover:text-deen-emerald font-headline text-[12px] font-semibold transition-all active:scale-95 shadow-xs" type="button">
+<span class="material-symbols-outlined text-[16px] text-deen-gold" data-icon="map">map</span>
+            Open 2D Map View
+          </button>
+</div>
+</div>
+</section>
+<!-- FLOATING PILL BOTTOM NAVIGATION (Exact mapping to Shared Components JSON) -->
+<!-- Destination count: 3 | Items: Home, Quran, Azkar | Icons: mosque, menu_book, fingerprint -->
+<nav aria-label="Main Navigation" class="fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center max-w-md mx-auto p-2">
+<div class="flex items-center justify-between w-full mx-6 mb-4 px-3 py-2 bg-white/95 dark:bg-stone-900/95 backdrop-blur-md rounded-full shadow-lg shadow-emerald-950/5 ring-1 ring-stone-200/50">
+<!-- Tab 1: Home (Active context in general app hierarchy, styled per JSON) -->
+<a class="flex items-center gap-2 bg-emerald-800 dark:bg-emerald-700 text-white rounded-full px-4 py-2 text-xs font-semibold ease-out duration-200 active:scale-95" href="#home">
+<span class="material-symbols-outlined text-[18px]" data-icon="mosque" data-weight="fill" style="font-variation-settings: 'FILL' 1;">mosque</span>
+<span class="font-label text-xs font-semibold tracking-wide">Home</span>
+</a>
+<!-- Tab 2: Quran -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 ease-out active:scale-95" href="#quran">
+<span class="material-symbols-outlined text-[18px]" data-icon="menu_book">menu_book</span>
+<span class="font-label text-xs font-semibold tracking-wide">Quran</span>
+</a>
+<!-- Tab 3: Azkar -->
+<a class="flex items-center gap-2 text-stone-500 dark:text-stone-400 px-3 py-2 text-xs font-medium hover:text-emerald-800 dark:hover:text-emerald-300 transition-colors duration-200 ease-out active:scale-95" href="#azkar">
+<span class="material-symbols-outlined text-[18px]" data-icon="fingerprint">fingerprint</span>
+<span class="font-label text-xs font-semibold tracking-wide">Azkar</span>
+</a>
+</div>
+</nav>
+</main>
+<!-- Interactive Compass Simulation Script -->
+<script>
+    // Lightweight device orientation integration with gentle haptic fallback
+    (function initCompassMicroInteractions() {
+      const needle = document.getElementById('qiblaNeedle');
+      if (!needle) return;
+
+      // Listen to DeviceOrientation if permission is granted on mobile devices
+      if (window.DeviceOrientationEvent && typeof DeviceOrientationEvent.requestPermission !== 'function') {
+        window.addEventListener('deviceorientationabsolute', handleOrientation, true);
+        window.addEventListener('deviceorientation', handleOrientation, true);
+      }
+
+      function handleOrientation(event) {
+        let compassHeading = null;
+        if (event.webkitCompassHeading) {
+          // iOS compass heading
+          compassHeading = event.webkitCompassHeading;
+        } else if (event.alpha !== null) {
+          // Android device orientation fallback
+          compassHeading = 360 - event.alpha;
+        }
+
+        if (compassHeading !== null) {
+          needle.classList.remove('needle-subtle-drift');
+          // Qibla bearing from Zanzibar is 256 degrees
+          const relativeAngle = (256 - compassHeading + 360) % 360;
+          needle.style.transform = `rotate(${relativeAngle}deg)`;
+        }
+      }
+    })();
+  </script>
+</body></html>
