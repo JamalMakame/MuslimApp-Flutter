@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show SystemUiOverlayStyle;
 import 'package:get/get.dart';
 import 'package:hijri/hijri_calendar.dart';
 
@@ -27,13 +28,14 @@ class _SplashScreenState extends State<SplashScreen>
     vsync: this,
     duration: const Duration(milliseconds: 2400),
   )..forward();
+  late final Worker _readyWorker;
   bool _navigated = false;
 
   @override
   void initState() {
     super.initState();
     final app = Get.find<AppController>();
-    ever(app.ready, (r) => _go());
+    _readyWorker = ever(app.ready, (_) => _go());
     _progress.addStatusListener((s) {
       if (s == AnimationStatus.completed) _go();
     });
@@ -50,6 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
 
   @override
   void dispose() {
+    _readyWorker.dispose();
     _spin.dispose();
     _progress.dispose();
     super.dispose();
@@ -58,147 +61,157 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final hijri = HijriCalendar.now();
-    return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [
-              AppColors.emerald,
-              Color(0xFF0B5448),
-              AppColors.emeraldDeep,
-            ],
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: SystemUiOverlayStyle.light,
+      child: Scaffold(
+        body: Container(
+          key: const ValueKey('splash-background'),
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                AppColors.emerald,
+                Color(0xFF0B5448),
+                AppColors.emeraldDeep,
+              ],
+            ),
           ),
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // Gold hairline frame
-              Positioned.fill(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                        color: AppColors.gold.withValues(alpha: 0.15),
+          child: SafeArea(
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                // Gold hairline frame
+                Positioned.fill(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(
+                          color: AppColors.gold.withValues(alpha: 0.15),
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
-              Column(
-                children: [
-                  const Spacer(flex: 2),
-                  // Rosette + emblem
-                  SizedBox(
-                    width: 208,
-                    height: 208,
-                    child: Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        // Ambient glow
-                        Container(
-                          width: 170,
-                          height: 170,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                color: AppColors.gold.withValues(alpha: 0.25),
-                                blurRadius: 80,
-                                spreadRadius: 10,
+                Column(
+                  children: [
+                    const Spacer(flex: 2),
+                    // Rosette + emblem
+                    SizedBox(
+                      width: 208,
+                      height: 208,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          // Ambient glow
+                          Container(
+                            width: 170,
+                            height: 170,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                  color: AppColors.gold.withValues(alpha: 0.25),
+                                  blurRadius: 80,
+                                  spreadRadius: 10,
+                                ),
+                              ],
+                            ),
+                          ),
+                          RotationTransition(
+                            turns: _spin,
+                            child: CustomPaint(
+                              size: const Size(208, 208),
+                              painter: _RosettePainter(),
+                            ),
+                          ),
+                          Container(
+                            width: 128,
+                            height: 128,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.emeraldDeep.withValues(
+                                alpha: 0.55,
                               ),
-                            ],
-                          ),
-                        ),
-                        RotationTransition(
-                          turns: _spin,
-                          child: CustomPaint(
-                            size: const Size(208, 208),
-                            painter: _RosettePainter(),
-                          ),
-                        ),
-                        Container(
-                          width: 128,
-                          height: 128,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.emeraldDeep.withValues(
-                              alpha: 0.55,
+                              border: Border.all(
+                                color: AppColors.gold.withValues(alpha: 0.35),
+                              ),
                             ),
-                            border: Border.all(
-                              color: AppColors.gold.withValues(alpha: 0.35),
+                            child: Image.asset(
+                              'assets/images/deen_dome.png',
+                              width: 64,
+                              height: 64,
+                              filterQuality: FilterQuality.high,
                             ),
                           ),
-                          child: const Icon(
-                            Icons.mosque,
-                            color: AppColors.gold,
-                            size: 56,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 28),
-                  Text(
-                    'appName'.tr,
-                    style: AppTheme.headline(
-                      42,
-                      weight: FontWeight.w800,
-                      color: AppColors.ivory,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'tagline'.tr.toUpperCase(),
-                    style: AppTheme.body(
-                      11,
-                      weight: FontWeight.w500,
-                      color: AppColors.ivory.withValues(alpha: 0.7),
-                      letterSpacing: 3.4,
-                    ),
-                  ),
-                  const Spacer(flex: 3),
-                  // Progress hairline
-                  SizedBox(
-                    width: 176,
-                    child: AnimatedBuilder(
-                      animation: _progress,
-                      builder: (_, __) => LinearProgressIndicator(
-                        value: _progress.value,
-                        minHeight: 2,
-                        backgroundColor: AppColors.gold.withValues(alpha: 0.2),
-                        valueColor: const AlwaysStoppedAnimation(
-                          AppColors.gold,
-                        ),
-                        borderRadius: BorderRadius.circular(2),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'preparing'.tr,
-                    style: AppTheme.body(
-                      12,
-                      color: AppColors.ivory.withValues(alpha: 0.6),
+                    const SizedBox(height: 28),
+                    Text(
+                      'appName'.tr,
+                      style: AppTheme.headline(
+                        42,
+                        weight: FontWeight.w800,
+                        color: AppColors.ivory,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'hijriYear'.trParams({'year': '${hijri.hYear}'}),
-                    style: AppTheme.body(
-                      10,
-                      weight: FontWeight.w500,
-                      color: AppColors.gold.withValues(alpha: 0.45),
-                      letterSpacing: 1.8,
+                    const SizedBox(height: 8),
+                    Text(
+                      'tagline'.tr.toUpperCase(),
+                      style: AppTheme.body(
+                        11,
+                        weight: FontWeight.w500,
+                        color: AppColors.ivory.withValues(alpha: 0.7),
+                        letterSpacing: 3.4,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            ],
+                    const Spacer(flex: 3),
+                    // Progress hairline
+                    SizedBox(
+                      width: 176,
+                      child: AnimatedBuilder(
+                        animation: _progress,
+                        builder: (_, __) => LinearProgressIndicator(
+                          value: _progress.value,
+                          minHeight: 2,
+                          backgroundColor: AppColors.gold.withValues(
+                            alpha: 0.2,
+                          ),
+                          valueColor: const AlwaysStoppedAnimation(
+                            AppColors.gold,
+                          ),
+                          borderRadius: BorderRadius.circular(2),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'preparing'.tr,
+                      style: AppTheme.body(
+                        12,
+                        color: AppColors.ivory.withValues(alpha: 0.6),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'hijriYear'.trParams({'year': '${hijri.hYear}'}),
+                      style: AppTheme.body(
+                        10,
+                        weight: FontWeight.w500,
+                        color: AppColors.gold.withValues(alpha: 0.45),
+                        letterSpacing: 1.8,
+                      ),
+                    ),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

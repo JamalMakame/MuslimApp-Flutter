@@ -28,6 +28,7 @@ abstract class AppTheme {
     double? letterSpacing,
   }) => TextStyle(
     fontFamily: AppFonts.headline,
+    fontFamilyFallback: const [AppFonts.quran],
     fontSize: size,
     fontWeight: weight,
     color: color,
@@ -44,6 +45,7 @@ abstract class AppTheme {
     double? letterSpacing,
   }) => TextStyle(
     fontFamily: AppFonts.body,
+    fontFamilyFallback: const [AppFonts.quran],
     fontSize: size,
     fontWeight: weight,
     color: color,

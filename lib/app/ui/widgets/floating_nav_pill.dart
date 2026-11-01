@@ -38,20 +38,23 @@ class FloatingNavPill extends StatelessWidget {
             ),
           ],
         ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            for (final (key, icon, route, label) in _items)
-              _NavItem(
-                icon: icon,
-                label: label.tr,
-                selected: key == active,
-                onTap: () {
-                  if (key == active) return;
-                  Get.offAllNamed(route);
-                },
-              ),
-          ],
+        child: LayoutBuilder(
+          builder: (context, constraints) => Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              for (final (key, icon, route, label) in _items)
+                _NavItem(
+                  icon: icon,
+                  label: label.tr,
+                  selected: key == active,
+                  compact: constraints.maxWidth < 320,
+                  onTap: () {
+                    if (Get.currentRoute == route) return;
+                    Get.offAllNamed(route);
+                  },
+                ),
+            ],
+          ),
         ),
       ),
     );
@@ -63,46 +66,51 @@ class _NavItem extends StatelessWidget {
     required this.icon,
     required this.label,
     required this.selected,
+    required this.compact,
     required this.onTap,
   });
 
   final IconData icon;
   final String label;
   final bool selected;
+  final bool compact;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 220),
-        curve: Curves.easeOut,
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-        decoration: BoxDecoration(
-          color: selected ? AppColors.emerald : Colors.transparent,
-          borderRadius: BorderRadius.circular(999),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              icon,
-              size: 19,
-              color: selected ? Colors.white : AppColors.sage,
-            ),
-            if (selected) ...[
-              const SizedBox(width: 6),
-              Text(
-                label,
-                style: AppTheme.body(
-                  12,
-                  weight: FontWeight.w600,
-                  color: Colors.white,
-                ),
+    return Tooltip(
+      message: label,
+      child: GestureDetector(
+        onTap: onTap,
+        behavior: HitTestBehavior.opaque,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 220),
+          curve: Curves.easeOut,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+          decoration: BoxDecoration(
+            color: selected ? AppColors.emerald : Colors.transparent,
+            borderRadius: BorderRadius.circular(999),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                icon,
+                size: 19,
+                color: selected ? Colors.white : AppColors.sage,
               ),
+              if (selected && !compact) ...[
+                const SizedBox(width: 6),
+                Text(
+                  label,
+                  style: AppTheme.body(
+                    12,
+                    weight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );

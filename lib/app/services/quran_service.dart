@@ -30,11 +30,28 @@ class QuranService {
   final List<Map<int, String>> _en = [];
   final List<Map<int, String>> _sw = [];
   bool _loaded = false;
+  Future<void>? _loading;
 
   bool get isLoaded => _loaded;
 
   Future<void> load() async {
     if (_loaded) return;
+    final pending = _loading ??= _load();
+    try {
+      await pending;
+    } catch (_) {
+      if (identical(_loading, pending)) {
+        _loading = null;
+        surahs = [];
+        _ar.clear();
+        _en.clear();
+        _sw.clear();
+      }
+      rethrow;
+    }
+  }
+
+  Future<void> _load() async {
     final metaRaw = await rootBundle.loadString('assets/json/surahs.json');
     surahs = (jsonDecode(metaRaw)['surahs'] as List)
         .map((e) => Surah.fromJson(e))
@@ -83,6 +100,52 @@ class QuranService {
 
   /// First ayah number (global) of a surah — for verse_key lookups.
   int firstGlobalAyah(int surahNumber) => _ar[surahNumber - 1].first.number;
+
+  // ---- Per-ayah audio + offline download -----------------------------------
+  /// Per-ayah reciters served by the islamic.network CDN.
+  /// Key = edition id; `name` is a stable display label.
+  static const reciters = <String, String>{
+    'ar.alafasy': 'Mishary Alafasy',
+    'ar.abdulbasitmurattal': 'Abdul Basit',
+    'ar.husary': 'Al-Husary',
+    'ar.minshawi': 'Al-Minshawi',
+  };
+
+  /// Per-ayah MP3 URL on the islamic.network CDN.
+  String ayahAudioUrl(String edition, int globalAyah) =>
+      'https://cdn.islamic.network/quran/audio/128/$edition/$globalAyah.mp3';
+
+  /// Global ayah numbers of one surah (for download iteration).
+  List<int> globalAyahs(int surahNumber) =>
+      _ar[surahNumber - 1].map((a) => a.number).toList();
+
+  /// Download manifest: {edition: {surahNumber: totalBytes}}.
+  Map<String, Map<String, int>> get downloadedAudio =>
+      ((_s.read<Map>(StorageService.kDownloadedAudio)) ?? {}).map(
+        (k, v) => MapEntry(
+          k.toString(),
+          (v as Map).map((k2, v2) => MapEntry(k2.toString(), v2 as int)),
+        ),
+      );
+
+  Future<void> markDownloaded(String edition, int surah, int bytes) async {
+    final m = downloadedAudio;
+    m.putIfAbsent(edition, () => {})[surah.toString()] = bytes;
+    await _s.write(StorageService.kDownloadedAudio, m);
+  }
+
+  Future<void> unmarkDownloaded(String edition, int surah) async {
+    final m = downloadedAudio;
+    m[edition]?.remove(surah.toString());
+    if (m[edition]?.isEmpty ?? false) m.remove(edition);
+    await _s.write(StorageService.kDownloadedAudio, m);
+  }
+
+  bool isDownloaded(String edition, int surah) =>
+      downloadedAudio[edition]?[surah.toString()] != null;
+
+  int? downloadedBytes(String edition, int surah) =>
+      downloadedAudio[edition]?[surah.toString()];
 
   // ---- Last-read + bookmarks (storage) ------------------------------------
   (int surah, int ayah, int page)? get lastRead {

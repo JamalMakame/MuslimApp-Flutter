@@ -2,7 +2,9 @@ import 'package:get/get.dart';
 
 import '../controllers/app_controller.dart';
 import '../controllers/azkar_controller.dart';
+import '../controllers/calendar_controller.dart';
 import '../controllers/home_controller.dart';
+import '../controllers/memorize_controller.dart';
 import '../controllers/qibla_controller.dart';
 import '../controllers/quran_controller.dart';
 import '../controllers/reader_controller.dart';
@@ -10,7 +12,9 @@ import '../controllers/settings_controller.dart';
 import '../controllers/tasbeeh_controller.dart';
 import '../ui/screens/azkar_categories_screen.dart';
 import '../ui/screens/azkar_detail_screen.dart';
+import '../ui/screens/calendar_screen.dart';
 import '../ui/screens/home_screen.dart';
+import '../ui/screens/memorize_screen.dart';
 import '../ui/screens/onboarding_screen.dart';
 import '../ui/screens/qibla_screen.dart';
 import '../ui/screens/quran_index_screen.dart';
@@ -28,9 +32,11 @@ abstract class Routes {
   static const azkar = '/azkar';
   static const tasbeeh = '/tasbeeh';
   static const settings = '/settings';
-  // Dynamic: '/reader/1', '/azkar-detail/catMorning'
+  static const calendar = '/calendar';
+  // Dynamic: '/reader/1', '/azkar-detail/catMorning', '/memorize/1'
   static String reader(int surah) => '/reader/$surah';
   static String azkarDetail(String bucket) => '/azkar-detail/$bucket';
+  static String memorize(int surah) => '/memorize/$surah';
 }
 
 /// Everything the app needs up-front (storage-backed prefs, boot
@@ -89,6 +95,19 @@ class AppPages {
           () => AzkarDetailController(Get.parameters['bucket']!),
           tag: 'azkar_${Get.parameters['bucket']}',
         );
+      }),
+    ),
+    GetPage(
+      name: Routes.calendar,
+      page: () => const CalendarScreen(),
+      binding: BindingsBuilder(() => Get.lazyPut(() => CalendarController())),
+    ),
+    GetPage(
+      name: '/memorize/:surah',
+      page: () => const MemorizeScreen(),
+      binding: BindingsBuilder(() {
+        final n = int.parse(Get.parameters['surah']!);
+        Get.lazyPut(() => MemorizeController(n));
       }),
     ),
   ];

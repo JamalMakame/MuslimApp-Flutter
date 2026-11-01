@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../services/notification_service.dart';
 import '../services/prayer_service.dart';
+import '../services/storage_service.dart';
 import 'settings_controller.dart';
 
 /// Prayer times for Home — recomputed when settings/location change,
@@ -13,6 +14,10 @@ class HomeController extends GetxController {
   final _prayers = PrayerService();
 
   final day = Rx<PrayerDay?>(null);
+  final currentDate = DateTime.now().obs;
+  final hijriOffset = StorageService.instance
+      .readInt(StorageService.kMoonOffset)
+      .obs;
   Timer? _ticker;
 
   /// Rotating daily-inspiration index.
@@ -33,6 +38,10 @@ class HomeController extends GetxController {
   }
 
   void recompute() {
+    currentDate.value = DateTime.now();
+    hijriOffset.value = StorageService.instance.readInt(
+      StorageService.kMoonOffset,
+    );
     if (!settings.hasLocation) return;
     day.value = _prayers.compute(
       lat: settings.latitude.value!,

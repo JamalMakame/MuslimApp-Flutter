@@ -1,8 +1,7 @@
-# Design Index — Phase 1 Screens
+# Design Index — Screens
 
 Stitch project `8790583281255569810` · Design system `assets/14074008453126267617`
-("Muslim App Emerald & Gold"). Working app title in mockups: **Deen**
-(final name can be changed at implementation time).
+("Muslim App Emerald & Gold"). Approved app title: **Deen**.
 
 Design language spec: [`DESIGN.md`](DESIGN.md)
 Artifacts: `screens/NN-<name>.png` (mockup render) + `.html` (full source
@@ -14,20 +13,24 @@ with Tailwind tokens — use for exact spacing/colors in Flutter).
 | 02 | Welcome & Onboarding | `02-onboarding` | `5a8e7ffd466f4690ad5b976e4bc057ec` | `/onboarding` (first-run only) |
 | 03 | Salah Times — Home | `03-home` | `1f1affe681b940cfbfba93a9042d905f` | `/home` (tab 0) |
 | 04 | Quran Index | `04-quran-index` | `bf6d8b00220a4025b1d736741d03cb7d` | `/quran` (tab 1) |
-| 05 | Quran Reader (Al-Fatihah) | `05-reader` | `2712376381374ab7b117aac487e9e7a5` | `/quran/:surah` |
-| 06 | Tafsir bottom sheet | `06-tafsir` | — (state of reader) | `Get.bottomSheet` over `/quran/:surah` |
+| 05 | Quran Reader (Al-Fatihah) | `05-reader` | `2712376381374ab7b117aac487e9e7a5` | `/reader/:surah` |
+| 06 | Tafsir bottom sheet | `06-tafsir` | — (state of reader) | Bottom sheet over `/reader/:surah` |
 | 07 | Azkar categories | `07-azkar` | — | `/azkar` (tab 2) |
-| 08 | Azkar detail / counter | `08-azkar-detail` | — | `/azkar/:category` |
+| 08 | Azkar detail / counter | `08-azkar-detail` | — | `/azkar-detail/:bucket` |
 | 09 | Tasbeeh counter | `09-tasbeeh` | — | `/tasbeeh` (from Azkar tab / instant-dhikr card) |
 | 10 | Qibla compass | `10-qibla` | — | `/qibla` (from Home) |
 | 11 | Settings | `11-settings` | — | `/settings` (nav pill) |
+| 12 | Hijri Calendar | `12-calendar` | `1843bccb37cb4ab3a68e34bd6a245c58` | `/calendar` (from Home Hijri date) |
+| 13 | Memorize / Audio (Hifz) | `13-memorize` | `11dc40b25ea241f696d993b7b364a544` | `/memorize/:surah` (from Reader) |
+
+On iOS, `LaunchScreen.storyboard` shows a static emerald Deen mark before
+Flutter can render `/splash`. Regenerate the matching native and Flutter dome
+artwork with `swift ios/generate_splash.swift`.
 
 ## Navigation model
 
-Floating pill nav with 3 primary tabs — **Home · Quran · Azkar** — plus a
-4th **Settings** slot shown in the mockups. Implementation note: either
-extend the pill to 4 items or move Settings to a header gear; decide at
-build time (settings access pattern differs from daily-ritual tabs).
+The approved floating pill has four slots: **Home · Quran · Azkar · Settings**.
+On smaller screens it shows icons with accessible tooltips.
 
 Qibla is a pushed route from Home (no nav pill state of its own — mockup
 shows Home active). Tafsir is a modal sheet, not a route.

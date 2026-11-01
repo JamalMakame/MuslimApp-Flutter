@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/settings_controller.dart';
+import '../../services/audio_cache_service.dart';
 import '../../services/location_service.dart';
 import '../../services/storage_service.dart';
 import '../../theme/app_theme.dart';
@@ -520,9 +521,15 @@ class SettingsScreen extends GetView<SettingsController> {
           FilledButton(
             style: FilledButton.styleFrom(backgroundColor: Colors.redAccent),
             onPressed: () async {
-              await StorageService.instance.clearAll();
-              Get.back();
-              Get.offAllNamed('/onboarding');
+              try {
+                await AudioCacheService.clearAllAudio();
+                await StorageService.instance.clearAll();
+                Get.back();
+                Get.offAllNamed('/onboarding');
+              } catch (_) {
+                Get.back();
+                Get.snackbar('clearLocalData'.tr, 'clearFailed'.tr);
+              }
             },
             child: Text(
               'clear'.tr,

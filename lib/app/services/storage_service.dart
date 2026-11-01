@@ -43,6 +43,15 @@ class StorageService {
   static const kTasbeehStreak = 'tasbeeh_streak';
   static const kTasbeehHaptics = 'tasbeeh_haptics';
   static const kAzkarProgress = 'azkar_progress'; // {date: {catKey: doneCount}}
+  static const kMoonOffset = 'moon_offset'; // -2..+2 days
+  static const kCalPrimary = 'cal_primary'; // 'hijri' | 'gregorian'
+  static const kReciter = 'reciter'; // islamic.network edition id
+  static const kMemRepeat = 'mem_repeat';
+  static const kMemAutoAdvance = 'mem_auto_advance';
+  static const kMemSpeed = 'mem_speed';
+  static const kMemPosition = 'mem_position'; // {surah: last selected ayah}
+  static const kDownloadedAudio =
+      'downloaded_audio'; // {edition: {surah: bytes}}
 
   // ---- Generic helpers ----------------------------------------------------
   T? read<T>(String key) => _box.read<T>(key);

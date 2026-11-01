@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' show DateFormat;
 import '../../controllers/home_controller.dart';
 import '../../controllers/settings_controller.dart';
 import '../../routes/app_pages.dart';
+import '../../services/hijri_date_service.dart';
 import '../../services/prayer_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
@@ -25,6 +26,12 @@ class HomeScreen extends GetView<HomeController> {
         child: Obx(() {
           final day = controller.day.value;
           final locale = settings.localeCode.value;
+          final now = controller.currentDate.value;
+          final hijri = HijriDateService.on(now, controller.hijriOffset.value);
+          final hijriLabel =
+              '${hijri.hDay} '
+              '${HijriDateService.monthName(hijri.hMonth, locale)} '
+              '${hijri.hYear}';
           return ListView(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 110),
             children: [
@@ -40,11 +47,37 @@ class HomeScreen extends GetView<HomeController> {
                           style: AppTheme.headline(22, weight: FontWeight.w800),
                         ),
                         const SizedBox(height: 3),
-                        Text(
-                          day == null
-                              ? ''
-                              : '${DateFormat('EEE d MMM y', locale).format(day.now)} · ${day.hijri.toFormat('d MMMM yyyy')}',
-                          style: AppTheme.body(12, color: AppColors.sage),
+                        InkWell(
+                          key: const ValueKey('home-calendar-link'),
+                          onTap: () async {
+                            final home = controller;
+                            await Get.toNamed(Routes.calendar);
+                            if (!home.isClosed) home.recompute();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Flexible(
+                                  child: Text(
+                                    '${DateFormat('EEE d MMM y', locale).format(now)} · $hijriLabel',
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: AppTheme.body(
+                                      12,
+                                      color: AppColors.sage,
+                                    ),
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.chevron_right,
+                                  color: AppColors.emerald,
+                                  size: 16,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -86,7 +119,8 @@ class HomeScreen extends GetView<HomeController> {
               const SizedBox(height: 18),
 
               // ---- Hero ---------------------------------------------------
-              if (day != null) _HeroCard(day: day, locale: locale),
+              if (day != null)
+                _HeroCard(day: day, locale: locale, hijriLabel: hijriLabel),
               if (day == null)
                 _Card(
                   child: Padding(
@@ -275,9 +309,14 @@ class _Card extends StatelessWidget {
 }
 
 class _HeroCard extends StatelessWidget {
-  const _HeroCard({required this.day, required this.locale});
+  const _HeroCard({
+    required this.day,
+    required this.locale,
+    required this.hijriLabel,
+  });
   final PrayerDay day;
   final String locale;
+  final String hijriLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -339,7 +378,7 @@ class _HeroCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    day.hijri.toFormat('d MMMM yyyy'),
+                    hijriLabel,
                     style: AppTheme.body(
                       11,
                       color: AppColors.ivory.withValues(alpha: 0.75),

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 
 import '../../controllers/reader_controller.dart';
 import '../../controllers/settings_controller.dart';
+import '../../routes/app_pages.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
 import '../widgets/tafsir_sheet.dart';
@@ -114,6 +115,15 @@ class QuranReaderScreen extends GetView<ReaderController> {
                     ),
                   ),
                   const Spacer(),
+                  _ChipBtn(
+                    icon: Icons.graphic_eq,
+                    label: 'hifzMode'.tr,
+                    onTap: () async {
+                      if (c.playing.value) await c.player.pause();
+                      Get.toNamed(Routes.memorize(s.number));
+                    },
+                  ),
+                  const SizedBox(width: 8),
                   _ChipBtn(
                     icon: Icons.text_fields,
                     label: 'A+A-',

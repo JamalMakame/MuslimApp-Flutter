@@ -1,6 +1,6 @@
 # Deen — Current Features & Architecture
 
-_Last updated: Phase 1 rebuild (local-first, no auth, no backend)._
+_Last updated: Phase 2 calendar and memorization implementation._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
@@ -16,8 +16,10 @@ enhancements (ayah audio streaming, remote search, remote tafsir).
 - **Compass:** `flutter_compass`
 - **Notifications:** `flutter_local_notifications` (local only; permission
   deferred until the user enables prayer notifications)
-- **Audio:** `audioplayers` (streams per-surah mp3quran URLs)
-- **Hijri dates:** `hijri`; formatting via `intl`
+- **Audio:** `audioplayers` (surah streams, per-ayah Hifz streams or
+  locally downloaded MP3s)
+- **Hijri dates:** `hijri` (Umm al-Qura estimate with local calibration);
+  formatting via `intl`
 - **Fonts (bundled):** Plus Jakarta Sans, Manrope, Amiri
 - **Sharing:** `share_plus`
 
@@ -41,15 +43,19 @@ English (Sahih Intl.), Swahili (Al-Barwani), or Arabic-only.
 | `/azkar-detail/:bucket` | Dhikr list + counters | AzkarDetailController |
 | `/tasbeeh` | Digital tasbeeh | TasbeehController |
 | `/qibla` | Compass | QiblaController |
+| `/calendar` | Dual Hijri/Gregorian calendar | CalendarController |
+| `/memorize/:surah` | Hifz and offline per-ayah audio | MemorizeController |
 | `/settings` | Settings | SettingsController (permanent) |
 
 Navigation shell: floating 4-slot pill — Home / Quran / Azkar / Settings.
-Qibla & Tasbeeh reachable from Home and Azkar respectively.
+Qibla and calendar are reached from Home; Hifz from the Quran reader.
 
 ## Screens
 
-- **Splash** — gold emblem + progress hairline; initializes services in
-  parallel, then routes to onboarding (first run) or home.
+- **Splash** — native iOS emerald launch with the Deen mark and wordmark
+  hands off to a full-screen Flutter splash with matching gold dome and
+  progress hairline; initializes services in parallel, then routes to
+  onboarding (first run) or home.
 - **Onboarding** — language pills, prayer location (GPS or manual city
   lookup), calculation method; privacy copy ("100% On-Device").
 - **Home** — emerald hero card with next-prayer countdown, prayer tiles
@@ -76,10 +82,20 @@ Qibla & Tasbeeh reachable from Home and Azkar respectively.
 - **Qibla** — painted compass dial (gold ticks, Kaaba marker, emerald
   needle), bearing + distance to Makkah, calibration chip, geodesic
   fallback section, compass-unavailable state on sensorless devices.
+- **Calendar** — dual Hijri/Gregorian month grid, White Days and upcoming
+  Islamic occasions; saves a -2 to +2 day local Hijri adjustment without
+  changing the actual Gregorian date. Moon phases are estimates, not
+  verified sightings.
+- **Hifz** — per-ayah playback, reciter selection, repeat loops, speed,
+  seeking, auto-advance and locally saved position. Per-surah downloads
+  resume after interruption; only verified complete sets show as offline.
+  Incomplete ayahs can still play from the local cache. Deletion requires
+  confirmation. Transliteration is not yet bundled or shown.
 - **Settings** — Prayer (method/madhab/notifications/location),
   Appearance (language/theme/text size), Quran & Audio (reciter, ayah
   audio, translations, translation language), Data & Privacy (clear
-  local data, privacy sheet), version footer.
+  local data (including downloaded audio after confirmation), privacy
+  sheet), version footer.
 
 ## Services (`lib/app/services/`)
 
@@ -89,7 +105,10 @@ Qibla & Tasbeeh reachable from Home and Azkar respectively.
   countdown, Hijri/Gregorian dates)
 - `notification_service` — tz-scheduled daily prayer reminders
 - `quran_service` — bundled surah/ayah data + translations, remote
-  search/tafsir with local cache, audio URL building
+  search/tafsir with local cache, audio URL building and download manifest
+- `audio_cache_service` — validates local MP3s, downloads per ayah via
+  temporary files, resumes interrupted downloads and verifies full surahs
+- `hijri_date_service` — converts dates using a locally persisted offset
 - `azkar_service` — bundled azkar.json → 10 display buckets + Other,
   daily-done persistence
 
@@ -103,12 +122,12 @@ Qibla & Tasbeeh reachable from Home and Azkar respectively.
 
 - `api.quran.com` — search, tafsir (fallback cache in storage)
 - `server8.mp3quran.net/afs` — Alafasy per-surah audio
-- `api.alquran.cloud` — meta (superseded by bundled data)
+- `cdn.islamic.network/quran/audio/128` — on-demand per-ayah Hifz MP3s
 
 ## Design
 
 Stitch-generated spec: `design/DESIGN.md`, artifacts in
-`design/screens/` (11 PNG + HTML), mapping in `design/DESIGN_INDEX.md`.
+`design/screens/` (13 PNG + HTML), mapping in `design/DESIGN_INDEX.md`.
 Emerald `#0E6B5C` / gold `#C9A24B` / ivory `#F8F6F1` palette.
 
 ## Tests
@@ -119,5 +138,12 @@ Emerald `#0E6B5C` / gold `#C9A24B` / ivory `#F8F6F1` palette.
 - `integration_test/locale_test.dart` — locale switch.
 - `integration_test/tour_test.dart` — per-screen screenshot tour.
 - `test/widget_test.dart` — theme token smoke test.
+- `test/calendar_test.dart` — calibrated dates, grid and event ordering.
+- `test/memorize_test.dart` — repeat decisions, mocked MP3 downloads,
+  interruption, stale cache and local-data cleanup.
+- `test/phase2_widget_test.dart` — calendar navigation, Arabic RTL and
+  narrow-screen Hifz layout without native audio or HTTP.
 
-`flutter analyze`: clean.
+Audio requires a connection for first play unless downloaded. Native
+streaming and lock-screen controls are not covered by widget tests;
+background audio controls remain a future phase.

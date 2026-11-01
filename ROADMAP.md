@@ -1,5 +1,10 @@
 # Muslim App — Product Roadmap & Direction
 
+> Planning snapshot from before Deen's local-first rebuild. Phase 1 is
+> implemented in English, Arabic and Swahili. Phase 2 now includes the
+> calibrated Hijri calendar and Hifz audio/offline cache; see `FEATURES.md`
+> for current behaviour and the remaining content and device-QA gaps.
+
 Direction: build incrementally — make the core, high-stakes utilities (precise
 prayer times, Qibla, Quran reading) flawless and offline-capable before adding
 complex features like social audio or AI. Privacy-first by design: local

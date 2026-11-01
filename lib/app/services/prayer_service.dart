@@ -1,5 +1,4 @@
 import 'package:adhan/adhan.dart';
-import 'package:hijri/hijri_calendar.dart';
 
 /// One prayer's computed data for the UI.
 class PrayerSlot {
@@ -24,7 +23,6 @@ class PrayerDay {
 
   /// Formatted via intl at presentation time — service keeps raw values.
   final DateTime now;
-  final HijriCalendar hijri;
 
   const PrayerDay({
     required this.slots,
@@ -33,7 +31,6 @@ class PrayerDay {
     required this.nextTime,
     required this.remaining,
     required this.now,
-    required this.hijri,
   });
 }
 
@@ -102,7 +99,6 @@ class PrayerService {
       nextTime: nextTime,
       remaining: nextTime.difference(DateTime.now()),
       now: DateTime.now(),
-      hijri: HijriCalendar.now(),
     );
   }
 
