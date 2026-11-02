@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../data/models.dart';
 import 'storage_service.dart';
 
-/// Bundled Quran corpus + remote extras (search, tafsir).
+/// Bundled Quran corpus + remote extras (tafsir, recitation audio).
 ///
 /// Offline-first: all 114 surahs' metadata, Uthmani text, and the
 /// English (Sahih Intl) & Swahili (Al-Barwani) translations are bundled
@@ -16,7 +16,38 @@ class QuranService {
   static final QuranService instance = QuranService._();
 
   static const audioBase = 'https://server8.mp3quran.net/afs/';
-  static const tafsirBase = 'https://api.quran.com/api/v4/verses/';
+  static const tafsirBase = 'https://api.quran.com/api/v4/tafsirs/';
+
+  /// quran.com tafsir resources: Ibn Kathir in Arabic (14) and the
+  /// abridged English edition (169). Swahili readers get the English one.
+  static int tafsirEdition(String lang) => lang == 'ar' ? 14 : 169;
+
+  static String tafsirUrl(String verseKey, {String lang = 'en'}) =>
+      '$tafsirBase${tafsirEdition(lang)}/by_ayah/$verseKey';
+
+  /// Plain text of a quran.com `by_ayah` response; null when it has none.
+  static String? parseTafsir(String body) {
+    final tafsir = (jsonDecode(body) as Map)['tafsir'];
+    final html = tafsir is Map ? tafsir['text'] as String? : null;
+    if (html == null) return null;
+    final text = html
+        .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
+        .replaceAll(
+          RegExp(r'</(p|h[1-6]|div|li)>', caseSensitive: false),
+          '\n\n',
+        )
+        .replaceAll(RegExp(r'<[^>]*>'), '')
+        .replaceAll('&nbsp;', ' ')
+        .replaceAll('&quot;', '"')
+        .replaceAll('&#39;', "'")
+        .replaceAll('&lt;', '<')
+        .replaceAll('&gt;', '>')
+        .replaceAll('&amp;', '&')
+        .replaceAll(RegExp(r'[ \t]+\n'), '\n')
+        .replaceAll(RegExp(r'\n{3,}'), '\n\n')
+        .trim();
+    return text.isEmpty ? null : text;
+  }
 
   StorageService get _s => StorageService.instance;
 
@@ -111,9 +142,13 @@ class QuranService {
     'ar.minshawi': 'Al-Minshawi',
   };
 
+  /// Bitrates the CDN actually serves per edition (Abdul Basit has no 128).
+  static const _reciterBitrate = <String, int>{'ar.abdulbasitmurattal': 192};
+
   /// Per-ayah MP3 URL on the islamic.network CDN.
   String ayahAudioUrl(String edition, int globalAyah) =>
-      'https://cdn.islamic.network/quran/audio/128/$edition/$globalAyah.mp3';
+      'https://cdn.islamic.network/quran/audio/'
+      '${_reciterBitrate[edition] ?? 128}/$edition/$globalAyah.mp3';
 
   /// Global ayah numbers of one surah (for download iteration).
   List<int> globalAyahs(int surahNumber) =>
@@ -293,29 +328,22 @@ class QuranService {
   );
 
   // ---- Remote: tafsir (cached locally once fetched) ------------------------
-  Future<String?> tafsir(String verseKey) async {
+  Future<String?> tafsir(String verseKey, {String lang = 'en'}) async {
+    final cacheKey = '${tafsirEdition(lang)}:$verseKey';
     final cache = (_s.read<Map>(StorageService.kTafsirCache) ?? {})
         .cast<String, String>();
-    if (cache.containsKey(verseKey)) return cache[verseKey];
+    if (cache.containsKey(cacheKey)) return cache[cacheKey];
 
     try {
       final res = await http
-          .get(Uri.parse('$tafsirBase$verseKey/tafsirs'))
+          .get(Uri.parse(tafsirUrl(verseKey, lang: lang)))
           .timeout(const Duration(seconds: 10));
       if (res.statusCode != 200) return null;
-      final list = jsonDecode(res.body)['tafsirs'] as List;
-      if (list.isEmpty) return null;
-      final text = (list.first['text'] ?? '') as String;
-      // Strip light HTML formatting.
-      final cleaned = text
-          .replaceAll(RegExp(r'<[^>]*>'), '')
-          .replaceAll('&quot;', '"')
-          .replaceAll('&#39;', "'")
-          .replaceAll('&amp;', '&')
-          .trim();
-      cache[verseKey] = cleaned;
+      final text = parseTafsir(res.body);
+      if (text == null) return null;
+      cache[cacheKey] = text;
       await _s.write(StorageService.kTafsirCache, cache);
-      return cleaned;
+      return text;
     } catch (_) {
       return null;
     }

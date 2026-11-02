@@ -321,7 +321,10 @@ class _TafsirBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder<String?>(
-      future: QuranService.instance.tafsir(verseKey),
+      future: QuranService.instance.tafsir(
+        verseKey,
+        lang: Get.locale?.languageCode ?? 'en',
+      ),
       builder: (_, snap) {
         if (snap.connectionState != ConnectionState.done) {
           return const Padding(
