@@ -8,11 +8,13 @@ import '../../data/daily_ayah.dart';
 import '../../data/daily_hadith.dart';
 import '../../routes/app_pages.dart';
 import '../../services/azkar_service.dart';
+import '../../services/habit_service.dart';
 import '../../services/hijri_date_service.dart';
 import '../../services/prayer_service.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
+import 'habits_screen.dart' show openPage;
 
 /// Salah Times home — date header, location chip, emerald next-prayer
 /// hero, prayer tiles (current highlighted gold), Qibla card,
@@ -259,6 +261,77 @@ class HomeScreen extends GetView<HomeController> {
                             color: AppColors.emerald,
                             size: 18,
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+
+              // ---- Reading habits -----------------------------------------
+              Obx(() {
+                final h = HabitService.instance;
+                h.version.value;
+                final today = DateTime.now();
+                final plan = h.khatmah;
+                final goal = h.goal;
+                final read = h.pagesOn(today);
+                final next = plan?.nextPage(today);
+                final portion = plan?.todayPortion(today);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _Card(
+                    key: const ValueKey('home-habits'),
+                    onTap: () => Get.toNamed(Routes.habits),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: AppColors.goldTint,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.local_fire_department,
+                              color: AppColors.gold,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  '${goal > 0 ? 'todayPages'.trParams({'n': '$read', 'g': '$goal'}) : 'todayPagesNoGoal'.trParams({'n': '$read'})} · ${'streakDays'.trParams({'n': '${h.currentStreak(today)}'})}',
+                                  style: AppTheme.body(
+                                    13.5,
+                                    weight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  plan == null
+                                      ? 'habitsSetup'.tr
+                                      : plan.complete
+                                      ? 'khatmahDone'.tr
+                                      : '${'khatmahDay'.trParams({'d': '${plan.dayIndex(today) + 1}', 'n': '${plan.days}'})} · ${'portionPages'.trParams({'a': '${portion!.$1}', 'b': '${portion.$2}'})}',
+                                  style: AppTheme.body(
+                                    11.5,
+                                    color: AppColors.sage,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          if (next != null)
+                            TextButton(
+                              key: const ValueKey('home-khatmah-start'),
+                              onPressed: () => openPage(next),
+                              child: Text('startReading'.tr),
+                            ),
                         ],
                       ),
                     ),

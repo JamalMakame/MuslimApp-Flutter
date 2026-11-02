@@ -73,6 +73,7 @@ void main() {
     'calendar': Routes.calendar,
     'settings': Routes.settings,
     'onboarding': Routes.onboarding,
+    'habits': Routes.habits,
   };
 
   for (final MapEntry(key: name, value: route) in screens.entries) {

@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 
 import '../data/models.dart';
+import '../services/habit_service.dart';
 import '../services/audio_cache_service.dart';
 import '../services/quran_service.dart';
 import '../services/recitation_audio.dart';
@@ -70,6 +71,33 @@ class MemorizeController extends GetxController {
   final round = 1.obs;
   Ayah get ayah => ayahs[ayahIndex.value];
 
+  /// Self-test: the ayah's words stay hidden until revealed one by one.
+  final testMode = false.obs;
+  final revealed = 0.obs;
+
+  List<String> get words =>
+      ayah.text.split(RegExp(r'\s+')).where((w) => w.isNotEmpty).toList();
+
+  String get maskedText {
+    final w = words;
+    return [
+      for (var i = 0; i < w.length; i++) i < revealed.value ? w[i] : '・・・',
+    ].join(' ');
+  }
+
+  void revealWord() {
+    if (revealed.value < words.length) revealed.value++;
+  }
+
+  void revealAll() => revealed.value = words.length;
+
+  /// Records the self-test result and moves on to the next ayah.
+  Future<void> grade(bool ok) async {
+    await HabitService.instance.markHifz(surahNumber, ayah.numberInSurah, ok);
+    revealed.value = 0;
+    if (ayahIndex.value < ayahs.length - 1) await next();
+  }
+
   final reciter = 'ar.alafasy'.obs;
   final repeat = 5.obs;
   final autoAdvance = true.obs;
@@ -118,6 +146,7 @@ class MemorizeController extends GetxController {
     ayahIndex.value = restored < 0 ? 0 : restored;
     rangeFrom.value = ayahIndex.value + 1;
     rangeTo.value = ayahs.length;
+    ever(ayahIndex, (_) => revealed.value = 0);
 
     unawaited(_refreshOfflineStatus());
     player.onPlayerComplete.listen((_) => unawaited(_onComplete()));

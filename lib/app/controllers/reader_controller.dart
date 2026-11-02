@@ -9,6 +9,7 @@ import '../data/models.dart';
 import '../services/audio_cache_service.dart';
 import '../services/quran_service.dart';
 import '../services/recitation_audio.dart';
+import '../services/habit_service.dart';
 import '../services/storage_service.dart';
 import 'settings_controller.dart';
 
@@ -150,11 +151,26 @@ class ReaderController extends GetxController {
 
   int? _savedAyah;
 
-  void _savePosition(Ayah a) {
+  void _savePosition(Ayah a, {bool reading = false}) {
+    final from = current.value;
     current.value = a;
+    if (reading) _recordReading(from, a);
     if (_savedAyah == a.numberInSurah) return;
     _savedAyah = a.numberInSurah;
     _quran.saveLastRead(surahNumber, a.numberInSurah, a.page);
+  }
+
+  /// A page counts as read once the reader scrolls past it onto the next
+  /// one, or reaches the surah's last ayah; opening, jumping and audio
+  /// don't count.
+  void _recordReading(Ayah? from, Ayah to) {
+    final habits = HabitService.instance;
+    if (from != null) {
+      for (var p = from.page; p < to.page; p++) {
+        habits.recordPage(p);
+      }
+    }
+    if (to.numberInSurah == ayahs.length) habits.recordPage(to.page);
   }
 
   /// Saves the ayah at the reading line (a quarter down the list) once the
@@ -165,7 +181,7 @@ class ReaderController extends GetxController {
         if (p.index >= 1 && p.index <= ayahs.length)
           (p.index, p.itemLeadingEdge),
     ], 0.25);
-    if (ayah != null) _savePosition(ayahs[ayah - 1]);
+    if (ayah != null) _savePosition(ayahs[ayah - 1], reading: true);
   }
 
   /// The last ayah whose start is at or above [line]; the first ayah when

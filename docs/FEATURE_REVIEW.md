@@ -163,6 +163,14 @@ Nothing tracks reading beyond "last read" today.
 - R3 **Optional daily reminder** to read, using the existing notification
   service. **S**
 
+**Phase 5 (built).** `HabitService` records pages read per day from the
+reader, a daily page goal and streak, a Khatmah plan (604 pages split over
+7–60 days, with catch-up), a daily reading reminder (ids 300+), and Hifz
+self-test results with spaced review (1/3/7/14/30/60 days). Home has a
+habits card; `/habits` holds the settings, the review-due list and
+memorised counts per surah. Not built: word-by-word reveal by audio, and
+counting ayahs (the goal is in pages).
+
 ---
 
 ## 6. Prayer times and reminders

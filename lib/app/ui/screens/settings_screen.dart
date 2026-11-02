@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../routes/app_pages.dart';
 
 import '../../controllers/settings_controller.dart';
+import '../../services/habit_service.dart';
 import '../../services/audio_cache_service.dart';
 import '../../services/location_service.dart';
 import '../../services/notification_service.dart';
@@ -579,6 +580,7 @@ class SettingsScreen extends GetView<SettingsController> {
                 await AudioCacheService.clearAllAudio();
                 await StorageService.instance.clearAll();
                 QuranService.instance.resetUserState();
+                HabitService.instance.reset();
                 controller.reload();
                 Get.updateLocale(controller.locale);
                 await NotificationService.instance.cancelAll();
