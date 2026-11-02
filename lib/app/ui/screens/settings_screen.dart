@@ -214,10 +214,34 @@ class SettingsScreen extends GetView<SettingsController> {
               title: 'quranAudioSection'.tr,
               children: [
                 _SettingsRow(
+                  key: const ValueKey('settings-reciter'),
                   title: 'defaultReciter'.tr,
                   subtitle: 'reciterDesc'.tr,
-                  trailingText: 'misharyAlafasy'.tr,
-                  onTap: () {},
+                  trailingTextFn: () =>
+                      QuranService.reciters[controller.reciter.value],
+                  rebuildKeys: [controller.reciter],
+                  onTap: () => Get.bottomSheet<void>(
+                    SafeArea(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          for (final e in QuranService.reciters.entries)
+                            ListTile(
+                              key: ValueKey('reciter-${e.key}'),
+                              title: Text(e.value, style: AppTheme.body(14)),
+                              trailing: controller.reciter.value == e.key
+                                  ? Icon(Icons.check, color: AppColors.emerald)
+                                  : null,
+                              onTap: () {
+                                Get.back<void>();
+                                controller.setReciter(e.key);
+                              },
+                            ),
+                        ],
+                      ),
+                    ),
+                    backgroundColor: AppColors.surface,
+                  ),
                 ),
                 Obx(
                   () => _SettingsSwitch(
@@ -581,11 +605,11 @@ class _Group extends StatelessWidget {
 
 class _SettingsRow extends StatelessWidget {
   const _SettingsRow({
+    super.key,
     required this.title,
     this.subtitle,
     this.subtitleFn,
     this.footer,
-    this.trailingText,
     this.trailingTextFn,
     this.trailingBadgeFn,
     this.danger = false,
@@ -597,7 +621,6 @@ class _SettingsRow extends StatelessWidget {
   final String? subtitle;
   final String? Function()? subtitleFn;
   final String? footer;
-  final String? trailingText;
   final String? Function()? trailingTextFn;
   final String? Function()? trailingBadgeFn;
   final bool danger;
@@ -679,10 +702,10 @@ class _SettingsRow extends StatelessWidget {
             ],
           ),
         ),
-        if ((trailingTextFn?.call() ?? trailingText) != null) ...[
+        if (trailingTextFn?.call() != null) ...[
           const SizedBox(width: 8),
           Text(
-            trailingTextFn?.call() ?? trailingText!,
+            trailingTextFn!.call()!,
             style: AppTheme.body(
               12,
               weight: FontWeight.w600,

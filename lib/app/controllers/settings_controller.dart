@@ -23,6 +23,9 @@ class SettingsController extends GetxController {
   final ayahAudio = false.obs;
   final translationLang = 'en'.obs;
 
+  /// Reciter for ayah-by-ayah audio in the reader and Hifz.
+  final reciter = 'ar.alafasy'.obs;
+
   final latitude = Rx<double?>(null);
   final longitude = Rx<double?>(null);
   final city = ''.obs;
@@ -38,6 +41,7 @@ class SettingsController extends GetxController {
   /// Re-reads every preference from storage (also after local data is
   /// cleared, so app-wide listeners see the defaults).
   void reload() {
+    reciter.value = _s.readStr(StorageService.kReciter, 'ar.alafasy');
     localeCode.value = _s.readStr(StorageService.kLocale, 'en');
     calcMethod.value = _s.readStr(StorageService.kCalcMethod, 'umm_al_qura');
     madhab.value = _s.readStr(StorageService.kMadhab, 'shafi');
@@ -95,6 +99,8 @@ class SettingsController extends GetxController {
       _persist(showTranslations, v, StorageService.kShowTranslations);
   Future<void> setAyahAudio(bool v) =>
       _persist(ayahAudio, v, StorageService.kAyahAudio);
+  Future<void> setReciter(String v) =>
+      _persist(reciter, v, StorageService.kReciter);
   Future<void> setTranslationLang(String v) =>
       _persist(translationLang, v, StorageService.kTranslationLang);
 

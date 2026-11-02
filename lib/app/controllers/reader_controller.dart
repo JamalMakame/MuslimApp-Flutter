@@ -8,6 +8,7 @@ import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import '../data/models.dart';
 import '../services/audio_cache_service.dart';
 import '../services/quran_service.dart';
+import '../services/recitation_audio.dart';
 import '../services/storage_service.dart';
 import 'settings_controller.dart';
 
@@ -119,7 +120,9 @@ class ReaderController extends GetxController {
   AudioPlayer _createPlayer() {
     final p = AudioPlayer();
     p.onPlayerStateChanged.listen((s) {
-      if (!isClosed) playing.value = s == PlayerState.playing;
+      if (isClosed) return;
+      playing.value = s == PlayerState.playing;
+      _reportAudio();
     });
     p.onDurationChanged.listen((d) {
       if (!isClosed) duration.value = d;
@@ -190,7 +193,9 @@ class ReaderController extends GetxController {
   Future<void> playFrom(int ayahInSurah) async {
     if (ayahInSurah < 1 || ayahInSurah > ayahs.length) return;
     final gen = ++_generation;
+    _attachAudio(ayahMode: true);
     playingAyah.value = ayahInSurah;
+    _reportAudio();
     highlightAyah.value = ayahInSurah;
     _savePosition(ayahs[ayahInSurah - 1]);
     unawaited(scrollToAyah(ayahInSurah));
@@ -223,10 +228,18 @@ class ReaderController extends GetxController {
       return;
     }
     if (playingAyah.value != null && position.value > Duration.zero) {
+      // Hifz may have taken the lock-screen controls meanwhile.
+      _attachAudio(ayahMode: true);
       await player.resume();
       return;
     }
+    // The full-surah stream is Alafasy; other reciters play ayah by ayah.
+    if (reciter != 'ar.alafasy') {
+      await playFrom(current.value?.numberInSurah ?? 1);
+      return;
+    }
     _generation++;
+    _attachAudio(ayahMode: false);
     playingAyah.value = null;
     audioLoading.value = true;
     try {
@@ -237,6 +250,48 @@ class ReaderController extends GetxController {
     } finally {
       audioLoading.value = false;
     }
+  }
+
+  /// Hands the lock-screen / notification controls to this reader.
+  /// Previous / next ayah only exist in ayah-by-ayah mode.
+  void _attachAudio({required bool ayahMode}) => RecitationAudio.attach(
+    this,
+    play: () async {
+      if (!playing.value) await toggleAudio();
+    },
+    pause: pauseAudio,
+    stop: () async {
+      _generation++;
+      playingAyah.value = null;
+      await _player?.stop();
+    },
+    next: ayahMode
+        ? () async {
+            final n = playingAyah.value;
+            if (n != null) await playFrom(n + 1);
+          }
+        : null,
+    prev: ayahMode
+        ? () async {
+            final n = playingAyah.value;
+            if (n != null) await playFrom(n - 1);
+          }
+        : null,
+  );
+
+  void _reportAudio() {
+    final n = playingAyah.value;
+    RecitationAudio.report(
+      this,
+      title: n == null
+          ? 'fullSurah'.trParams({'name': surah.nameSimple})
+          : 'playingAyah'.trParams({'name': surah.nameSimple, 'n': '$n'}),
+      artist: n == null
+          ? 'misharyAlafasy'.tr
+          : QuranService.reciters[reciter] ?? '',
+      playing: playing.value,
+      loading: audioLoading.value,
+    );
   }
 
   Future<void> pauseAudio() async {
@@ -281,6 +336,7 @@ class ReaderController extends GetxController {
   @override
   void onClose() {
     _generation++;
+    RecitationAudio.detach(this);
     _player?.dispose();
     _cache?.close();
     super.onClose();
