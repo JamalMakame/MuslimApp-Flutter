@@ -4,6 +4,7 @@ import '../controllers/app_controller.dart';
 import '../controllers/azkar_controller.dart';
 import '../controllers/calendar_controller.dart';
 import '../controllers/home_controller.dart';
+import '../controllers/prayer_reminder_controller.dart';
 import '../controllers/memorize_controller.dart';
 import '../controllers/qibla_controller.dart';
 import '../controllers/quran_controller.dart';
@@ -47,6 +48,7 @@ class AppBinding extends Bindings {
   void dependencies() {
     Get.put(SettingsController(), permanent: true);
     Get.put(AppController(), permanent: true);
+    Get.put(PrayerReminderController(), permanent: true);
   }
 }
 

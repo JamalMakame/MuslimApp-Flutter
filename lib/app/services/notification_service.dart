@@ -24,6 +24,12 @@ class NotificationService {
   bool _ready = false;
   String? _scheduledFor;
   bool _cleared = false;
+  Future<void> _queue = Future.value();
+
+  /// Runs [op] after every earlier schedule/cancel has finished, so a
+  /// cancel can never be overtaken by a schedule that started before it.
+  Future<void> _serial(Future<void> Function() op) =>
+      _queue = _queue.then((_) => op()).catchError((Object _) {});
 
   static const days = 7;
   static const _channelId = 'prayer_times';
@@ -90,7 +96,7 @@ class NotificationService {
     required List<PrayerReminder> reminders,
     required String Function(String key) title,
     required String Function(String key) body,
-  }) async {
+  }) => _serial(() async {
     if (signature == _scheduledFor) return;
     await init();
     await _plugin.cancelAll();
@@ -122,13 +128,13 @@ class NotificationService {
     }
     _scheduledFor = signature;
     _cleared = false;
-  }
+  });
 
-  Future<void> cancelAll() async {
+  Future<void> cancelAll() => _serial(() async {
     if (_cleared) return;
     await init();
     await _plugin.cancelAll();
     _scheduledFor = null;
     _cleared = true;
-  }
+  });
 }

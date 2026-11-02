@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
-import '../services/notification_service.dart';
 import '../services/prayer_service.dart';
 import '../services/storage_service.dart';
 import 'settings_controller.dart';
@@ -34,7 +33,6 @@ class HomeController extends GetxController {
       settings.calcMethod,
       settings.madhab,
     ], (_) => recompute());
-    ever(settings.notifyPrayers, (_) => _syncNotifications());
   }
 
   void recompute() {
@@ -48,51 +46,6 @@ class HomeController extends GetxController {
       lng: settings.longitude.value!,
       method: settings.calcMethod.value,
       madhab: settings.madhab.value,
-    );
-    _syncNotifications();
-  }
-
-  bool _askedPermission = false;
-
-  Future<void> _syncNotifications() async {
-    final notifications = NotificationService.instance;
-    if (!settings.notifyPrayers.value || !settings.hasLocation) {
-      await notifications.cancelAll();
-      return;
-    }
-    if (!_askedPermission) {
-      _askedPermission = true;
-      await notifications.requestPermission();
-    }
-    final lat = settings.latitude.value!;
-    final lng = settings.longitude.value!;
-    final method = settings.calcMethod.value;
-    final madhab = settings.madhab.value;
-    final now = DateTime.now();
-    final signature = [
-      lat,
-      lng,
-      method,
-      madhab,
-      Get.locale?.languageCode,
-      now.year,
-      now.month,
-      now.day,
-    ].join('|');
-    await notifications.schedule(
-      signature: signature,
-      reminders: NotificationService.plan(
-        (date) => _prayers.slotsOn(
-          date,
-          lat: lat,
-          lng: lng,
-          method: method,
-          madhab: madhab,
-        ),
-        now,
-      ),
-      title: (key) => key.tr,
-      body: (key) => 'prayerNotifyBody'.trParams({'prayer': key.tr}),
     );
   }
 
