@@ -54,6 +54,7 @@ dependencies:
   path_provider: ^2.1.6
   app_links: ^7.2.2
   scrollable_positioned_list: ^0.3.8
+  audio_service: ^0.18.19
 
 dev_dependencies:
   flutter_test:

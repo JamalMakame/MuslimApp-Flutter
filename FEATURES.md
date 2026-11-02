@@ -1,6 +1,6 @@
 # Deen — Current Features & Architecture
 
-_Last updated: ayah-level reader (ayah menu, ayah bookmarks + notes, next/previous surah, Juz tab)._
+_Last updated: listen anywhere (one reciter setting, Hifz ranges, background + lock-screen audio)._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
@@ -83,6 +83,13 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
   Audio bar: full surah (Alafasy stream) or ayah-by-ayah from the chosen
   ayah with the Hifz reciter (downloaded files when present), highlighting
   and scrolling to the ayah being recited; play/pause/seek/speed.
+- **Audio everywhere** — one reciter setting (Settings → Default
+  reciter) used by the reader's ayah-by-ayah playback and Hifz; with a
+  reciter other than Alafasy the reader's play button recites ayah by
+  ayah. Playback continues with the screen locked or the app in the
+  background (`audio_service` foreground service on Android, `audio`
+  background mode on iOS) with notification / lock-screen play, pause,
+  previous / next ayah and stop.
 - **Bookmarks** (`/bookmarks`, index header) — bookmarked ayahs newest
   first with Arabic snippet and note; edit note, delete, tap to open.
   Older surah bookmarks are migrated to ayah 1 of that surah.

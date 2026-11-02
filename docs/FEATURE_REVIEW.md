@@ -303,6 +303,11 @@ audio with highlight, the core of Q8) came with the menu. Continuous
 reading across surahs (rest of Q7) is not built; the footer's next-surah
 button covers it for now.
 
+Phase 3 is built: one reciter setting (H4), Hifz range with repeats (H1)
+and background / lock-screen audio through `audio_service` (H5) for the
+reader and Hifz. Audio still stops when you leave the reader or Hifz
+screen; a pause between repeats (rest of H4) is not built.
+
 | Phase | Contents | Why first |
 |---|---|---|
 | **1. Start anywhere** | Q2 data, Q1 Go-to sheet, S1 search shortcuts, Q4 live chips, Q11 deep links, D1 Ayah of the Day, D2 Continue on Home | Small changes on existing data; every later feature reuses `locate()` and the Go-to path |

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../controllers/memorize_controller.dart';
@@ -426,6 +427,41 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                           activeTrackColor: AppColors.emerald,
                         ),
                       ],
+                    ),
+                    const Divider(height: 24),
+                    InkWell(
+                      key: const ValueKey('hifz-range'),
+                      onTap: () => Get.dialog<void>(_RangeDialog(c: c)),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'hifzRange'.tr,
+                                  style: AppTheme.body(
+                                    14,
+                                    weight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  'hifzRangeValue'.trParams({
+                                    'from': '${c.rangeFrom.value}',
+                                    'to': '${c.rangeTo.value}',
+                                    'm': '${c.rangeRepeat.value}',
+                                  }),
+                                  style: AppTheme.body(
+                                    11,
+                                    color: AppColors.sage,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(Icons.chevron_right, color: AppColors.sage),
+                        ],
+                      ),
                     ),
                     const Divider(height: 24),
                     Wrap(
@@ -904,4 +940,108 @@ class _StepBtn extends StatelessWidget {
     ),
     icon: Icon(icon, size: 16, color: filled ? Colors.white : AppColors.sage),
   );
+}
+
+/// Pick the ayahs to practise and how many times to run through them.
+class _RangeDialog extends StatefulWidget {
+  const _RangeDialog({required this.c});
+
+  final MemorizeController c;
+
+  @override
+  State<_RangeDialog> createState() => _RangeDialogState();
+}
+
+class _RangeDialogState extends State<_RangeDialog> {
+  late final _from = TextEditingController(text: '${widget.c.rangeFrom.value}');
+  late final _to = TextEditingController(text: '${widget.c.rangeTo.value}');
+  late int _rounds = widget.c.rangeRepeat.value;
+
+  @override
+  void dispose() {
+    _from.dispose();
+    _to.dispose();
+    super.dispose();
+  }
+
+  int _read(TextEditingController t, int fallback) =>
+      int.tryParse(QuranService.westernDigits(t.text.trim())) ?? fallback;
+
+  Widget _field(String key, String label, TextEditingController t) => TextField(
+    key: ValueKey(key),
+    controller: t,
+    keyboardType: TextInputType.number,
+    inputFormatters: [
+      FilteringTextInputFormatter.allow(
+        RegExp('[0-9\u0660-\u0669\u06F0-\u06F9]'),
+      ),
+    ],
+    decoration: InputDecoration(
+      labelText: label,
+      helperText: '1–${widget.c.ayahs.length}',
+      border: const OutlineInputBorder(),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      backgroundColor: AppColors.surface,
+      title: Text('hifzRange'.tr, style: AppTheme.headline(16)),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _field('range-from', 'rangeFrom'.tr, _from),
+          const SizedBox(height: 10),
+          _field('range-to', 'rangeTo'.tr, _to),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              Expanded(child: Text('rangeRounds'.tr, style: AppTheme.body(13))),
+              IconButton(
+                key: const ValueKey('range-rounds-minus'),
+                onPressed: _rounds > 1 ? () => setState(() => _rounds--) : null,
+                icon: const Icon(Icons.remove),
+              ),
+              Text(
+                '${_rounds}x',
+                style: AppTheme.body(14, weight: FontWeight.w700),
+              ),
+              IconButton(
+                key: const ValueKey('range-rounds-plus'),
+                onPressed: _rounds < 10
+                    ? () => setState(() => _rounds++)
+                    : null,
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Get.back<void>(),
+          child: Text('cancel'.tr, style: AppTheme.body(13)),
+        ),
+        TextButton(
+          key: const ValueKey('range-save'),
+          onPressed: () {
+            final c = widget.c;
+            final from = _read(_from, 1);
+            final to = _read(_to, c.ayahs.length);
+            Get.back<void>();
+            c.setRange(from, to, _rounds);
+          },
+          child: Text(
+            'save'.tr,
+            style: AppTheme.body(
+              13,
+              weight: FontWeight.w700,
+              color: AppColors.emerald,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }

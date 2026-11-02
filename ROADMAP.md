@@ -73,6 +73,9 @@ availability are critical.
   ayah menu (play from here, bookmark, note, copy, share, tafsir, memorise
   from here), previous / next surah, Juz tab
   ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 2)
+- ✅ Listen anywhere: one reciter setting for reader + Hifz, Hifz range
+  (from–to, repeat the range), background and lock-screen audio
+  ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 3)
 - ✅ Quran text stays Arabic; bundled **translation layer** — English
   (Sahih International) and Swahili (Al-Barwani), or Arabic only
 - ✅ UI chrome (surah index, sort, search, bookmarks) localized; surah
