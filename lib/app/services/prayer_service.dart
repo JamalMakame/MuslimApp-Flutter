@@ -48,6 +48,29 @@ class PrayerService {
     return params;
   }
 
+  /// The six slots (fajr…isha, with sunrise) for one calendar [date].
+  List<PrayerSlot> slotsOn(
+    DateTime date, {
+    required double lat,
+    required double lng,
+    required String method,
+    required String madhab,
+  }) {
+    final t = PrayerTimes(
+      Coordinates(lat, lng),
+      DateComponents.from(date),
+      _paramsFor(method, madhab),
+    );
+    return [
+      PrayerSlot('fajr', t.fajr),
+      PrayerSlot('sunrise', t.sunrise),
+      PrayerSlot('dhuhr', t.dhuhr),
+      PrayerSlot('asr', t.asr),
+      PrayerSlot('maghrib', t.maghrib),
+      PrayerSlot('isha', t.isha),
+    ];
+  }
+
   PrayerDay compute({
     required double lat,
     required double lng,

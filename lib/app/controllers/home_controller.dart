@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
-import '../services/notification_service.dart';
 import '../services/prayer_service.dart';
 import '../services/storage_service.dart';
 import 'settings_controller.dart';
@@ -34,7 +33,6 @@ class HomeController extends GetxController {
       settings.calcMethod,
       settings.madhab,
     ], (_) => recompute());
-    ever(settings.notifyPrayers, (_) => _syncNotifications());
   }
 
   void recompute() {
@@ -49,18 +47,6 @@ class HomeController extends GetxController {
       method: settings.calcMethod.value,
       madhab: settings.madhab.value,
     );
-    _syncNotifications();
-  }
-
-  Future<void> _syncNotifications() async {
-    final d = day.value;
-    if (d == null) return;
-    if (settings.notifyPrayers.value) {
-      await NotificationService.instance.requestPermission();
-      await NotificationService.instance.scheduleFor(d, (key) => key.tr);
-    } else {
-      await NotificationService.instance.cancelAll();
-    }
   }
 
   @override
