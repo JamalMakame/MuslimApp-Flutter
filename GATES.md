@@ -44,3 +44,23 @@ Scope: Ship a truthful offline-first Hijri calendar and a working Quran memoriza
 
 - [x] G9: Compare native and Flutter splash composition against the approved design on narrow and full-size phone layouts.
   EVIDENCE: Reviewed the 208pt native transparent Deen mark, both compiled native storyboards and Flutter widget snapshots at 393x852 and 320x568 in en/ar/sw. The gradient fills the viewport, mark and wordmark are centered, Arabic remains RTL, status bar text is light and both native backdrops are emerald. Physical-iPhone launch still needs a visual check.
+
+## Offline Quran search
+
+- [ ] G10: Search the bundled Quran without HTTP across Arabic and both translations, including diacritics, exact verse references, deduplication and result limits.
+  CHECK: flutter test --no-pub test/quran_search_test.dart && printf 'offline corpus search passed\n'
+  EXPECT: offline corpus search passed
+  EVIDENCE: pending
+
+- [ ] G11: The Quran index searches without stale state, distinguishes empty queries from no matches and opens the selected ayah in the reader across en/ar/sw phone layouts.
+  CHECK: flutter test --no-pub test/quran_search_widget_test.dart && printf 'offline search UI passed\n'
+  EXPECT: offline search UI passed
+  EVIDENCE: pending
+
+- [ ] G12: Offline search preserves format, analysis and all existing unit/widget tests.
+  CHECK: dart format --output=none --set-exit-if-changed lib/app test && flutter analyze --no-pub && flutter test --no-pub test && printf 'offline search suite passed\n'
+  EXPECT: offline search suite passed
+  EVIDENCE: pending
+
+- [ ] G13: EN/AR/SW phone views retain the approved Quran index visual language, readable match sources, Arabic RTL and honest offline/limited-result copy.
+  EVIDENCE: pending
