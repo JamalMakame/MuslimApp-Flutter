@@ -191,6 +191,27 @@ void main() {
     expect(quran.bookmarkAt(2, 2), isNull);
   });
 
+  testWidgets('Arabic only: no translation in the reader or the copy', (
+    tester,
+  ) async {
+    await Get.find<SettingsController>().setTranslationLang('ar');
+    await pump(tester, Routes.reader(2));
+    expect(find.text(quran.translation(2, 1, 'en')), findsNothing);
+    await tap(tester, 'ayah-more-1');
+    await tap(tester, 'action-copy');
+    await settleToast(tester);
+    expect(clipboard, isNot(contains(quran.translation(2, 1, 'en'))));
+    expect(clipboard, contains('— Al-Baqarah 2:1'));
+  });
+
+  test('editing a note keeps the bookmark in its place', () async {
+    await quran.saveBookmark(2, 255);
+    await quran.saveBookmark(36, 58);
+    await quran.saveBookmark(2, 255, note: 'Kursi');
+    expect(quran.bookmarksRx.map((b) => b.verseKey), ['36:58', '2:255']);
+    expect(quran.bookmarkAt(2, 255)?.note, 'Kursi');
+  });
+
   testWidgets('header bookmark toggles the ayah being read', (tester) async {
     await pump(tester, Routes.reader(36, ayah: 58));
     await tap(tester, 'reader-bookmark');

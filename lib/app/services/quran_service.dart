@@ -309,9 +309,9 @@ class QuranService {
             created: DateTime.now(),
           )
         : old.withNote(note ?? old.note);
-    bookmarksRx
-      ..remove(old)
-      ..insert(0, b);
+    final at = old == null ? -1 : bookmarksRx.indexOf(old);
+    // A new bookmark goes first; a note edit keeps its place.
+    at < 0 ? bookmarksRx.insert(0, b) : bookmarksRx[at] = b;
     await _writeBookmarks();
   }
 

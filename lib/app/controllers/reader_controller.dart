@@ -177,11 +177,13 @@ class ReaderController extends GetxController {
     return best ?? first;
   }
 
-  String translationOf(int ayahInSurah) => _quran.translation(
-    surahNumber,
-    ayahInSurah,
-    settings.translationLang.value,
-  );
+  /// The chosen translation; empty when the reader is set to Arabic only.
+  String translationOf(int ayahInSurah) {
+    final lang = settings.translationLang.value;
+    return lang == 'ar'
+        ? ''
+        : _quran.translation(surahNumber, ayahInSurah, lang);
+  }
 
   /// Recites from [ayahInSurah] to the end of the surah, one ayah at a
   /// time (downloaded Hifz audio when present), following along.
