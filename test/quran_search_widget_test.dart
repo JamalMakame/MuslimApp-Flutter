@@ -68,7 +68,7 @@ void main() {
     );
     await tester.pumpWidget(
       GetMaterialApp(
-        theme: AppTheme.light,
+        theme: AppTheme.current,
         locale: Locale(locale),
         fallbackLocale: const Locale('en'),
         translations: DeenTranslations(),

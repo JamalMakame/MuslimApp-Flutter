@@ -26,11 +26,7 @@ class QuranIndexScreen extends GetView<QuranController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(
-                  Icons.bookmark_border,
-                  size: 18,
-                  color: AppColors.sage,
-                ),
+                Icon(Icons.bookmark_border, size: 18, color: AppColors.sage),
                 const SizedBox(width: 60),
                 Expanded(
                   child: Column(
@@ -51,7 +47,7 @@ class QuranIndexScreen extends GetView<QuranController> {
                     ],
                   ),
                 ),
-                const Icon(Icons.tune, size: 18, color: AppColors.sage),
+                Icon(Icons.tune, size: 18, color: AppColors.sage),
                 const SizedBox(width: 24),
               ],
             ),
@@ -65,7 +61,7 @@ class QuranIndexScreen extends GetView<QuranController> {
                 decoration: InputDecoration(
                   hintText: 'searchSurahAyah'.tr,
                   hintStyle: AppTheme.body(13, color: AppColors.sage),
-                  prefixIcon: const Icon(
+                  prefixIcon: Icon(
                     Icons.search,
                     size: 20,
                     color: AppColors.sage,
@@ -75,11 +71,11 @@ class QuranIndexScreen extends GetView<QuranController> {
                   contentPadding: const EdgeInsets.symmetric(vertical: 13),
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(999),
-                    borderSide: const BorderSide(color: AppColors.hairline),
+                    borderSide: BorderSide(color: AppColors.hairline),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(999),
-                    borderSide: const BorderSide(color: AppColors.emerald),
+                    borderSide: BorderSide(color: AppColors.emerald),
                   ),
                 ),
                 style: AppTheme.body(13.5),
@@ -163,7 +159,7 @@ class QuranIndexScreen extends GetView<QuranController> {
                             onTap: controller.toggleSort,
                             child: Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.sort,
                                   size: 14,
                                   color: AppColors.emerald,
@@ -292,7 +288,7 @@ class _ContinueCard extends StatelessWidget {
           Container(
             width: 40,
             height: 40,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.goldTint,
               shape: BoxShape.circle,
             ),
@@ -336,7 +332,7 @@ class _ContinueCard extends StatelessWidget {
                 color: AppColors.emerald,
               ),
             ),
-            label: const Icon(
+            label: Icon(
               Icons.chevron_right,
               color: AppColors.emerald,
               size: 17,

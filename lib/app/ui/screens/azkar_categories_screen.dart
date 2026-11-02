@@ -39,11 +39,7 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
             // Top row: location chip + action icons
             Row(
               children: [
-                const Icon(
-                  Icons.location_on,
-                  size: 15,
-                  color: AppColors.emerald,
-                ),
+                Icon(Icons.location_on, size: 15, color: AppColors.emerald),
                 const SizedBox(width: 4),
                 Text(
                   settings.placeLabel,
@@ -124,7 +120,7 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
                         Container(
                           width: 34,
                           height: 34,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             color: AppColors.goldTint,
                             shape: BoxShape.circle,
                           ),
@@ -188,15 +184,13 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
                             : c.featuredDone / c.featuredTotal,
                         minHeight: 7,
                         backgroundColor: AppColors.ivory,
-                        valueColor: const AlwaysStoppedAnimation(
-                          AppColors.emerald,
-                        ),
+                        valueColor: AlwaysStoppedAnimation(AppColors.emerald),
                       ),
                     ),
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.check_circle,
                           size: 13,
                           color: AppColors.emerald,
@@ -221,7 +215,7 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
                                   color: AppColors.emerald,
                                 ),
                               ),
-                              const Icon(
+                              Icon(
                                 Icons.chevron_right,
                                 size: 15,
                                 color: AppColors.emerald,
@@ -290,10 +284,10 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
               onTap: () => Get.toNamed(Routes.tasbeeh),
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppColors.emeraldDeep,
+                  color: AppColors.brandDeep,
                   borderRadius: BorderRadius.circular(16),
                   gradient: const LinearGradient(
-                    colors: [AppColors.emerald, AppColors.emeraldDeep],
+                    colors: [AppColors.brand, AppColors.brandDeep],
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                   ),
@@ -329,7 +323,7 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
                             'openCounter'.tr,
                             style: AppTheme.body(
                               10.5,
-                              color: AppColors.ivory.withValues(alpha: 0.7),
+                              color: AppColors.onBrand.withValues(alpha: 0.7),
                             ),
                           ),
                         ],
@@ -342,7 +336,7 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
                         color: AppColors.gold,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
+                      child: Icon(
                         Icons.fingerprint,
                         color: AppColors.emeraldDeep,
                         size: 21,
@@ -407,7 +401,7 @@ class _CategoryTile extends StatelessWidget {
               Container(
                 width: 44,
                 height: 44,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.goldTint,
                   shape: BoxShape.circle,
                 ),

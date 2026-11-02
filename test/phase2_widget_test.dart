@@ -124,7 +124,7 @@ void main() {
         key: const ValueKey('phase2-qa-frame'),
         child: GetMaterialApp(
           title: 'Deen',
-          theme: AppTheme.light,
+          theme: AppTheme.current,
           locale: const Locale('en'),
           fallbackLocale: const Locale('en'),
           translations: DeenTranslations(),

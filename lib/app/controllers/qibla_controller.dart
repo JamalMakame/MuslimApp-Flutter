@@ -15,7 +15,12 @@ class QiblaController extends GetxController {
 
   /// Device compass heading in degrees (0=N). null = sensor missing.
   final heading = Rx<double?>(null);
-  final calibrated = true.obs;
+  final calibrated = false.obs;
+
+  /// Heading error within ±30° (Android "medium"/"high" sensor accuracy,
+  /// iOS headingAccuracy); unknown or negative accuracy is not calibrated.
+  static bool isCalibrated(double? accuracy) =>
+      accuracy != null && accuracy > 0 && accuracy <= 30;
   StreamSubscription<CompassEvent>? _sub;
 
   /// Degrees from user position to the Kaaba.
@@ -61,7 +66,7 @@ class QiblaController extends GetxController {
     super.onInit();
     _sub = FlutterCompass.events?.listen((event) {
       heading.value = event.heading;
-      calibrated.value = (event.accuracy ?? 0) >= 0;
+      calibrated.value = isCalibrated(event.accuracy);
     });
   }
 

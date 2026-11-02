@@ -83,7 +83,7 @@ void main() {
     key: const ValueKey('splash-qa-frame'),
     child: GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.light,
+      theme: AppTheme.current,
       translations: DeenTranslations(),
       locale: Locale(language),
       fallbackLocale: const Locale('en'),

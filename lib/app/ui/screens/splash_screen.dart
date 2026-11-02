@@ -72,11 +72,7 @@ class _SplashScreenState extends State<SplashScreen>
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                AppColors.emerald,
-                Color(0xFF0B5448),
-                AppColors.emeraldDeep,
-              ],
+              colors: [AppColors.brand, Color(0xFF0B5448), AppColors.brandDeep],
             ),
           ),
           child: SafeArea(
@@ -134,7 +130,7 @@ class _SplashScreenState extends State<SplashScreen>
                             height: 128,
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
-                              color: AppColors.emeraldDeep.withValues(
+                              color: AppColors.brandDeep.withValues(
                                 alpha: 0.55,
                               ),
                               border: Border.all(
@@ -157,7 +153,7 @@ class _SplashScreenState extends State<SplashScreen>
                       style: AppTheme.headline(
                         42,
                         weight: FontWeight.w800,
-                        color: AppColors.ivory,
+                        color: AppColors.onBrand,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -166,7 +162,7 @@ class _SplashScreenState extends State<SplashScreen>
                       style: AppTheme.body(
                         11,
                         weight: FontWeight.w500,
-                        color: AppColors.ivory.withValues(alpha: 0.7),
+                        color: AppColors.onBrand.withValues(alpha: 0.7),
                         letterSpacing: 3.4,
                       ),
                     ),
@@ -190,13 +186,42 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'preparing'.tr,
-                      style: AppTheme.body(
-                        12,
-                        color: AppColors.ivory.withValues(alpha: 0.6),
-                      ),
-                    ),
+                    Obx(() {
+                      final app = Get.find<AppController>();
+                      if (!app.bootFailed.value) {
+                        return Text(
+                          'preparing'.tr,
+                          style: AppTheme.body(
+                            12,
+                            color: AppColors.onBrand.withValues(alpha: 0.6),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          Text(
+                            'bootFailed'.tr,
+                            textAlign: TextAlign.center,
+                            style: AppTheme.body(
+                              12,
+                              color: AppColors.onBrand.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          TextButton(
+                            key: const ValueKey('boot-retry'),
+                            onPressed: app.retryBoot,
+                            child: Text(
+                              'retry'.tr,
+                              style: AppTheme.body(
+                                13,
+                                weight: FontWeight.w700,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                     const SizedBox(height: 8),
                     Text(
                       'hijriYear'.trParams({'year': '${hijri.hYear}'}),

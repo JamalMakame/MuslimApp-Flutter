@@ -44,7 +44,7 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
           final repeatIcon = Container(
             width: 36,
             height: 36,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.goldTint,
               shape: BoxShape.circle,
             ),
@@ -204,7 +204,7 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                                     style: AppTheme.body(
                                       11,
                                       weight: FontWeight.w700,
-                                      color: const Color(0xFF8A6B1F),
+                                      color: AppColors.goldInk,
                                     ).copyWith(letterSpacing: 0.5),
                                   ),
                                 ],
@@ -606,7 +606,7 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                                 style: AppTheme.body(
                                   10,
                                   weight: FontWeight.w700,
-                                  color: const Color(0xFF8A6B1F),
+                                  color: AppColors.goldInk,
                                 ),
                               ),
                             ],
@@ -658,7 +658,7 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                         Container(
                           width: 36,
                           height: 36,
-                          decoration: const BoxDecoration(
+                          decoration: BoxDecoration(
                             color: AppColors.goldTint,
                             shape: BoxShape.circle,
                           ),
@@ -703,7 +703,7 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                             onPressed: c.downloadSurah,
                             style: OutlinedButton.styleFrom(
                               foregroundColor: AppColors.emerald,
-                              side: const BorderSide(color: AppColors.emerald),
+                              side: BorderSide(color: AppColors.emerald),
                               minimumSize: const Size(76, 44),
                             ),
                             child: Text('downloadBtn'.tr),
@@ -753,7 +753,7 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                                 await c.deleteDownload();
                               }
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.delete_outline,
                               size: 19,
                               color: AppColors.sage,
