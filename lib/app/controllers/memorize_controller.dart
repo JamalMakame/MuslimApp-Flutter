@@ -275,7 +275,13 @@ class MemorizeController extends GetxController {
     rangeTo.value = b;
     rangeRepeat.value = rounds.clamp(1, 10);
     round.value = 1;
-    await goTo(a - 1);
+    if (ayahIndex.value != a - 1) {
+      await goTo(a - 1);
+      return;
+    }
+    // Already on the first ayah: start its repetitions over.
+    repetition.value = 1;
+    if (playing.value || loadingAudio.value) await play(restart: true);
   }
 
   void _reportAudio() => RecitationAudio.report(
@@ -326,7 +332,11 @@ class MemorizeController extends GetxController {
     _loadedTrack = null;
     await player.stop();
     reciter.value = edition;
-    await _s.write(StorageService.kReciter, edition);
+    if (Get.isRegistered<SettingsController>()) {
+      await Get.find<SettingsController>().setReciter(edition);
+    } else {
+      await _s.write(StorageService.kReciter, edition);
+    }
     repetition.value = 1;
     position.value = Duration.zero;
     duration.value = Duration.zero;

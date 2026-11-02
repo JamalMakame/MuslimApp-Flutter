@@ -193,7 +193,7 @@ class ReaderController extends GetxController {
   Future<void> playFrom(int ayahInSurah) async {
     if (ayahInSurah < 1 || ayahInSurah > ayahs.length) return;
     final gen = ++_generation;
-    _attachAudio();
+    _attachAudio(ayahMode: true);
     playingAyah.value = ayahInSurah;
     _reportAudio();
     highlightAyah.value = ayahInSurah;
@@ -228,6 +228,8 @@ class ReaderController extends GetxController {
       return;
     }
     if (playingAyah.value != null && position.value > Duration.zero) {
+      // Hifz may have taken the lock-screen controls meanwhile.
+      _attachAudio(ayahMode: true);
       await player.resume();
       return;
     }
@@ -237,7 +239,7 @@ class ReaderController extends GetxController {
       return;
     }
     _generation++;
-    _attachAudio();
+    _attachAudio(ayahMode: false);
     playingAyah.value = null;
     audioLoading.value = true;
     try {
@@ -251,7 +253,8 @@ class ReaderController extends GetxController {
   }
 
   /// Hands the lock-screen / notification controls to this reader.
-  void _attachAudio() => RecitationAudio.attach(
+  /// Previous / next ayah only exist in ayah-by-ayah mode.
+  void _attachAudio({required bool ayahMode}) => RecitationAudio.attach(
     this,
     play: () async {
       if (!playing.value) await toggleAudio();
@@ -262,14 +265,18 @@ class ReaderController extends GetxController {
       playingAyah.value = null;
       await _player?.stop();
     },
-    next: () async {
-      final n = playingAyah.value;
-      if (n != null) await playFrom(n + 1);
-    },
-    prev: () async {
-      final n = playingAyah.value;
-      if (n != null) await playFrom(n - 1);
-    },
+    next: ayahMode
+        ? () async {
+            final n = playingAyah.value;
+            if (n != null) await playFrom(n + 1);
+          }
+        : null,
+    prev: ayahMode
+        ? () async {
+            final n = playingAyah.value;
+            if (n != null) await playFrom(n - 1);
+          }
+        : null,
   );
 
   void _reportAudio() {
