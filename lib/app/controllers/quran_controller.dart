@@ -13,7 +13,7 @@ class QuranController extends GetxController {
   final sortByRevelation = false.obs;
   final ayahResults = <AyahSearchResult>[].obs;
   final bookmarked = Rx<Set<int>>(<int>{});
-  final lastRead = Rx<(int, int, int)?>(null);
+  Rxn<(int, int, int)> get lastRead => _quran.lastReadRx;
 
   /// True when the result list was cut at [QuranService.defaultSearchLimit].
   final resultsLimited = false.obs;
@@ -24,7 +24,6 @@ class QuranController extends GetxController {
   void onInit() {
     super.onInit();
     bookmarked.value = _quran.bookmarks;
-    lastRead.value = _quran.lastRead;
   }
 
   List<Surah> get visibleSurahs {

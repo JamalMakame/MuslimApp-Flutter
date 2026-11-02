@@ -291,6 +291,11 @@ language, theme, text size, translations, reciter and data clearing.
 Ordered by what users will feel most, with "start anywhere" first. Each
 phase is one branch and one PR.
 
+Phase 1 is built: Go to sheet, search shortcuts, live chips, `deen://quran`
+links, Ayah of the Day and Continue reading on Home. It also fixed sajda
+ayahs, which were never marked because the corpus stores `sajda` as an
+object, not `true`.
+
 | Phase | Contents | Why first |
 |---|---|---|
 | **1. Start anywhere** | Q2 data, Q1 Go-to sheet, S1 search shortcuts, Q4 live chips, Q11 deep links, D1 Ayah of the Day, D2 Continue on Home | Small changes on existing data; every later feature reuses `locate()` and the Go-to path |

@@ -63,6 +63,10 @@ availability are critical.
 - ✅ Offline-first reading of bundled Uthmani text (Amiri font) in a
   mushaf-style reader; no network needed
 - ⬜ Indo-Pak script option / page-faithful mushaf layout
+- ✅ Start anywhere: Go to surah + ayah / juz / hizb / page, search
+  shortcuts (`juz 5`, `page 300`, `2:255-260`), `deen://quran/2/255`
+  links, live Juz/Hizb/Page chips, Continue reading + Ayah of the Day on
+  Home ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 1)
 - ✅ Surah bookmarks + last-read memory (saved as you scroll; Continue
   Reading resumes at that ayah)
 - ✅ Quran text stays Arabic; bundled **translation layer** — English

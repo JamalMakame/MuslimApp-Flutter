@@ -53,6 +53,12 @@ class Ayah {
   final int page;
   final bool sajda;
 
+  /// 1–240: the quarter of a hizb (rubʿ) this ayah is in; hizb is
+  /// `(hizbQuarter - 1) ~/ 4 + 1`.
+  final int hizbQuarter;
+  final int manzil;
+  final int ruku;
+
   const Ayah({
     required this.number,
     required this.numberInSurah,
@@ -60,7 +66,16 @@ class Ayah {
     required this.juz,
     required this.page,
     required this.sajda,
+    this.hizbQuarter = 1,
+    this.manzil = 1,
+    this.ruku = 1,
   });
+
+  int get hizb => (hizbQuarter - 1) ~/ 4 + 1;
+
+  /// "3", "3¼", "3½" or "3¾" — the hizb and the quarter of it.
+  String get hizbLabel =>
+      '$hizb${const ['', '¼', '½', '¾'][(hizbQuarter - 1) % 4]}';
 
   factory Ayah.fromJson(Map<String, dynamic> j) => Ayah(
     number: j['number'],
@@ -68,7 +83,10 @@ class Ayah {
     text: (j['text'] as String).replaceAll('﻿', ''),
     juz: j['juz'],
     page: j['page'],
-    sajda: j['sajda'] == true,
+    sajda: j['sajda'] != null && j['sajda'] != false,
+    hizbQuarter: j['hizbQuarter'] ?? 1,
+    manzil: j['manzil'] ?? 1,
+    ruku: j['ruku'] ?? 1,
   );
 }
 

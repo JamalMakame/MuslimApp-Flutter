@@ -6,12 +6,14 @@ import 'package:get/get.dart';
 import 'app/controllers/settings_controller.dart';
 import 'app/i18n/app_translations.dart';
 import 'app/routes/app_pages.dart';
+import 'app/services/link_service.dart';
 import 'app/services/storage_service.dart';
 import 'app/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await StorageService.init();
+  LinkService.instance.init();
   runApp(const DeenApp());
 }
 

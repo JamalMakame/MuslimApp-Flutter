@@ -1,6 +1,6 @@
 # Deen — Current Features & Architecture
 
-_Last updated: offline search, Android reminders, dark mode and daily cards._
+_Last updated: start anywhere in the Quran (Go to, search shortcuts, links, live chips)._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
@@ -60,17 +60,33 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
 - **Onboarding** — language pills, prayer location (GPS or manual city
   lookup), calculation method; privacy copy ("100% On-Device").
 - **Home** — emerald hero card with next-prayer countdown, prayer tiles
-  (current prayer highlighted gold), sunrise row, Qibla card, daily
-  Hadith of the Day / Dua of the Day cards (rotate daily, tap for full
-  text), Hijri + Gregorian dates.
-- **Quran index** — search field, Surahs/Ayat segment, continue-reading
-  card (last-read persisted), 114 surah tiles with gold-ring numbers,
+  (current prayer highlighted gold), sunrise row, Continue reading card
+  (last-read ayah with its juz/page; opens the reader there), Qibla card,
+  Ayah of the Day (40 well-known ayahs, rotates daily, opens the reader at
+  that ayah), Hadith of the Day / Dua of the Day cards (rotate daily, tap
+  for full text), Hijri + Gregorian dates.
+- **Quran index** — search field, Surahs/Ayat segment, Go to button,
+  continue-reading card (last-read persisted), 114 surah tiles with gold-ring numbers,
   Makki/Madani chips, revelation order, sort toggle, Juz-30 divider.
 - **Reader** — mushaf-style card with gold frame; flowing RTL Arabic with
   gold ayah medallions; basmala cartouche (suppressed for Al-Fatihah,
   where ayah 1 is the basmala, and At-Tawbah which has none); translation
-  section with per-ayah TAFSIR links; Juz/Page chips; text-size and
+  section with per-ayah TAFSIR links; ۞ at every hizb quarter; Juz /
+  Hizb / Page chips that follow the ayah being read (tap to Go to); Go to
+  button; text-size and
   translation toggles; audio bar (Alafasy) with play/pause/seek/speed.
+- **Go to sheet** — surah + ayah (validated against the surah's length),
+  juz 1–30, hizb 1–60 or mushaf page 1–604; resolves to the first ayah
+  from the bundled juz/hizb-quarter/page data. In the reader, the same
+  surah scrolls in place and another surah replaces the reader.
+- **Ayat search shortcuts** — `2:255`, `2:255-260`, `juz 5`, `hizb 12`,
+  `page 300` (also `الجزء`/`حزب`/`صفحة` and `juzuu`/`hizbu`/`ukurasa`,
+  Arabic-Indic digits): a juz lists its 8 quarter starts, a hizb its 4,
+  a page or range its ayahs.
+- **Quran links** — `deen://quran/2/255`, `deen://quran/2:255`,
+  `deen://quran/36`, `deen://quran?juz=30|hizb=12|page=300` open the
+  reader there (Android intent filter, iOS URL scheme, `app_links`); a
+  link that starts the app waits until Home is up.
 - **Tafsir sheet** — modal bottom sheet: ayah text, Sahih Intl. quote,
   Ibn Kathir commentary (remote w/ graceful offline state), Share/Copy/Done.
 - **Azkar categories** — daily progress card, 11-collection grid

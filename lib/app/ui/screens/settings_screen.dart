@@ -5,6 +5,7 @@ import '../../controllers/settings_controller.dart';
 import '../../services/audio_cache_service.dart';
 import '../../services/location_service.dart';
 import '../../services/notification_service.dart';
+import '../../services/quran_service.dart';
 import '../../services/storage_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
@@ -525,6 +526,7 @@ class SettingsScreen extends GetView<SettingsController> {
               try {
                 await AudioCacheService.clearAllAudio();
                 await StorageService.instance.clearAll();
+                QuranService.instance.lastReadRx.value = null;
                 controller.reload();
                 Get.updateLocale(controller.locale);
                 await NotificationService.instance.cancelAll();
