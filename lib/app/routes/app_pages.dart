@@ -14,6 +14,8 @@ import '../controllers/tasbeeh_controller.dart';
 import '../ui/screens/azkar_categories_screen.dart';
 import '../ui/screens/azkar_detail_screen.dart';
 import '../ui/screens/bookmarks_screen.dart';
+import '../ui/screens/prayer_tuning_screen.dart';
+import '../ui/screens/timetable_screen.dart';
 import '../ui/screens/calendar_screen.dart';
 import '../ui/screens/home_screen.dart';
 import '../ui/screens/memorize_screen.dart';
@@ -42,6 +44,8 @@ abstract class Routes {
   static String memorize(int surah, {int? ayah}) =>
       ayah == null ? '/memorize/$surah' : '/memorize/$surah?ayah=$ayah';
   static const bookmarks = '/bookmarks';
+  static const prayerTuning = '/prayer-tuning';
+  static const timetable = '/timetable';
 }
 
 /// Everything the app needs up-front (storage-backed prefs, boot
@@ -108,6 +112,8 @@ class AppPages {
       }),
     ),
     GetPage(name: Routes.bookmarks, page: () => const BookmarksScreen()),
+    GetPage(name: Routes.prayerTuning, page: () => const PrayerTuningScreen()),
+    GetPage(name: Routes.timetable, page: () => const TimetableScreen()),
     GetPage(
       name: Routes.calendar,
       page: () => const CalendarScreen(),

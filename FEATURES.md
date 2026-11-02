@@ -58,7 +58,9 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
   timeout), then routes to onboarding (first run) or home. If the bundled
   Quran/azkar data fails to load it shows an error with Retry.
 - **Onboarding** — language pills, prayer location (GPS or manual city
-  lookup), calculation method; privacy copy ("100% On-Device").
+  lookup), calculation method (12), high-latitude rule, "Adjust times &
+  reminders" (per-prayer ± minutes and reminder timing), morning/evening
+  azkar reminders, monthly timetable (shareable); privacy copy ("100% On-Device").
 - **Home** — emerald hero card with next-prayer countdown, prayer tiles
   (current prayer highlighted gold), sunrise row, Continue reading card
   (last-read ayah with its juz/page; opens the reader there), Qibla card,

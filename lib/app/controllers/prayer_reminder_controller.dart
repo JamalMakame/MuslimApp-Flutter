@@ -28,6 +28,10 @@ class PrayerReminderController extends GetxController
       settings.madhab,
       settings.localeCode,
       settings.notifyPrayers,
+      settings.highLatRule,
+      settings.prayerOffsets,
+      settings.prayerLeads,
+      settings.azkarReminders,
     ], (_) => sync());
     _timer = Timer.periodic(const Duration(minutes: 15), (_) => sync());
     sync();
@@ -52,7 +56,9 @@ class PrayerReminderController extends GetxController
 
   Future<void> _sync() async {
     final notifications = NotificationService.instance;
-    if (!settings.notifyPrayers.value || !settings.hasLocation) {
+    final prayersOn = settings.notifyPrayers.value;
+    final azkar = settings.azkarReminders.value;
+    if ((!prayersOn && !azkar) || !settings.hasLocation) {
       await notifications.cancelAll();
       return;
     }
@@ -65,6 +71,10 @@ class PrayerReminderController extends GetxController
     final method = settings.calcMethod.value;
     final madhab = settings.madhab.value;
     final code = settings.localeCode.value;
+    final tuning = settings.tuning;
+    final leads = prayersOn
+        ? Map.of(settings.prayerLeads)
+        : {for (final k in PrayerService.keys) k: -1};
     final now = DateTime.now();
     await notifications.schedule(
       signature: [
@@ -73,6 +83,9 @@ class PrayerReminderController extends GetxController
         method,
         madhab,
         code,
+        tuning.signature,
+        [for (final k in leads.keys.toList()..sort()) '$k${leads[k]}'],
+        azkar,
         now.year,
         now.month,
         now.day,
@@ -84,12 +97,25 @@ class PrayerReminderController extends GetxController
           lng: lng,
           method: method,
           madhab: madhab,
+          tuning: tuning,
         ),
         now,
+        leads: leads,
+        azkar: azkar,
       ),
-      title: (key) => _t(code, key),
-      body: (key) =>
-          _t(code, 'prayerNotifyBody').replaceAll('@prayer', _t(code, key)),
+      title: (r) => _t(code, r.key),
+      body: (r) => switch (r.key) {
+        NotificationService.azkarMorning ||
+        NotificationService.azkarEvening => _t(code, 'azkarNotifyBody'),
+        _ when r.lead > 0 => _t(
+          code,
+          'prayerSoonBody',
+        ).replaceAll('@prayer', _t(code, r.key)).replaceAll('@m', '${r.lead}'),
+        _ => _t(
+          code,
+          'prayerNotifyBody',
+        ).replaceAll('@prayer', _t(code, r.key)),
+      },
     );
   }
 

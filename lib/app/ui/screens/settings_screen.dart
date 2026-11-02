@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../routes/app_pages.dart';
+
 import '../../controllers/settings_controller.dart';
 import '../../services/audio_cache_service.dart';
 import '../../services/location_service.dart';
@@ -86,13 +88,7 @@ class SettingsScreen extends GetView<SettingsController> {
                   title: 'calcMethod'.tr,
                   subtitleFn: () => _methodLabel(controller.calcMethod.value),
                   onTap: () => _pickSheet(
-                    options: const [
-                      'umm_al_qura',
-                      'mwl',
-                      'egypt',
-                      'karachi',
-                      'isna',
-                    ],
+                    options: SettingsController.methods,
                     selected: controller.calcMethod.value,
                     labelFor: _methodLabel,
                     onPick: controller.setCalcMethod,
@@ -110,6 +106,18 @@ class SettingsScreen extends GetView<SettingsController> {
                   ),
                   rebuildKeys: [controller.madhab],
                 ),
+                _SettingsRow(
+                  key: const ValueKey('settings-high-lat'),
+                  title: 'highLatRule'.tr,
+                  subtitleFn: () => 'hl_${controller.highLatRule.value}'.tr,
+                  onTap: () => _pickSheet(
+                    options: SettingsController.highLatRules,
+                    selected: controller.highLatRule.value,
+                    labelFor: (r) => 'hl_$r'.tr,
+                    onPick: controller.setHighLatRule,
+                  ),
+                  rebuildKeys: [controller.highLatRule],
+                ),
                 Obx(
                   () => _SettingsSwitch(
                     title: 'prayerNotifications'.tr,
@@ -117,6 +125,25 @@ class SettingsScreen extends GetView<SettingsController> {
                     value: controller.notifyPrayers.value,
                     onChanged: controller.setNotifyPrayers,
                   ),
+                ),
+                _SettingsRow(
+                  key: const ValueKey('settings-prayer-tuning'),
+                  title: 'prayerTuning'.tr,
+                  subtitle: 'prayerTuningDesc'.tr,
+                  onTap: () => Get.toNamed(Routes.prayerTuning),
+                ),
+                Obx(
+                  () => _SettingsSwitch(
+                    title: 'azkarReminders'.tr,
+                    subtitle: 'azkarRemindersDesc'.tr,
+                    value: controller.azkarReminders.value,
+                    onChanged: controller.setAzkarReminders,
+                  ),
+                ),
+                _SettingsRow(
+                  key: const ValueKey('settings-timetable'),
+                  title: 'monthlyTimetable'.tr,
+                  onTap: () => Get.toNamed(Routes.timetable),
                 ),
                 _SettingsRow(
                   title: 'locationRow'.tr,
@@ -376,13 +403,7 @@ class SettingsScreen extends GetView<SettingsController> {
     );
   }
 
-  String _methodLabel(String m) => switch (m) {
-    'mwl' => 'mwl'.tr,
-    'egypt' => 'egypt'.tr,
-    'karachi' => 'karachi'.tr,
-    'isna' => 'isna'.tr,
-    _ => 'ummAlQura'.tr,
-  };
+  String _methodLabel(String m) => m == 'umm_al_qura' ? 'ummAlQura'.tr : m.tr;
 
   void _pickSheet({
     required List<String> options,
@@ -406,27 +427,34 @@ class SettingsScreen extends GetView<SettingsController> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              for (final o in options)
-                ListTile(
-                  title: Text(
-                    labelFor(o),
-                    style: AppTheme.body(13.5, weight: FontWeight.w600),
-                  ),
-                  trailing: o == selected
-                      ? Icon(
-                          Icons.check_circle,
-                          color: AppColors.emerald,
-                          size: 20,
-                        )
-                      : null,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onTap: () {
-                    onPick(o);
-                    Get.back();
-                  },
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final o in options)
+                      ListTile(
+                        title: Text(
+                          labelFor(o),
+                          style: AppTheme.body(13.5, weight: FontWeight.w600),
+                        ),
+                        trailing: o == selected
+                            ? Icon(
+                                Icons.check_circle,
+                                color: AppColors.emerald,
+                                size: 20,
+                              )
+                            : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        onTap: () {
+                          onPick(o);
+                          Get.back();
+                        },
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),

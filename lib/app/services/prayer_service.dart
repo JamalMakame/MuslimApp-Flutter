@@ -34,17 +34,55 @@ class PrayerDay {
   });
 }
 
+/// The user's fine-tuning on top of a method: the high-latitude rule and
+/// per-prayer minute offsets (fajr, sunrise, dhuhr, asr, maghrib, isha).
+class PrayerTuning {
+  final String highLat; // middle | seventh | angle
+  final Map<String, int> offsets;
+  const PrayerTuning({this.highLat = 'middle', this.offsets = const {}});
+
+  String get signature =>
+      [highLat, for (final k in PrayerService.keys) offsets[k] ?? 0].join(',');
+}
+
 /// Local prayer-time engine (adhan). No network; coords are passed in.
 class PrayerService {
-  CalculationParameters _paramsFor(String method, String madhab) {
+  static const keys = ['fajr', 'sunrise', 'dhuhr', 'asr', 'maghrib', 'isha'];
+
+  CalculationParameters _paramsFor(
+    String method,
+    String madhab, [
+    PrayerTuning tuning = const PrayerTuning(),
+  ]) {
     final params = switch (method) {
       'mwl' => CalculationMethod.muslim_world_league.getParameters(),
       'egypt' => CalculationMethod.egyptian.getParameters(),
       'karachi' => CalculationMethod.karachi.getParameters(),
       'isna' => CalculationMethod.north_america.getParameters(),
+      'dubai' => CalculationMethod.dubai.getParameters(),
+      'kuwait' => CalculationMethod.kuwait.getParameters(),
+      'qatar' => CalculationMethod.qatar.getParameters(),
+      'singapore' => CalculationMethod.singapore.getParameters(),
+      'turkey' => CalculationMethod.turkey.getParameters(),
+      'tehran' => CalculationMethod.tehran.getParameters(),
+      'moonsighting' =>
+        CalculationMethod.moon_sighting_committee.getParameters(),
       _ => CalculationMethod.umm_al_qura.getParameters(),
     };
     params.madhab = madhab == 'hanafi' ? Madhab.hanafi : Madhab.shafi;
+    params.highLatitudeRule = switch (tuning.highLat) {
+      'seventh' => HighLatitudeRule.seventh_of_the_night,
+      'angle' => HighLatitudeRule.twilight_angle,
+      _ => HighLatitudeRule.middle_of_the_night,
+    };
+    final o = tuning.offsets;
+    params.adjustments
+      ..fajr = o['fajr'] ?? 0
+      ..sunrise = o['sunrise'] ?? 0
+      ..dhuhr = o['dhuhr'] ?? 0
+      ..asr = o['asr'] ?? 0
+      ..maghrib = o['maghrib'] ?? 0
+      ..isha = o['isha'] ?? 0;
     return params;
   }
 
@@ -55,11 +93,12 @@ class PrayerService {
     required double lng,
     required String method,
     required String madhab,
+    PrayerTuning tuning = const PrayerTuning(),
   }) {
     final t = PrayerTimes(
       Coordinates(lat, lng),
       DateComponents.from(date),
-      _paramsFor(method, madhab),
+      _paramsFor(method, madhab, tuning),
     );
     return [
       PrayerSlot('fajr', t.fajr),
@@ -76,8 +115,9 @@ class PrayerService {
     required double lng,
     required String method,
     required String madhab,
+    PrayerTuning tuning = const PrayerTuning(),
   }) {
-    final params = _paramsFor(method, madhab);
+    final params = _paramsFor(method, madhab, tuning);
     final times = PrayerTimes(
       Coordinates(lat, lng),
       DateComponents.from(DateTime.now()),
