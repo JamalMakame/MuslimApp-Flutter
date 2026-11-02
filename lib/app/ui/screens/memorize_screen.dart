@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
+import '../../services/habit_service.dart';
 import '../../controllers/memorize_controller.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
@@ -228,7 +229,8 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                     Directionality(
                       textDirection: TextDirection.rtl,
                       child: Text(
-                        c.ayah.text,
+                        c.testMode.value ? c.maskedText : c.ayah.text,
+                        key: const ValueKey('mem-ayah-text'),
                         textAlign: TextAlign.center,
                         style: AppTheme.quran(26, height: 2.0),
                       ),
@@ -263,6 +265,8 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                           backgroundColor: AppColors.hairline,
                         ),
                       ),
+                    const SizedBox(height: 8),
+                    _SelfTest(c: c),
                     if (c.translation.isNotEmpty) ...[
                       const SizedBox(height: 10),
                       Directionality(
@@ -1044,4 +1048,81 @@ class _RangeDialogState extends State<_RangeDialog> {
       ],
     );
   }
+}
+
+class _SelfTest extends StatelessWidget {
+  const _SelfTest({required this.c});
+  final MemorizeController c;
+
+  @override
+  Widget build(BuildContext context) => Obx(() {
+    final h = HabitService.instance;
+    h.version.value;
+    final entry = h.hifzOf(c.surahNumber, c.ayah.numberInSurah);
+    final count = h.memorisedPerSurah[c.surahNumber] ?? 0;
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (entry?.memorised ?? false)
+              Padding(
+                padding: const EdgeInsetsDirectional.only(end: 4),
+                child: Icon(
+                  Icons.verified,
+                  key: const ValueKey('mem-memorised'),
+                  size: 16,
+                  color: AppColors.emerald,
+                ),
+              ),
+            Text(
+              'memorisedOfN'.trParams({
+                'n': '$count',
+                't': '${c.ayahs.length}',
+              }),
+              style: AppTheme.body(11.5, color: AppColors.sage),
+            ),
+            const SizedBox(width: 8),
+            TextButton.icon(
+              key: const ValueKey('self-test'),
+              onPressed: c.testMode.toggle,
+              icon: Icon(
+                c.testMode.value ? Icons.visibility : Icons.visibility_off,
+                size: 18,
+              ),
+              label: Text('selfTest'.tr),
+            ),
+          ],
+        ),
+        if (c.testMode.value)
+          Wrap(
+            alignment: WrapAlignment.center,
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              OutlinedButton(
+                key: const ValueKey('reveal-word'),
+                onPressed: c.revealWord,
+                child: Text('revealWord'.tr),
+              ),
+              OutlinedButton(
+                key: const ValueKey('reveal-all'),
+                onPressed: c.revealAll,
+                child: Text('revealAll'.tr),
+              ),
+              FilledButton(
+                key: const ValueKey('hifz-ok'),
+                onPressed: () => c.grade(true),
+                child: Text('memorised'.tr),
+              ),
+              OutlinedButton(
+                key: const ValueKey('hifz-again'),
+                onPressed: () => c.grade(false),
+                child: Text('needsReview'.tr),
+              ),
+            ],
+          ),
+      ],
+    );
+  });
 }

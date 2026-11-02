@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
+import '../services/habit_service.dart';
 import '../services/notification_service.dart';
 import '../services/prayer_service.dart';
 import 'settings_controller.dart';
@@ -32,6 +33,7 @@ class PrayerReminderController extends GetxController
       settings.prayerOffsets,
       settings.prayerLeads,
       settings.azkarReminders,
+      HabitService.instance.readReminder,
     ], (_) => sync());
     _timer = Timer.periodic(const Duration(minutes: 15), (_) => sync());
     sync();
@@ -58,7 +60,10 @@ class PrayerReminderController extends GetxController
     final notifications = NotificationService.instance;
     final prayersOn = settings.notifyPrayers.value;
     final azkar = settings.azkarReminders.value;
-    if ((!prayersOn && !azkar) || !settings.hasLocation) {
+    final readAt = HabitService.instance.readReminder.value;
+    final reading = readAt >= 0 ? readAt : null;
+    final located = settings.hasLocation;
+    if (reading == null && (!located || (!prayersOn && !azkar))) {
       await notifications.cancelAll();
       return;
     }
@@ -66,8 +71,8 @@ class PrayerReminderController extends GetxController
       _askedPermission = true;
       await notifications.requestPermission();
     }
-    final lat = settings.latitude.value!;
-    final lng = settings.longitude.value!;
+    final lat = settings.latitude.value ?? 0;
+    final lng = settings.longitude.value ?? 0;
     final method = settings.calcMethod.value;
     final madhab = settings.madhab.value;
     final code = settings.localeCode.value;
@@ -86,27 +91,33 @@ class PrayerReminderController extends GetxController
         tuning.signature,
         [for (final k in leads.keys.toList()..sort()) '$k${leads[k]}'],
         azkar,
+        located,
+        reading,
         now.year,
         now.month,
         now.day,
       ].join('|'),
       reminders: NotificationService.plan(
-        (date) => _prayers.slotsOn(
-          date,
-          lat: lat,
-          lng: lng,
-          method: method,
-          madhab: madhab,
-          tuning: tuning,
-        ),
+        (date) => !located
+            ? const []
+            : _prayers.slotsOn(
+                date,
+                lat: lat,
+                lng: lng,
+                method: method,
+                madhab: madhab,
+                tuning: tuning,
+              ),
         now,
         leads: leads,
         azkar: azkar,
+        readingAt: reading,
       ),
       title: (r) => _t(code, r.key),
       body: (r) => switch (r.key) {
         NotificationService.azkarMorning ||
         NotificationService.azkarEvening => _t(code, 'azkarNotifyBody'),
+        NotificationService.reading => _t(code, 'readNotifyBody'),
         _ when r.lead > 0 => _t(
           code,
           'prayerSoonBody',

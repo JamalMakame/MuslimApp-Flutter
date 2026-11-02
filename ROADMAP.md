@@ -79,6 +79,10 @@ availability are critical.
 - ✅ Listen anywhere: one reciter setting for reader + Hifz, Hifz range
   (from–to, repeat the range), background and lock-screen audio
   ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 3)
+- ✅ Habits and memorisation: Khatmah plan (finish in 7–60 days, today's
+  pages with a Start button), daily page goal + streak, daily reading
+  reminder, Hifz self-test (reveal word by word, memorised / needs review)
+  with a spaced-review list ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 5)
 - ✅ Quran text stays Arabic; bundled **translation layer** — English
   (Sahih International) and Swahili (Al-Barwani), or Arabic only
 - ✅ UI chrome (surah index, sort, search, bookmarks) localized; surah

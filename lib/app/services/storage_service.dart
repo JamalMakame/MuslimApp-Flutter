@@ -55,6 +55,11 @@ class StorageService {
   static const kMemAutoAdvance = 'mem_auto_advance';
   static const kMemSpeed = 'mem_speed';
   static const kMemPosition = 'mem_position'; // {surah: last selected ayah}
+  static const kReadLog = 'read_log'; // {yyyy-MM-dd: [pages read]}
+  static const kReadGoal = 'read_goal'; // pages per day, 0 = off
+  static const kKhatmah = 'khatmah'; // {start, days, done: [pages]}
+  static const kReadReminder = 'read_reminder'; // minutes after 0:00, -1 off
+  static const kHifz = 'hifz'; // {'s:a': {l: level, d: next review}}
   static const kDownloadedAudio =
       'downloaded_audio'; // {edition: {surah: bytes}}
 

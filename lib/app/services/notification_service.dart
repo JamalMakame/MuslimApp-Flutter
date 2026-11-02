@@ -12,7 +12,7 @@ class PrayerReminder {
   const PrayerReminder(this.id, this.key, this.time, {this.lead = 0});
   final int id;
 
-  /// A prayer key, or [azkarMorning] / [azkarEvening].
+  /// A prayer key, [azkarMorning] / [azkarEvening] or [reading].
   final String key;
   final DateTime time;
 
@@ -86,22 +86,38 @@ class NotificationService {
   /// Minutes after Fajr / Asr for the morning / evening azkar reminder.
   static const azkarDelay = 20;
 
+  static const reading = 'readNotify';
+
   /// The next [days] days of reminders after [now], in time order. Starts
   /// one calendar day back so a location far from the device's time zone
   /// still gets a full week. [leads] gives minutes before each prayer
   /// (missing = at its time, negative = off); [azkar] adds the morning and
-  /// evening azkar reminders. Ids are stable per (day offset, slot).
+  /// evening azkar reminders; [readingAt] (minutes after midnight) adds a
+  /// daily Quran reading reminder. Ids are stable per (day offset, slot).
   static List<PrayerReminder> plan(
     List<PrayerSlot> Function(DateTime date) slotsOn,
     DateTime now, {
     Map<String, int> leads = const {},
     bool azkar = false,
+    int? readingAt,
   }) {
     final out = <PrayerReminder>[];
     final per =
-        _prayers.where((p) => (leads[p] ?? 0) >= 0).length + (azkar ? 2 : 0);
+        _prayers.where((p) => (leads[p] ?? 0) >= 0).length +
+        (azkar ? 2 : 0) +
+        (readingAt != null ? 1 : 0);
     for (var d = -1; d <= days; d++) {
       final date = DateTime(now.year, now.month, now.day + d);
+      if (readingAt != null) {
+        final at = DateTime(
+          date.year,
+          date.month,
+          date.day,
+          readingAt ~/ 60,
+          readingAt % 60,
+        );
+        if (at.isAfter(now)) out.add(PrayerReminder(310 + d, reading, at));
+      }
       for (final slot in slotsOn(date)) {
         final i = _prayers.indexOf(slot.key);
         if (i < 0) continue;

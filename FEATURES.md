@@ -1,6 +1,6 @@
 # Deen — Current Features & Architecture
 
-_Last updated: listen anywhere (one reciter setting, Hifz ranges, background + lock-screen audio)._
+_Last updated: habits and memorisation (Khatmah plan, daily goal + streak, reading reminder, Hifz self-test and review list)._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
@@ -45,10 +45,22 @@ English (Sahih Intl.), Swahili (Al-Barwani), or Arabic-only.
 | `/qibla` | Compass | QiblaController |
 | `/calendar` | Dual Hijri/Gregorian calendar | CalendarController |
 | `/memorize/:surah` | Hifz and offline per-ayah audio | MemorizeController |
+| `/habits` | Reading goal, streak, Khatmah plan, reading reminder, memorisation progress | HabitService |
 | `/settings` | Settings | SettingsController (permanent) |
 
 Navigation shell: floating 4-slot pill — Home / Quran / Azkar / Settings.
 Qibla and calendar are reached from Home; Hifz from the Quran reader.
+
+**Habits (`HabitService`, all on-device).** Every page the reader settles on
+counts as read for that day (`read_log`, kept 400 days). Home shows today's
+pages against the daily goal, the streak (days in a row meeting the goal,
+or at least one page) and today's Khatmah portion with a Start button. The
+Khatmah splits 604 pages evenly over 7–60 days; Start opens the first unread
+page up to today's portion, so missed days are caught up first. An optional
+daily reading reminder joins the prayer notifications (works without a
+location). Hifz has a self-test: hide the ayah, reveal word by word or all,
+then mark memorised (next review after 1, 3, 7, 14, 30, 60 days) or needs
+review (due tomorrow); `/habits` lists ayahs due and memorised counts per surah.
 
 ## Screens
 

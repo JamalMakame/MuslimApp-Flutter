@@ -9,6 +9,7 @@ import '../data/models.dart';
 import '../services/audio_cache_service.dart';
 import '../services/quran_service.dart';
 import '../services/recitation_audio.dart';
+import '../services/habit_service.dart';
 import '../services/storage_service.dart';
 import 'settings_controller.dart';
 
@@ -155,6 +156,7 @@ class ReaderController extends GetxController {
     if (_savedAyah == a.numberInSurah) return;
     _savedAyah = a.numberInSurah;
     _quran.saveLastRead(surahNumber, a.numberInSurah, a.page);
+    HabitService.instance.recordPage(a.page);
   }
 
   /// Saves the ayah at the reading line (a quarter down the list) once the
