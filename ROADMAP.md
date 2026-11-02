@@ -259,8 +259,8 @@ vs. effort:
 
 1. **Device QA** — run `integration_test/` and a manual pass on a real
    Android phone and an iPhone (notifications firing with the app closed,
-   compass accuracy, downloads). Bump the Android Gradle wrapper to ≥ 8.14,
-   which Flutter 3.47 requires.
+   compass accuracy, downloads). Then the store release in
+   [docs/RELEASE.md](docs/RELEASE.md).
 2. **High-latitude rules + minute overrides** in prayer settings.
 3. **Azkar English translation + transliteration** (Swahili later, custom
    content).

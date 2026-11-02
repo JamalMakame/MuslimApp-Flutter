@@ -38,6 +38,13 @@ app (Google keeps the real signing key; yours is only the upload key).
 
 ### Build and upload
 
+Gradle 8.14 runs on JDK 17–24; Android Studio's bundled JDK 25 fails with
+"incompatible with Gradle". Point Flutter at JDK 21 once:
+
+```sh
+flutter config --jdk-dir=/Library/Java/JavaVirtualMachines/temurin-21.jdk/Contents/Home
+```
+
 ```sh
 flutter build appbundle --release
 ```
