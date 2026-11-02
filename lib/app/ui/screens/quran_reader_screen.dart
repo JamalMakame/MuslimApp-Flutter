@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:get/get.dart';
 
 import '../../controllers/reader_controller.dart';
@@ -154,230 +155,244 @@ class QuranReaderScreen extends GetView<ReaderController> {
 
             // ---- Mushaf canvas ---------------------------------------------
             Expanded(
-              child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                children: [
-                  Container(
-                    decoration: appCardDecoration(radius: 16),
-                    padding: const EdgeInsets.all(4),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: AppColors.gold.withValues(alpha: 0.35),
-                        ),
-                      ),
-                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                      child: Column(
-                        children: [
-                          // Surah cartouche
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 18,
-                              vertical: 8,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AppColors.goldTint,
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Column(
-                              children: [
-                                Text(
-                                  'surahHeader'.trParams({
-                                    'name': s.nameSimple.toUpperCase(),
-                                  }),
-                                  style: AppTheme.body(
-                                    11,
-                                    weight: FontWeight.w800,
-                                    color: AppColors.emeraldDeep,
-                                    letterSpacing: 1.4,
-                                  ),
-                                ),
-                                Text(
-                                  '${s.nameTranslated} · ${'revelation'.trParams({'order': '${s.revelationOrder}'})}',
-                                  style: AppTheme.body(
-                                    9.5,
-                                    color: AppColors.sage,
-                                  ),
-                                ),
-                              ],
-                            ),
+              // Only the reader's own scrolling moves the saved position,
+              // not the jump to a searched ayah.
+              child: NotificationListener<UserScrollNotification>(
+                onNotification: (n) {
+                  if (n.direction != ScrollDirection.idle) return false;
+                  final box = n.context?.findRenderObject();
+                  if (box is RenderBox && box.hasSize) {
+                    final top = box.localToGlobal(Offset.zero).dy;
+                    c.saveVisiblePosition(top + box.size.height * 0.25);
+                  }
+                  return false;
+                },
+                child: ListView(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                  children: [
+                    Container(
+                      decoration: appCardDecoration(radius: 16),
+                      padding: const EdgeInsets.all(4),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color: AppColors.gold.withValues(alpha: 0.35),
                           ),
-                          if (s.number != 1 && s.number != 9) ...[
-                            const SizedBox(height: 18),
-                            Text(
-                              basmala,
-                              textDirection: TextDirection.rtl,
-                              style: AppTheme.quran(
-                                24 * settings.quranScale,
-                                color: AppColors.emerald,
-                                height: 1.5,
+                        ),
+                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+                        child: Column(
+                          children: [
+                            // Surah cartouche
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 18,
+                                vertical: 8,
                               ),
-                            ),
-                          ],
-                          const SizedBox(height: 12),
-                          const Divider(color: AppColors.hairline, height: 1),
-                          const SizedBox(height: 14),
-
-                          // Flowing ayah text w/ medallions
-                          Obx(() {
-                            final scale = settings.textScale.value;
-                            final size = [19.0, 21.0, 26.0][scale];
-                            final highlight = c.highlightAyah.value;
-                            return Directionality(
-                              textDirection: TextDirection.rtl,
-                              child: Text.rich(
-                                TextSpan(
-                                  children: [
-                                    for (final a in c.ayahs) ...[
-                                      WidgetSpan(
-                                        child: SizedBox(
-                                          key: c.ayahKey(a.numberInSurah),
-                                          width: 0,
-                                          height: size,
-                                        ),
-                                      ),
-                                      TextSpan(
-                                        text: '${a.text} ',
-                                        style:
-                                            AppTheme.quran(
-                                              size,
-                                              height: 2.05,
-                                            ).copyWith(
-                                              backgroundColor:
-                                                  highlight == a.numberInSurah
-                                                  ? AppColors.goldTint
-                                                  : null,
-                                            ),
-                                      ),
-                                      WidgetSpan(
-                                        alignment: PlaceholderAlignment.middle,
-                                        child: GestureDetector(
-                                          onTap: () => showTafsirSheet(
-                                            surahNumber: s.number,
-                                            ayahNumber: a.numberInSurah,
-                                            ayahText: a.text,
-                                          ),
-                                          child: _AyahMedallion(
-                                            n: a.numberInSurah,
-                                            isSajda: a.sajda,
-                                          ),
-                                        ),
-                                      ),
-                                      const TextSpan(text: ' '),
-                                    ],
-                                  ],
-                                ),
+                              decoration: BoxDecoration(
+                                color: AppColors.goldTint,
+                                borderRadius: BorderRadius.circular(999),
                               ),
-                            );
-                          }),
-
-                          // Translations
-                          Obx(() {
-                            if (!c.showTrans.value) {
-                              return const SizedBox.shrink();
-                            }
-                            return Column(
-                              children: [
-                                const SizedBox(height: 14),
-                                const Divider(color: AppColors.hairline),
-                                const SizedBox(height: 8),
-                                for (final a in c.ayahs)
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 7,
-                                    ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Container(
-                                              width: 20,
-                                              height: 20,
-                                              alignment: Alignment.center,
-                                              decoration: const BoxDecoration(
-                                                color: AppColors.goldTint,
-                                                shape: BoxShape.circle,
-                                              ),
-                                              child: Text(
-                                                '${a.numberInSurah}',
-                                                style: AppTheme.body(
-                                                  9.5,
-                                                  weight: FontWeight.w700,
-                                                  color: AppColors.gold,
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(width: 7),
-                                            GestureDetector(
-                                              onTap: () => showTafsirSheet(
-                                                surahNumber: s.number,
-                                                ayahNumber: a.numberInSurah,
-                                                ayahText: a.text,
-                                              ),
-                                              child: Text(
-                                                'tafsirKathir'.tr,
-                                                style: AppTheme.body(
-                                                  9,
-                                                  weight: FontWeight.w700,
-                                                  color: AppColors.emerald,
-                                                  letterSpacing: 0.6,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        const SizedBox(height: 4),
-                                        Text(
-                                          c.translationOf(a.numberInSurah),
-                                          style: AppTheme.body(
-                                            13,
-                                            color: AppColors.ink,
-                                            height: 1.55,
-                                          ),
-                                        ),
-                                      ],
+                              child: Column(
+                                children: [
+                                  Text(
+                                    'surahHeader'.trParams({
+                                      'name': s.nameSimple.toUpperCase(),
+                                    }),
+                                    style: AppTheme.body(
+                                      11,
+                                      weight: FontWeight.w800,
+                                      color: AppColors.emeraldDeep,
+                                      letterSpacing: 1.4,
                                     ),
                                   ),
-                              ],
-                            );
-                          }),
-                          const SizedBox(height: 12),
-                          const Divider(color: AppColors.hairline),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              const Icon(
-                                Icons.circle,
-                                size: 7,
-                                color: AppColors.emerald,
+                                  Text(
+                                    '${s.nameTranslated} · ${'revelation'.trParams({'order': '${s.revelationOrder}'})}',
+                                    style: AppTheme.body(
+                                      9.5,
+                                      color: AppColors.sage,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(width: 5),
+                            ),
+                            if (s.number != 1 && s.number != 9) ...[
+                              const SizedBox(height: 18),
                               Text(
-                                'hafsRecitation'.tr,
-                                style: AppTheme.body(
-                                  10.5,
-                                  color: AppColors.sage,
-                                ),
-                              ),
-                              const Spacer(),
-                              Text(
-                                'mushafSharif'.tr,
-                                style: AppTheme.body(
-                                  10.5,
-                                  fontStyle: FontStyle.italic,
-                                  color: AppColors.gold,
+                                basmala,
+                                textDirection: TextDirection.rtl,
+                                style: AppTheme.quran(
+                                  24 * settings.quranScale,
+                                  color: AppColors.emerald,
+                                  height: 1.5,
                                 ),
                               ),
                             ],
-                          ),
-                        ],
+                            const SizedBox(height: 12),
+                            const Divider(color: AppColors.hairline, height: 1),
+                            const SizedBox(height: 14),
+
+                            // Flowing ayah text w/ medallions
+                            Obx(() {
+                              final scale = settings.textScale.value;
+                              final size = [19.0, 21.0, 26.0][scale];
+                              final highlight = c.highlightAyah.value;
+                              return Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      for (final a in c.ayahs) ...[
+                                        WidgetSpan(
+                                          child: SizedBox(
+                                            key: c.ayahKey(a.numberInSurah),
+                                            width: 0,
+                                            height: size,
+                                          ),
+                                        ),
+                                        TextSpan(
+                                          text: '${a.text} ',
+                                          style:
+                                              AppTheme.quran(
+                                                size,
+                                                height: 2.05,
+                                              ).copyWith(
+                                                backgroundColor:
+                                                    highlight == a.numberInSurah
+                                                    ? AppColors.goldTint
+                                                    : null,
+                                              ),
+                                        ),
+                                        WidgetSpan(
+                                          alignment:
+                                              PlaceholderAlignment.middle,
+                                          child: GestureDetector(
+                                            onTap: () => showTafsirSheet(
+                                              surahNumber: s.number,
+                                              ayahNumber: a.numberInSurah,
+                                              ayahText: a.text,
+                                            ),
+                                            child: _AyahMedallion(
+                                              n: a.numberInSurah,
+                                              isSajda: a.sajda,
+                                            ),
+                                          ),
+                                        ),
+                                        const TextSpan(text: ' '),
+                                      ],
+                                    ],
+                                  ),
+                                ),
+                              );
+                            }),
+
+                            // Translations
+                            Obx(() {
+                              if (!c.showTrans.value) {
+                                return const SizedBox.shrink();
+                              }
+                              return Column(
+                                children: [
+                                  const SizedBox(height: 14),
+                                  const Divider(color: AppColors.hairline),
+                                  const SizedBox(height: 8),
+                                  for (final a in c.ayahs)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 7,
+                                      ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Container(
+                                                width: 20,
+                                                height: 20,
+                                                alignment: Alignment.center,
+                                                decoration: const BoxDecoration(
+                                                  color: AppColors.goldTint,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Text(
+                                                  '${a.numberInSurah}',
+                                                  style: AppTheme.body(
+                                                    9.5,
+                                                    weight: FontWeight.w700,
+                                                    color: AppColors.gold,
+                                                  ),
+                                                ),
+                                              ),
+                                              const SizedBox(width: 7),
+                                              GestureDetector(
+                                                onTap: () => showTafsirSheet(
+                                                  surahNumber: s.number,
+                                                  ayahNumber: a.numberInSurah,
+                                                  ayahText: a.text,
+                                                ),
+                                                child: Text(
+                                                  'tafsirKathir'.tr,
+                                                  style: AppTheme.body(
+                                                    9,
+                                                    weight: FontWeight.w700,
+                                                    color: AppColors.emerald,
+                                                    letterSpacing: 0.6,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          const SizedBox(height: 4),
+                                          Text(
+                                            c.translationOf(a.numberInSurah),
+                                            style: AppTheme.body(
+                                              13,
+                                              color: AppColors.ink,
+                                              height: 1.55,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                ],
+                              );
+                            }),
+                            const SizedBox(height: 12),
+                            const Divider(color: AppColors.hairline),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.circle,
+                                  size: 7,
+                                  color: AppColors.emerald,
+                                ),
+                                const SizedBox(width: 5),
+                                Text(
+                                  'hafsRecitation'.tr,
+                                  style: AppTheme.body(
+                                    10.5,
+                                    color: AppColors.sage,
+                                  ),
+                                ),
+                                const Spacer(),
+                                Text(
+                                  'mushafSharif'.tr,
+                                  style: AppTheme.body(
+                                    10.5,
+                                    fontStyle: FontStyle.italic,
+                                    color: AppColors.gold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
 

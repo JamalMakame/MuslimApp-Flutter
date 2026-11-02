@@ -4,7 +4,9 @@ import 'package:intl/intl.dart' show DateFormat;
 
 import '../../controllers/home_controller.dart';
 import '../../controllers/settings_controller.dart';
+import '../../data/daily_hadith.dart';
 import '../../routes/app_pages.dart';
+import '../../services/azkar_service.dart';
 import '../../services/hijri_date_service.dart';
 import '../../services/prayer_service.dart';
 import '../../theme/app_theme.dart';
@@ -254,10 +256,20 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: _InspirationCard(
-                      icon: Icons.format_quote,
-                      label: 'hadithOfDay'.tr,
-                      arabic: '',
+                    child: Builder(
+                      builder: (_) {
+                        final h = pickForDay(
+                          dailyHadith,
+                          controller.currentDate.value,
+                        );
+                        return _InspirationCard(
+                          key: const ValueKey('hadith-of-day'),
+                          icon: Icons.format_quote,
+                          label: 'hadithOfDay'.tr,
+                          arabic: h.text,
+                          reference: h.reference,
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -274,10 +286,20 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: _InspirationCard(
-                      icon: Icons.volunteer_activism,
-                      label: 'duaOfDay'.tr,
-                      arabic: '',
+                    child: Builder(
+                      builder: (_) {
+                        final pool = AzkarService.instance.dailyDuaPool;
+                        final d = pool.isEmpty
+                            ? null
+                            : pickForDay(pool, controller.currentDate.value);
+                        return _InspirationCard(
+                          key: const ValueKey('dua-of-day'),
+                          icon: Icons.volunteer_activism,
+                          label: 'duaOfDay'.tr,
+                          arabic: d?.zekr ?? '',
+                          reference: d?.reference ?? '',
+                        );
+                      },
                     ),
                   ),
                 ],
@@ -551,46 +573,87 @@ class _PrayerTile extends StatelessWidget {
 
 class _InspirationCard extends StatelessWidget {
   const _InspirationCard({
+    super.key,
     required this.icon,
     required this.label,
     required this.arabic,
+    this.reference = '',
   });
 
   final IconData icon;
   final String label;
   final String arabic;
+  final String reference;
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: appCardDecoration(),
-      padding: const EdgeInsets.all(14),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 32,
-            height: 32,
-            decoration: const BoxDecoration(
-              color: AppColors.goldTint,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(icon, size: 16, color: AppColors.gold),
-          ),
-          const SizedBox(height: 10),
-          Text(label, style: AppTheme.body(12.5, weight: FontWeight.w700)),
-          const SizedBox(height: 4),
-          if (arabic.isNotEmpty)
+  void _open() => Get.dialog(
+    AlertDialog(
+      backgroundColor: AppColors.surface,
+      title: Text(label, style: AppTheme.headline(16)),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
             Text(
               arabic,
               textDirection: TextDirection.rtl,
-              style: AppTheme.quran(13, color: AppColors.sage, height: 1.6),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            )
-          else
-            Text('·', style: AppTheme.body(12, color: AppColors.sage)),
-        ],
+              style: AppTheme.quran(19, height: 1.9),
+            ),
+            if (reference.isNotEmpty) ...[
+              const SizedBox(height: 10),
+              Text(
+                reference,
+                textDirection: TextDirection.rtl,
+                style: AppTheme.body(12, color: AppColors.sage),
+              ),
+            ],
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: Get.back,
+          child: Text('done'.tr, style: AppTheme.body(13)),
+        ),
+      ],
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      borderRadius: BorderRadius.circular(16),
+      onTap: arabic.isEmpty ? null : _open,
+      child: Container(
+        decoration: appCardDecoration(),
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: const BoxDecoration(
+                color: AppColors.goldTint,
+                shape: BoxShape.circle,
+              ),
+              child: Icon(icon, size: 16, color: AppColors.gold),
+            ),
+            const SizedBox(height: 10),
+            Text(label, style: AppTheme.body(12.5, weight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            if (arabic.isNotEmpty)
+              Text(
+                arabic,
+                textDirection: TextDirection.rtl,
+                style: AppTheme.quran(13, color: AppColors.sage, height: 1.6),
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+              )
+            else
+              Text('·', style: AppTheme.body(12, color: AppColors.sage)),
+          ],
+        ),
       ),
     );
   }

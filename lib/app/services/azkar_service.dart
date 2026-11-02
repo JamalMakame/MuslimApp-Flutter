@@ -89,6 +89,14 @@ class AzkarService {
   }
 
   List<DhikrItem> items(String bucket) => _byBucket[bucket] ?? [];
+
+  /// Supplications short enough for the Home "Dua of the Day" card
+  /// (Quranic ruqyah verses excluded).
+  List<DhikrItem> get dailyDuaPool => [
+    for (final e in _byBucket.entries)
+      if (e.key != 'catRuqyahQuran')
+        ...e.value.where((d) => d.zekr.length <= 220),
+  ];
   int totalCount(String bucket) => items(bucket).length;
   int totalRepeats(String bucket) =>
       items(bucket).fold(0, (sum, e) => sum + e.count);

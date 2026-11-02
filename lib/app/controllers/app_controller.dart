@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../services/azkar_service.dart';
@@ -21,12 +22,28 @@ class AppController extends GetxController {
     _boot();
   }
 
-  Future<void> _boot() async {
-    // Parse bundled corpora — the only real startup work.
+  /// Boot steps that failed or timed out; the app opens regardless.
+  final bootFailures = <String>[];
+
+  Future<void> _boot() => boot({
+    'quran': QuranService.instance.load,
+    'azkar': AzkarService.instance.load,
+    'notifications': NotificationService.instance.init,
+  });
+
+  /// Runs every step at once, each bounded by [timeout], then marks the app
+  /// ready even if some failed, so splash can never hang.
+  @visibleForTesting
+  Future<void> boot(
+    Map<String, Future<void> Function()> steps, {
+    Duration timeout = const Duration(seconds: 8),
+  }) async {
     await Future.wait([
-      QuranService.instance.load(),
-      AzkarService.instance.load(),
-      NotificationService.instance.init(),
+      for (final e in steps.entries)
+        e.value().timeout(timeout).catchError((Object error) {
+          bootFailures.add(e.key);
+          debugPrint('Boot step ${e.key} failed: $error');
+        }),
     ]);
     ready.value = true;
   }

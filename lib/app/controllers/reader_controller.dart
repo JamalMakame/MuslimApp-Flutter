@@ -85,8 +85,40 @@ class ReaderController extends GetxController {
     return p;
   }
 
+  int? _savedAyah;
+
   void _savePosition(Ayah a) {
+    if (_savedAyah == a.numberInSurah) return;
+    _savedAyah = a.numberInSurah;
     _quran.saveLastRead(surahNumber, a.numberInSurah, a.page);
+  }
+
+  /// Saves the ayah at the reading line (global y) once the reader's own
+  /// scrolling settles.
+  void saveVisiblePosition(double readingLine) {
+    final anchors = <(int, double)>[];
+    for (final e in _ayahKeys.entries) {
+      final box = e.value.currentContext?.findRenderObject();
+      if (box is RenderBox && box.attached && box.hasSize) {
+        anchors.add((e.key, box.localToGlobal(Offset.zero).dy));
+      }
+    }
+    final ayah = ayahAtLine(anchors, readingLine);
+    if (ayah != null && ayah >= 1 && ayah <= ayahs.length) {
+      _savePosition(ayahs[ayah - 1]);
+    }
+  }
+
+  /// The last ayah whose start is at or above [line]; the first ayah when
+  /// none has reached it yet.
+  static int? ayahAtLine(Iterable<(int, double)> anchors, double line) {
+    int? best;
+    int? first;
+    for (final (ayah, y) in anchors) {
+      if (first == null || ayah < first) first = ayah;
+      if (y <= line && (best == null || ayah > best)) best = ayah;
+    }
+    return best ?? first;
   }
 
   String translationOf(int ayahInSurah) => _quran.translation(
