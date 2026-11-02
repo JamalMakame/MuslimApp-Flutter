@@ -37,8 +37,10 @@ class LocationService {
       }
 
       final pos = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.medium,
-        timeLimit: timeout,
+        locationSettings: LocationSettings(
+          accuracy: LocationAccuracy.medium,
+          timeLimit: timeout,
+        ),
       );
 
       String city = '', country = '';

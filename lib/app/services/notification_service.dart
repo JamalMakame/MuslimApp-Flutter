@@ -1,3 +1,5 @@
+import 'dart:ui' show Color;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -49,7 +51,7 @@ class NotificationService {
         requestBadgePermission: false,
         requestSoundPermission: false,
       ),
-      android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      android: AndroidInitializationSettings('@drawable/ic_notification'),
     );
     await _plugin.initialize(init);
     _ready = true;
@@ -123,6 +125,7 @@ class NotificationService {
             importance: Importance.high,
             priority: Priority.high,
             category: AndroidNotificationCategory.reminder,
+            color: Color(0xFF0E6B5C),
           ),
         ),
         uiLocalNotificationDateInterpretation:
