@@ -95,6 +95,8 @@ app, test it in TestFlight, and submit for review.
 
 ## Before each release
 
+GitHub Actions (`.github/workflows/ci.yml`) runs these on every PR and push to main; to run them locally:
+
 ```sh
 dart format --output=none --set-exit-if-changed lib/app test
 flutter analyze

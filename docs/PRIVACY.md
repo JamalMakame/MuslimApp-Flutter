@@ -16,7 +16,9 @@ Everything the app stores is kept only on your phone:
 - your location as coordinates and a place name, used for prayer times and
   the Qibla direction;
 - your Quran last-read position, bookmarks, Hifz progress and tasbeeh counts;
-- Quran recitation audio you download.
+- Quran recitation audio and tafsir you download;
+- error reports from the app crashing, which leave the phone only if you
+  share them from Settings → Problem reports.
 
 **Settings → Data & Privacy → Clear local data** deletes all of it, and
 uninstalling the app removes it too. We have no servers that hold a copy.

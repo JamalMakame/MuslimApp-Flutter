@@ -270,6 +270,21 @@ class QuranService {
   /// Where mushaf page [n] (1–604) starts.
   (int surah, int ayah)? pageStart(int n) => _at(_pageStarts, n);
 
+  /// Every (surah, ayah) on mushaf page [n], in order.
+  List<(int, Ayah)> ayahsOnPage(int n) {
+    final start = pageStart(n);
+    if (start == null) return const [];
+    final out = <(int, Ayah)>[];
+    for (var s = start.$1; s <= _ar.length; s++) {
+      final list = _ar[s - 1];
+      for (var i = s == start.$1 ? start.$2 - 1 : 0; i < list.length; i++) {
+        if (list[i].page != n) return out;
+        out.add((s, list[i]));
+      }
+    }
+    return out;
+  }
+
   static (int, int)? _at(List<(int, int)> starts, int n) =>
       n >= 1 && n <= starts.length ? starts[n - 1] : null;
 
