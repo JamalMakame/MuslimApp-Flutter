@@ -143,6 +143,31 @@ void main() {
       },
     );
 
+    test('two saves of one surah share a single download', () async {
+      var calls = 0;
+      final client = MockClient((r) async {
+        calls++;
+        return http.Response(
+          jsonEncode({
+            'tafsirs': [
+              {'verse_key': '5:1', 'text': 'x'},
+            ],
+            'pagination': {'next_page': null},
+          }),
+          200,
+        );
+      });
+      final q = QuranService.instance;
+      final r = await Future.wait([
+        q.downloadTafsir(5, client: client),
+        q.downloadTafsir(5, client: client),
+      ]);
+      expect(r, [true, true]);
+      expect(calls, 1);
+      final dir = (await QuranService.tafsirFile(169, 5)).parent;
+      expect(dir.listSync().where((f) => f.path.endsWith('.part')), isEmpty);
+    });
+
     test('a failed page saves nothing', () async {
       var calls = 0;
       final client = MockClient((r) async {

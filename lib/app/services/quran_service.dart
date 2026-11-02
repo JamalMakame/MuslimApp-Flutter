@@ -72,7 +72,22 @@ class QuranService {
     int surah, {
     String lang = 'en',
     http.Client? client,
-  }) async {
+  }) {
+    final key = '${tafsirEdition(lang)}:$surah';
+    return _tafsirSaves[key] ??= _downloadTafsir(surah, lang, client)
+        .whenComplete(() {
+          _tafsirSaves.remove(key);
+        });
+  }
+
+  /// One save per edition:surah at a time; a second caller shares it.
+  static final _tafsirSaves = <String, Future<bool>>{};
+
+  Future<bool> _downloadTafsir(
+    int surah,
+    String lang,
+    http.Client? client,
+  ) async {
     final edition = tafsirEdition(lang);
     final generation = tafsirGeneration;
     final get = client?.get ?? http.get;
@@ -97,18 +112,19 @@ class QuranService {
       return false;
     }
     if (out.isEmpty || generation != tafsirGeneration) return false;
+    File? tmp;
     try {
       final file = await tafsirFile(edition, surah);
       await file.parent.create(recursive: true);
-      final tmp = File('${file.path}.part');
+      tmp = File('${file.path}.${DateTime.now().microsecondsSinceEpoch}.part');
       await tmp.writeAsString(jsonEncode(out), flush: true);
-      if (generation != tafsirGeneration) {
-        await tmp.delete();
-        return false;
-      }
+      if (generation != tafsirGeneration) throw StateError('cleared');
       await tmp.rename(file.path);
       return true;
     } catch (_) {
+      try {
+        if (tmp != null && await tmp.exists()) await tmp.delete();
+      } catch (_) {}
       return false;
     }
   }
