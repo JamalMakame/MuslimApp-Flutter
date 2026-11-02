@@ -52,15 +52,48 @@ class HomeController extends GetxController {
     _syncNotifications();
   }
 
+  bool _askedPermission = false;
+
   Future<void> _syncNotifications() async {
-    final d = day.value;
-    if (d == null) return;
-    if (settings.notifyPrayers.value) {
-      await NotificationService.instance.requestPermission();
-      await NotificationService.instance.scheduleFor(d, (key) => key.tr);
-    } else {
-      await NotificationService.instance.cancelAll();
+    final notifications = NotificationService.instance;
+    if (!settings.notifyPrayers.value || !settings.hasLocation) {
+      await notifications.cancelAll();
+      return;
     }
+    if (!_askedPermission) {
+      _askedPermission = true;
+      await notifications.requestPermission();
+    }
+    final lat = settings.latitude.value!;
+    final lng = settings.longitude.value!;
+    final method = settings.calcMethod.value;
+    final madhab = settings.madhab.value;
+    final now = DateTime.now();
+    final signature = [
+      lat,
+      lng,
+      method,
+      madhab,
+      Get.locale?.languageCode,
+      now.year,
+      now.month,
+      now.day,
+    ].join('|');
+    await notifications.schedule(
+      signature: signature,
+      reminders: NotificationService.plan(
+        (date) => _prayers.slotsOn(
+          date,
+          lat: lat,
+          lng: lng,
+          method: method,
+          madhab: madhab,
+        ),
+        now,
+      ),
+      title: (key) => key.tr,
+      body: (key) => 'prayerNotifyBody'.trParams({'prayer': key.tr}),
+    );
   }
 
   @override
