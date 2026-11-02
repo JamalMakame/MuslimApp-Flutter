@@ -67,7 +67,7 @@ class SettingsScreen extends GetView<SettingsController> {
             const SizedBox(height: 4),
             Row(
               children: [
-                const Icon(Icons.lock_outline, size: 14, color: AppColors.sage),
+                Icon(Icons.lock_outline, size: 14, color: AppColors.sage),
                 const SizedBox(width: 5),
                 Text(
                   'prefsLocal'.tr,
@@ -297,7 +297,7 @@ class SettingsScreen extends GetView<SettingsController> {
                   Container(
                     width: 34,
                     height: 34,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.goldTint,
                       shape: BoxShape.circle,
                     ),
@@ -388,7 +388,7 @@ class SettingsScreen extends GetView<SettingsController> {
                     style: AppTheme.body(13.5, weight: FontWeight.w600),
                   ),
                   trailing: o == selected
-                      ? const Icon(
+                      ? Icon(
                           Icons.check_circle,
                           color: AppColors.emerald,
                           size: 20,
@@ -450,7 +450,7 @@ class SettingsScreen extends GetView<SettingsController> {
                   fillColor: AppColors.ivory,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: const BorderSide(color: AppColors.hairline),
+                    borderSide: BorderSide(color: AppColors.hairline),
                   ),
                 ),
               ),
@@ -659,7 +659,7 @@ class _SettingsRow extends StatelessWidget {
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.shield_outlined,
                       size: 12,
                       color: AppColors.emerald,

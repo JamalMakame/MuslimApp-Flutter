@@ -131,9 +131,13 @@ class _AzkarDetailScreenState extends State<AzkarDetailScreen> {
                       color: AppColors.gold,
                     ),
                     const SizedBox(width: 8),
-                    Text(
-                      'recitationMode'.tr,
-                      style: AppTheme.body(12, weight: FontWeight.w600),
+                    Flexible(
+                      child: Text(
+                        'recitationMode'.tr,
+                        style: AppTheme.body(12, weight: FontWeight.w600),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     const SizedBox(width: 6),
                     Container(
@@ -157,9 +161,13 @@ class _AzkarDetailScreenState extends State<AzkarDetailScreen> {
                       ),
                     ),
                     const Spacer(),
-                    Text(
-                      'autoAdvance'.tr,
-                      style: AppTheme.body(11, color: AppColors.sage),
+                    Flexible(
+                      child: Text(
+                        'autoAdvance'.tr,
+                        style: AppTheme.body(11, color: AppColors.sage),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     const SizedBox(width: 6),
                     Obx(
@@ -283,15 +291,11 @@ class _DhikrCard extends StatelessWidget {
                 ),
               ],
               const Spacer(),
-              const Icon(
-                Icons.bookmark_border,
-                size: 17,
-                color: AppColors.sage,
-              ),
+              Icon(Icons.bookmark_border, size: 17, color: AppColors.sage),
               const SizedBox(width: 8),
               GestureDetector(
                 onTap: () => Share.share(item.zekr),
-                child: const Icon(
+                child: Icon(
                   Icons.share_outlined,
                   size: 17,
                   color: AppColors.sage,
@@ -348,11 +352,7 @@ class _DhikrCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (done)
-                    const Icon(
-                      Icons.check_circle,
-                      size: 17,
-                      color: AppColors.emerald,
-                    )
+                    Icon(Icons.check_circle, size: 17, color: AppColors.emerald)
                   else
                     const Icon(
                       Icons.fingerprint,

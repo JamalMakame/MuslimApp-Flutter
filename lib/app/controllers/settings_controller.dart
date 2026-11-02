@@ -61,12 +61,6 @@ class SettingsController extends GetxController {
   bool get isRtl => localeCode.value == 'ar';
   bool get hasLocation => latitude.value != null && longitude.value != null;
 
-  ThemeMode get materialThemeMode => switch (themeMode.value) {
-    'light' => ThemeMode.light,
-    'dark' => ThemeMode.dark,
-    _ => ThemeMode.system,
-  };
-
   /// Font scale applied to Quran text: small 1.0, medium 1.15, large 1.35.
   double get quranScale => switch (textScale.value) {
     0 => 0.92,

@@ -29,11 +29,7 @@ class CalendarScreen extends GetView<CalendarController> {
               // ---- Context header ------------------------------------------
               Row(
                 children: [
-                  const Icon(
-                    Icons.location_on,
-                    size: 14,
-                    color: AppColors.emerald,
-                  ),
+                  Icon(Icons.location_on, size: 14, color: AppColors.emerald),
                   const SizedBox(width: 4),
                   Expanded(
                     child: Text(
@@ -126,7 +122,7 @@ class CalendarScreen extends GetView<CalendarController> {
                   gradient: const LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [AppColors.emerald, AppColors.emeraldDeep],
+                    colors: [AppColors.brand, AppColors.brandDeep],
                   ),
                   border: Border.all(
                     color: AppColors.gold.withValues(alpha: 0.2),
@@ -438,10 +434,7 @@ class CalendarScreen extends GetView<CalendarController> {
                       runSpacing: 5,
                       crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
-                        const _LegendDot(
-                          color: AppColors.emerald,
-                          filled: true,
-                        ),
+                        _LegendDot(color: AppColors.emerald, filled: true),
                         const SizedBox(width: 5),
                         Text(
                           'currentDay'.tr,
@@ -545,7 +538,7 @@ class CalendarScreen extends GetView<CalendarController> {
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFE7F2F0),
+                          color: AppColors.emeraldTint,
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Text(

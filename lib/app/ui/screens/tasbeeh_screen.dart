@@ -228,7 +228,7 @@ class TasbeehScreen extends GetView<TasbeehController> {
                       label: 'goal'.tr,
                       value: '${controller.target.value} ${'counts'.tr}',
                       trailing: IconButton(
-                        icon: const Icon(
+                        icon: Icon(
                           Icons.swap_vert,
                           size: 16,
                           color: AppColors.sage,
@@ -265,7 +265,7 @@ class TasbeehScreen extends GetView<TasbeehController> {
                   Container(
                     width: 38,
                     height: 38,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.goldTint,
                       shape: BoxShape.circle,
                     ),
@@ -517,7 +517,7 @@ class _StatCard extends StatelessWidget {
           Container(
             width: 34,
             height: 34,
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               color: AppColors.goldTint,
               shape: BoxShape.circle,
             ),

@@ -236,9 +236,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 14,
                                     ),
-                                    side: const BorderSide(
-                                      color: AppColors.hairline,
-                                    ),
+                                    side: BorderSide(color: AppColors.hairline),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(999),
                                     ),
@@ -246,7 +244,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                   onPressed: _locating
                                       ? null
                                       : _useCurrentLocation,
-                                  icon: const Icon(
+                                  icon: Icon(
                                     Icons.my_location,
                                     size: 17,
                                     color: AppColors.emerald,
@@ -269,7 +267,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                       _manual = !_manual;
                                       _error = null;
                                     }),
-                                    icon: const Icon(
+                                    icon: Icon(
                                       Icons.edit_location_alt_outlined,
                                       size: 16,
                                       color: AppColors.emerald,
@@ -315,7 +313,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
-                                            borderSide: const BorderSide(
+                                            borderSide: BorderSide(
                                               color: AppColors.hairline,
                                             ),
                                           ),
@@ -323,7 +321,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
-                                            borderSide: const BorderSide(
+                                            borderSide: BorderSide(
                                               color: AppColors.hairline,
                                             ),
                                           ),
@@ -352,7 +350,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           ),
                   ),
                   if (_locating)
-                    const Padding(
+                    Padding(
                       padding: EdgeInsets.only(top: 10),
                       child: Center(
                         child: SizedBox(
@@ -478,7 +476,7 @@ class _SectionCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.location_on, size: 13, color: AppColors.emerald),
+              Icon(Icons.location_on, size: 13, color: AppColors.emerald),
               const SizedBox(width: 4),
               Text(
                 eyebrow,
@@ -584,7 +582,7 @@ class _LocationSetRow extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const Icon(Icons.check_circle, color: AppColors.emerald, size: 18),
+          Icon(Icons.check_circle, color: AppColors.emerald, size: 18),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
@@ -681,7 +679,7 @@ class _MethodPicker extends StatelessWidget {
             Container(
               width: 34,
               height: 34,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.goldTint,
                 shape: BoxShape.circle,
               ),
@@ -707,11 +705,7 @@ class _MethodPicker extends StatelessWidget {
                 ],
               ),
             ),
-            const Icon(
-              Icons.keyboard_arrow_down,
-              color: AppColors.sage,
-              size: 20,
-            ),
+            Icon(Icons.keyboard_arrow_down, color: AppColors.sage, size: 20),
           ],
         ),
       ),
@@ -752,7 +746,7 @@ class _MethodSheet extends StatelessWidget {
                   style: AppTheme.body(11, color: AppColors.sage),
                 ),
                 trailing: e.key == value
-                    ? const Icon(
+                    ? Icon(
                         Icons.check_circle,
                         color: AppColors.emerald,
                         size: 20,

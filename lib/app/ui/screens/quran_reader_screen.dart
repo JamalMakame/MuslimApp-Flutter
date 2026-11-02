@@ -67,7 +67,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                             style: AppTheme.body(12, color: Colors.white),
                           ),
                           snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: AppColors.emeraldDeep,
+                          backgroundColor: AppColors.brandDeep,
                           duration: const Duration(seconds: 1),
                           borderRadius: 12,
                           margin: const EdgeInsets.all(16),
@@ -88,7 +88,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                   Container(
                     width: 30,
                     height: 30,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.goldTint,
                       shape: BoxShape.circle,
                     ),
@@ -229,7 +229,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                               ),
                             ],
                             const SizedBox(height: 12),
-                            const Divider(color: AppColors.hairline, height: 1),
+                            Divider(color: AppColors.hairline, height: 1),
                             const SizedBox(height: 14),
 
                             // Flowing ayah text w/ medallions
@@ -294,7 +294,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                               return Column(
                                 children: [
                                   const SizedBox(height: 14),
-                                  const Divider(color: AppColors.hairline),
+                                  Divider(color: AppColors.hairline),
                                   const SizedBox(height: 8),
                                   for (final a in c.ayahs)
                                     Padding(
@@ -311,7 +311,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                                                 width: 20,
                                                 height: 20,
                                                 alignment: Alignment.center,
-                                                decoration: const BoxDecoration(
+                                                decoration: BoxDecoration(
                                                   color: AppColors.goldTint,
                                                   shape: BoxShape.circle,
                                                 ),
@@ -359,11 +359,11 @@ class QuranReaderScreen extends GetView<ReaderController> {
                               );
                             }),
                             const SizedBox(height: 12),
-                            const Divider(color: AppColors.hairline),
+                            Divider(color: AppColors.hairline),
                             const SizedBox(height: 10),
                             Row(
                               children: [
-                                const Icon(
+                                Icon(
                                   Icons.circle,
                                   size: 7,
                                   color: AppColors.emerald,
@@ -460,7 +460,7 @@ class _AudioBar extends StatelessWidget {
                   color: AppColors.emerald.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: const Icon(
+                child: Icon(
                   Icons.graphic_eq,
                   color: AppColors.emerald,
                   size: 19,
@@ -508,7 +508,7 @@ class _AudioBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 10),
-              const Icon(Icons.repeat, color: AppColors.sage, size: 18),
+              Icon(Icons.repeat, color: AppColors.sage, size: 18),
             ],
           ),
           const SizedBox(height: 10),
@@ -561,9 +561,9 @@ class _AudioBar extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.skip_previous, color: AppColors.ink, size: 26),
+              Icon(Icons.skip_previous, color: AppColors.ink, size: 26),
               const SizedBox(width: 14),
-              const Icon(Icons.replay_10, color: AppColors.ink, size: 24),
+              Icon(Icons.replay_10, color: AppColors.ink, size: 24),
               const SizedBox(width: 14),
               Obx(
                 () => GestureDetector(
@@ -571,7 +571,7 @@ class _AudioBar extends StatelessWidget {
                   child: Container(
                     width: 62,
                     height: 62,
-                    decoration: const BoxDecoration(
+                    decoration: BoxDecoration(
                       color: AppColors.emerald,
                       shape: BoxShape.circle,
                     ),
@@ -594,9 +594,9 @@ class _AudioBar extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
-              const Icon(Icons.forward_10, color: AppColors.ink, size: 24),
+              Icon(Icons.forward_10, color: AppColors.ink, size: 24),
               const SizedBox(width: 14),
-              const Icon(Icons.skip_next, color: AppColors.ink, size: 26),
+              Icon(Icons.skip_next, color: AppColors.ink, size: 26),
             ],
           ),
         ],

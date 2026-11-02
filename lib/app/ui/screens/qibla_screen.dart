@@ -115,7 +115,7 @@ class QiblaScreen extends GetView<QiblaController> {
                               : controller.needleAngle,
                           heading: heading,
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Icon(
                             Icons.mosque,
                             color: AppColors.emeraldDeep,
@@ -208,7 +208,7 @@ class QiblaScreen extends GetView<QiblaController> {
                     Container(
                       width: 38,
                       height: 38,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: AppColors.goldTint,
                         shape: BoxShape.circle,
                       ),
@@ -329,7 +329,7 @@ class _GeodesicRow extends StatelessWidget {
                 children: [
                   Transform.rotate(
                     angle: bearing * math.pi / 180,
-                    child: const Icon(
+                    child: Icon(
                       Icons.navigation,
                       color: AppColors.emerald,
                       size: 30,

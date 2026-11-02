@@ -72,7 +72,7 @@ class HomeScreen extends GetView<HomeController> {
                                     ),
                                   ),
                                 ),
-                                const Icon(
+                                Icon(
                                   Icons.chevron_right,
                                   color: AppColors.emerald,
                                   size: 16,
@@ -98,7 +98,7 @@ class HomeScreen extends GetView<HomeController> {
                       ),
                       child: Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.location_on,
                             size: 13,
                             color: AppColors.emerald,
@@ -129,7 +129,7 @@ class HomeScreen extends GetView<HomeController> {
                     padding: const EdgeInsets.all(20),
                     child: Column(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.location_searching,
                           color: AppColors.emerald,
                           size: 30,
@@ -191,7 +191,7 @@ class HomeScreen extends GetView<HomeController> {
                       Container(
                         width: 42,
                         height: 42,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           color: AppColors.goldTint,
                           shape: BoxShape.circle,
                         ),
@@ -220,7 +220,7 @@ class HomeScreen extends GetView<HomeController> {
                           ],
                         ),
                       ),
-                      const Icon(
+                      Icon(
                         Icons.chevron_right,
                         color: AppColors.sage,
                         size: 20,
@@ -348,7 +348,7 @@ class _HeroCard extends StatelessWidget {
         gradient: const LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.emerald, AppColors.emeraldDeep],
+          colors: [AppColors.brand, AppColors.brandDeep],
         ),
         border: Border.all(color: AppColors.gold.withValues(alpha: 0.35)),
         boxShadow: const [
@@ -403,7 +403,7 @@ class _HeroCard extends StatelessWidget {
                     hijriLabel,
                     style: AppTheme.body(
                       11,
-                      color: AppColors.ivory.withValues(alpha: 0.75),
+                      color: AppColors.onBrand.withValues(alpha: 0.75),
                     ),
                   ),
                 ],
@@ -423,7 +423,7 @@ class _HeroCard extends StatelessWidget {
                 style: AppTheme.body(
                   16,
                   weight: FontWeight.w600,
-                  color: AppColors.ivory.withValues(alpha: 0.85),
+                  color: AppColors.onBrand.withValues(alpha: 0.85),
                 ),
               ),
               const SizedBox(height: 12),
@@ -439,7 +439,7 @@ class _HeroCard extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.schedule,
                       size: 13,
                       color: AppColors.emeraldDeep,
@@ -633,7 +633,7 @@ class _InspirationCard extends StatelessWidget {
             Container(
               width: 32,
               height: 32,
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 color: AppColors.goldTint,
                 shape: BoxShape.circle,
               ),

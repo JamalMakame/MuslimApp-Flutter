@@ -66,15 +66,11 @@ Future<void> showTafsirSheet({
                     child: Container(
                       width: 34,
                       height: 34,
-                      decoration: const BoxDecoration(
+                      decoration: BoxDecoration(
                         color: AppColors.ivory,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(
-                        Icons.close,
-                        size: 17,
-                        color: AppColors.ink,
-                      ),
+                      child: Icon(Icons.close, size: 17, color: AppColors.ink),
                     ),
                   ),
                 ],
@@ -214,7 +210,7 @@ Future<void> showTafsirSheet({
                       const Spacer(),
                       Row(
                         children: [
-                          const Icon(
+                          Icon(
                             Icons.menu_book,
                             size: 13,
                             color: AppColors.emerald,
@@ -241,7 +237,7 @@ Future<void> showTafsirSheet({
             // Actions
             Container(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
-              decoration: const BoxDecoration(
+              decoration: BoxDecoration(
                 border: Border(top: BorderSide(color: AppColors.hairline)),
               ),
               child: Row(
@@ -270,7 +266,7 @@ Future<void> showTafsirSheet({
                           style: AppTheme.body(12, color: Colors.white),
                         ),
                         snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: AppColors.emeraldDeep,
+                        backgroundColor: AppColors.brandDeep,
                         duration: const Duration(seconds: 2),
                         borderRadius: 12,
                         margin: const EdgeInsets.all(16),
@@ -327,7 +323,7 @@ class _TafsirBody extends StatelessWidget {
       ),
       builder: (_, snap) {
         if (snap.connectionState != ConnectionState.done) {
-          return const Padding(
+          return Padding(
             padding: EdgeInsets.symmetric(vertical: 14),
             child: Center(
               child: SizedBox(
