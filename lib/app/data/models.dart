@@ -168,3 +168,37 @@ class AyahSearchResult {
     this.matchedTranslation,
   });
 }
+
+/// A bookmarked ayah with an optional note.
+class AyahBookmark {
+  final int surah;
+  final int ayah;
+  final String note;
+  final DateTime created;
+
+  const AyahBookmark({
+    required this.surah,
+    required this.ayah,
+    this.note = '',
+    required this.created,
+  });
+
+  String get verseKey => '$surah:$ayah';
+
+  AyahBookmark withNote(String note) =>
+      AyahBookmark(surah: surah, ayah: ayah, note: note, created: created);
+
+  Map<String, dynamic> toJson() => {
+    's': surah,
+    'a': ayah,
+    'n': note,
+    't': created.millisecondsSinceEpoch,
+  };
+
+  factory AyahBookmark.fromJson(Map j) => AyahBookmark(
+    surah: j['s'] as int,
+    ayah: j['a'] as int,
+    note: (j['n'] ?? '') as String,
+    created: DateTime.fromMillisecondsSinceEpoch((j['t'] ?? 0) as int),
+  );
+}

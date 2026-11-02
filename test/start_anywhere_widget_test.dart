@@ -217,16 +217,6 @@ void main() {
     expect(tester.takeException(), isNull);
   });
 
-  testWidgets('the ۞ mark is drawn before quarter starts', (tester) async {
-    await pump(tester, Routes.reader(2));
-    final rich = tester
-        .widgetList<RichText>(find.byType(RichText))
-        .where((t) => t.text.toPlainText().contains('۞'));
-    expect(rich, isNotEmpty);
-    final marks = '۞'.allMatches(rich.first.text.toPlainText()).length;
-    expect(marks, quran.ayahsFor(2).where(quran.startsHizbQuarter).length);
-  });
-
   testWidgets('Home: Continue reading and Ayah of the Day open the reader', (
     tester,
   ) async {

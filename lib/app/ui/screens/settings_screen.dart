@@ -526,7 +526,7 @@ class SettingsScreen extends GetView<SettingsController> {
               try {
                 await AudioCacheService.clearAllAudio();
                 await StorageService.instance.clearAll();
-                QuranService.instance.lastReadRx.value = null;
+                QuranService.instance.resetUserState();
                 controller.reload();
                 Get.updateLocale(controller.locale);
                 await NotificationService.instance.cancelAll();

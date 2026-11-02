@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 
 import '../data/models.dart';
+import '../routes/app_pages.dart';
 import '../services/quran_service.dart';
 
 /// Quran index: offline search (surah names / ayah text), sort mode,
@@ -9,22 +10,18 @@ class QuranController extends GetxController {
   final _quran = QuranService.instance;
 
   final query = ''.obs;
-  final searchAyahs = false.obs; // Surahs | Ayat segment
+
+  /// 0 Surahs · 1 Juz · 2 Ayat.
+  final segment = 0.obs;
+  bool get searchAyahs => segment.value == 2;
   final sortByRevelation = false.obs;
   final ayahResults = <AyahSearchResult>[].obs;
-  final bookmarked = Rx<Set<int>>(<int>{});
   Rxn<(int, int, int)> get lastRead => _quran.lastReadRx;
 
   /// True when the result list was cut at [QuranService.defaultSearchLimit].
   final resultsLimited = false.obs;
 
   bool get hasAyahQuery => _normalizedLength(query.value) >= 2;
-
-  @override
-  void onInit() {
-    super.onInit();
-    bookmarked.value = _quran.bookmarks;
-  }
 
   List<Surah> get visibleSurahs {
     var list = _quran.surahs.toList();
@@ -49,13 +46,13 @@ class QuranController extends GetxController {
     _runAyahSearch();
   }
 
-  void setSegment(bool ayahs) {
-    searchAyahs.value = ayahs;
+  void setSegment(int i) {
+    segment.value = i;
     _runAyahSearch();
   }
 
   void _runAyahSearch() {
-    if (!searchAyahs.value || !hasAyahQuery) {
+    if (!searchAyahs || !hasAyahQuery) {
       ayahResults.clear();
       resultsLimited.value = false;
       return;
@@ -78,9 +75,14 @@ class QuranController extends GetxController {
 
   void toggleSort() => sortByRevelation.toggle();
 
-  Future<void> toggleBookmark(int surahNumber) async {
-    await _quran.toggleBookmark(surahNumber);
-    bookmarked.value = _quran.bookmarks;
+  /// A surah without bookmarks gets one on its first ayah; one with
+  /// bookmarks opens the Bookmarks list.
+  Future<void> surahBookmarkTap(int surahNumber) async {
+    if (_quran.bookmarkedSurahs.contains(surahNumber)) {
+      await Get.toNamed(Routes.bookmarks);
+    } else {
+      await _quran.saveBookmark(surahNumber, 1);
+    }
   }
 
   void refreshLastRead() => lastRead.value = _quran.lastRead;

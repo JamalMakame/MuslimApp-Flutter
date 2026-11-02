@@ -262,14 +262,72 @@ class QuranService {
     await _s.write(StorageService.kLastReadPage, page);
   }
 
-  Set<int> get bookmarks => ((_s.read<List>(StorageService.kBookmarks)) ?? [])
-      .whereType<int>()
-      .toSet();
+  /// Ayah bookmarks, newest first. Surah bookmarks from older versions
+  /// become bookmarks on that surah's first ayah.
+  RxList<AyahBookmark> get bookmarksRx =>
+      _bookmarksRx ??= RxList(_readBookmarks());
+  RxList<AyahBookmark>? _bookmarksRx;
 
-  Future<void> toggleBookmark(int surahNumber) async {
-    final b = bookmarks;
-    b.contains(surahNumber) ? b.remove(surahNumber) : b.add(surahNumber);
-    await _s.write(StorageService.kBookmarks, b.toList());
+  List<AyahBookmark> _readBookmarks() {
+    final stored = _s.read<List>(StorageService.kAyahBookmarks);
+    if (stored != null) {
+      return [
+        for (final m in stored.whereType<Map>()) AyahBookmark.fromJson(m),
+      ];
+    }
+    final legacy = (_s.read<List>(StorageService.kBookmarks) ?? [])
+        .whereType<int>()
+        .where((s) => s >= 1 && s <= 114)
+        .toSet();
+    final now = DateTime.now();
+    final migrated = [
+      for (final s in legacy) AyahBookmark(surah: s, ayah: 1, created: now),
+    ];
+    if (legacy.isNotEmpty) {
+      _s.write(StorageService.kAyahBookmarks, [
+        for (final b in migrated) b.toJson(),
+      ]);
+      _s.remove(StorageService.kBookmarks);
+    }
+    return migrated;
+  }
+
+  AyahBookmark? bookmarkAt(int surah, int ayah) =>
+      bookmarksRx.firstWhereOrNull((b) => b.surah == surah && b.ayah == ayah);
+
+  /// Surahs that have at least one bookmarked ayah.
+  Set<int> get bookmarkedSurahs => {for (final b in bookmarksRx) b.surah};
+
+  /// Adds the bookmark, or updates its note when it exists.
+  Future<void> saveBookmark(int surah, int ayah, {String? note}) async {
+    final old = bookmarkAt(surah, ayah);
+    final b = old == null
+        ? AyahBookmark(
+            surah: surah,
+            ayah: ayah,
+            note: note ?? '',
+            created: DateTime.now(),
+          )
+        : old.withNote(note ?? old.note);
+    bookmarksRx
+      ..remove(old)
+      ..insert(0, b);
+    await _writeBookmarks();
+  }
+
+  Future<void> removeBookmark(int surah, int ayah) async {
+    bookmarksRx.removeWhere((b) => b.surah == surah && b.ayah == ayah);
+    await _writeBookmarks();
+  }
+
+  Future<void> _writeBookmarks() => _s.write(StorageService.kAyahBookmarks, [
+    for (final b in bookmarksRx) b.toJson(),
+  ]);
+
+  /// Forgets cached user state after Settings → clear local data.
+  void resetUserState() {
+    _lastReadRx = null;
+    _bookmarksRx = null;
   }
 
   // ---- Offline ayah search -------------------------------------------------

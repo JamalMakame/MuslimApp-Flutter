@@ -32,7 +32,8 @@ class StorageService {
   static const kLastReadSurah = 'last_surah';
   static const kLastReadAyah = 'last_ayah';
   static const kLastReadPage = 'last_page';
-  static const kBookmarks = 'bookmarks'; // Set<surah>
+  static const kBookmarks = 'bookmarks'; // Set<surah>, before ayah bookmarks
+  static const kAyahBookmarks = 'ayah_bookmarks'; // [{s, a, n, t}]
   static const kTafsirCache = 'tafsir_cache';
   static const kTasbeehPhrase = 'tasbeeh_phrase';
   static const kTasbeehCount = 'tasbeeh_count';

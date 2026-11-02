@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:get/get.dart';
+import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
 import '../../controllers/reader_controller.dart';
 import '../../controllers/settings_controller.dart';
+import '../../data/models.dart';
 import '../../routes/app_pages.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
+import '../widgets/ayah_actions_sheet.dart';
 import '../widgets/floating_nav_pill.dart';
 import '../widgets/go_to_sheet.dart';
 import '../widgets/tafsir_sheet.dart';
@@ -61,28 +64,25 @@ class QuranReaderScreen extends GetView<ReaderController> {
                     onTap: () => showGoToSheet(fromSurah: s.number),
                   ),
                   const SizedBox(width: 8),
-                  Obx(
-                    () => _RoundIconBtn(
-                      icon: c.bookmarked.value
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
-                      color: c.bookmarked.value ? AppColors.gold : null,
+                  Obx(() {
+                    final n = c.current.value?.numberInSurah ?? 1;
+                    final on = c.isBookmarked(n);
+                    return _RoundIconBtn(
+                      key: const ValueKey('reader-bookmark'),
+                      icon: on ? Icons.bookmark : Icons.bookmark_border,
+                      color: on ? AppColors.gold : null,
                       onTap: () async {
-                        await c.toggleBookmark();
-                        Get.rawSnackbar(
-                          messageText: Text(
-                            'bookmarkSaved'.tr,
-                            style: AppTheme.body(12, color: Colors.white),
-                          ),
-                          snackPosition: SnackPosition.BOTTOM,
-                          backgroundColor: AppColors.brandDeep,
-                          duration: const Duration(seconds: 1),
-                          borderRadius: 12,
-                          margin: const EdgeInsets.all(16),
+                        final added = await c.toggleCurrentBookmark();
+                        showReaderToast(
+                          added
+                              ? 'bookmarkAdded'.trParams({
+                                  'ref': '${s.nameSimple} ${s.number}:$n',
+                                })
+                              : 'bookmarkRemoved'.tr,
                         );
                       },
-                    ),
-                  ),
+                    );
+                  }),
                 ],
               ),
             ),
@@ -146,8 +146,13 @@ class QuranReaderScreen extends GetView<ReaderController> {
                     icon: Icons.graphic_eq,
                     label: 'hifzMode'.tr,
                     onTap: () async {
-                      if (c.playing.value) await c.player.pause();
-                      Get.toNamed(Routes.memorize(s.number));
+                      await c.pauseAudio();
+                      Get.toNamed(
+                        Routes.memorize(
+                          s.number,
+                          ayah: c.current.value?.numberInSurah,
+                        ),
+                      );
                     },
                   ),
                   const SizedBox(width: 8),
@@ -175,260 +180,52 @@ class QuranReaderScreen extends GetView<ReaderController> {
             ),
             const SizedBox(height: 12),
 
-            // ---- Mushaf canvas ---------------------------------------------
+            // ---- Ayahs: one block each, built as they scroll in -------------
             Expanded(
               // Only the reader's own scrolling moves the saved position,
-              // not the jump to a searched ayah.
+              // not a jump to an ayah.
               child: NotificationListener<UserScrollNotification>(
                 onNotification: (n) {
-                  if (n.direction != ScrollDirection.idle) return false;
-                  final box = n.context?.findRenderObject();
-                  if (box is RenderBox && box.hasSize) {
-                    final top = box.localToGlobal(Offset.zero).dy;
-                    c.saveVisiblePosition(top + box.size.height * 0.25);
+                  if (n.direction == ScrollDirection.idle) {
+                    c.saveVisiblePosition();
                   }
                   return false;
                 },
-                child: ListView(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
-                  children: [
-                    Container(
-                      decoration: appCardDecoration(radius: 16),
-                      padding: const EdgeInsets.all(4),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: AppColors.gold.withValues(alpha: 0.35),
-                          ),
-                        ),
-                        padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
-                        child: Column(
-                          children: [
-                            // Surah cartouche
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 18,
-                                vertical: 8,
-                              ),
-                              decoration: BoxDecoration(
-                                color: AppColors.goldTint,
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'surahHeader'.trParams({
-                                      'name': s.nameSimple.toUpperCase(),
-                                    }),
-                                    style: AppTheme.body(
-                                      11,
-                                      weight: FontWeight.w800,
-                                      color: AppColors.emeraldDeep,
-                                      letterSpacing: 1.4,
-                                    ),
-                                  ),
-                                  Text(
-                                    '${s.nameTranslated} · ${'revelation'.trParams({'order': '${s.revelationOrder}'})}',
-                                    style: AppTheme.body(
-                                      9.5,
-                                      color: AppColors.sage,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            if (s.number != 1 && s.number != 9) ...[
-                              const SizedBox(height: 18),
-                              Text(
-                                basmala,
-                                textDirection: TextDirection.rtl,
-                                style: AppTheme.quran(
-                                  24 * settings.quranScale,
-                                  color: AppColors.emerald,
-                                  height: 1.5,
-                                ),
-                              ),
-                            ],
-                            const SizedBox(height: 12),
-                            Divider(color: AppColors.hairline, height: 1),
-                            const SizedBox(height: 14),
-
-                            // Flowing ayah text w/ medallions
-                            Obx(() {
-                              final scale = settings.textScale.value;
-                              final size = [19.0, 21.0, 26.0][scale];
-                              final highlight = c.highlightAyah.value;
-                              return Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: Text.rich(
-                                  TextSpan(
-                                    children: [
-                                      for (final a in c.ayahs) ...[
-                                        // The corpus marks most quarters
-                                        // itself; add the missing ones.
-                                        if (QuranService.instance
-                                                .startsHizbQuarter(a) &&
-                                            !a.text.startsWith('۞'))
-                                          TextSpan(
-                                            text: '۞ ',
-                                            style: AppTheme.quran(
-                                              size,
-                                              color: AppColors.gold,
-                                              height: 2.05,
-                                            ),
-                                          ),
-                                        WidgetSpan(
-                                          child: SizedBox(
-                                            key: c.ayahKey(a.numberInSurah),
-                                            width: 0,
-                                            height: size,
-                                          ),
-                                        ),
-                                        TextSpan(
-                                          text: '${a.text} ',
-                                          style:
-                                              AppTheme.quran(
-                                                size,
-                                                height: 2.05,
-                                              ).copyWith(
-                                                backgroundColor:
-                                                    highlight == a.numberInSurah
-                                                    ? AppColors.goldTint
-                                                    : null,
-                                              ),
-                                        ),
-                                        WidgetSpan(
-                                          alignment:
-                                              PlaceholderAlignment.middle,
-                                          child: GestureDetector(
-                                            onTap: () => showTafsirSheet(
-                                              surahNumber: s.number,
-                                              ayahNumber: a.numberInSurah,
-                                              ayahText: a.text,
-                                            ),
-                                            child: _AyahMedallion(
-                                              n: a.numberInSurah,
-                                              isSajda: a.sajda,
-                                            ),
-                                          ),
-                                        ),
-                                        const TextSpan(text: ' '),
-                                      ],
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }),
-
-                            // Translations
-                            Obx(() {
-                              if (!c.showTrans.value) {
-                                return const SizedBox.shrink();
-                              }
-                              return Column(
-                                children: [
-                                  const SizedBox(height: 14),
-                                  Divider(color: AppColors.hairline),
-                                  const SizedBox(height: 8),
-                                  for (final a in c.ayahs)
-                                    Padding(
-                                      key: c.translationKey(a.numberInSurah),
-                                      padding: const EdgeInsets.symmetric(
-                                        vertical: 7,
-                                      ),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Container(
-                                                width: 20,
-                                                height: 20,
-                                                alignment: Alignment.center,
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.goldTint,
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: Text(
-                                                  '${a.numberInSurah}',
-                                                  style: AppTheme.body(
-                                                    9.5,
-                                                    weight: FontWeight.w700,
-                                                    color: AppColors.gold,
-                                                  ),
-                                                ),
-                                              ),
-                                              const SizedBox(width: 7),
-                                              GestureDetector(
-                                                onTap: () => showTafsirSheet(
-                                                  surahNumber: s.number,
-                                                  ayahNumber: a.numberInSurah,
-                                                  ayahText: a.text,
-                                                ),
-                                                child: Text(
-                                                  'tafsirKathir'.tr,
-                                                  style: AppTheme.body(
-                                                    9,
-                                                    weight: FontWeight.w700,
-                                                    color: AppColors.emerald,
-                                                    letterSpacing: 0.6,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(height: 4),
-                                          Text(
-                                            c.translationOf(a.numberInSurah),
-                                            style: AppTheme.body(
-                                              13,
-                                              color: AppColors.ink,
-                                              height: 1.55,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                ],
-                              );
-                            }),
-                            const SizedBox(height: 12),
-                            Divider(color: AppColors.hairline),
-                            const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Icon(
-                                  Icons.circle,
-                                  size: 7,
-                                  color: AppColors.emerald,
-                                ),
-                                const SizedBox(width: 5),
-                                Text(
-                                  'hafsRecitation'.tr,
-                                  style: AppTheme.body(
-                                    10.5,
-                                    color: AppColors.sage,
-                                  ),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  'mushafSharif'.tr,
-                                  style: AppTheme.body(
-                                    10.5,
-                                    fontStyle: FontStyle.italic,
-                                    color: AppColors.gold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                child: Obx(() {
+                  final size = [19.0, 21.0, 26.0][settings.textScale.value];
+                  final showTrans = c.showTrans.value;
+                  final highlight = c.highlightAyah.value;
+                  final playingAyah = c.playingAyah.value;
+                  final marked = {
+                    for (final b in QuranService.instance.bookmarksRx)
+                      if (b.surah == s.number) b.ayah,
+                  };
+                  final count = c.ayahs.length;
+                  return ScrollablePositionedList.builder(
+                    itemScrollController: c.itemScroll,
+                    itemPositionsListener: c.positions,
+                    initialScrollIndex: c.initialIndex,
+                    initialAlignment: c.initialIndex == 0 ? 0 : 0.08,
+                    padding: const EdgeInsets.fromLTRB(20, 0, 20, 16),
+                    itemCount: count + 2,
+                    itemBuilder: (context, i) {
+                      if (i == 0) return _SurahHeader(surah: s);
+                      if (i == count + 1) return _SurahFooter(surah: s);
+                      final a = c.ayahs[i - 1];
+                      final n = a.numberInSurah;
+                      return _AyahBlock(
+                        key: c.ayahKey(n),
+                        surah: s.number,
+                        ayah: a,
+                        size: size,
+                        translation: showTrans ? c.translationOf(n) : '',
+                        highlighted: highlight == n || playingAyah == n,
+                        bookmarked: marked.contains(n),
+                        onActions: () => showAyahActions(c, a),
+                      );
+                    },
+                  );
+                }),
               ),
             ),
 
@@ -507,15 +304,25 @@ class _AudioBar extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'fullSurah'.trParams({
-                        'name': controller.surah.nameSimple,
-                      }),
-                      style: AppTheme.headline(13.5, weight: FontWeight.w700),
-                    ),
-                    Text(
-                      'misharyAlafasy'.tr,
-                      style: AppTheme.body(11, color: AppColors.sage),
+                    Obx(() {
+                      final n = controller.playingAyah.value;
+                      final name = controller.surah.nameSimple;
+                      return Text(
+                        n == null
+                            ? 'fullSurah'.trParams({'name': name})
+                            : 'playingAyah'.trParams({'name': name, 'n': '$n'}),
+                        style: AppTheme.headline(13.5, weight: FontWeight.w700),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      );
+                    }),
+                    Obx(
+                      () => Text(
+                        controller.playingAyah.value == null
+                            ? 'misharyAlafasy'.tr
+                            : QuranService.reciters[controller.reciter] ?? '',
+                        style: AppTheme.body(11, color: AppColors.sage),
+                      ),
                     ),
                   ],
                 ),
@@ -715,6 +522,280 @@ class _RoundIconBtn extends StatelessWidget {
           border: Border.all(color: AppColors.hairline),
         ),
         child: Icon(icon, size: 19, color: color ?? AppColors.ink),
+      ),
+    );
+  }
+}
+
+/// Surah cartouche and basmala (suppressed for Al-Fatihah, where ayah 1 is
+/// the basmala, and At-Tawbah, which has none).
+class _SurahHeader extends StatelessWidget {
+  const _SurahHeader({required this.surah});
+
+  final Surah surah;
+
+  @override
+  Widget build(BuildContext context) {
+    final settings = Get.find<SettingsController>();
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      decoration: appCardDecoration(radius: 16),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 14),
+      child: Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+            decoration: BoxDecoration(
+              color: AppColors.goldTint,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Column(
+              children: [
+                Text(
+                  'surahHeader'.trParams({
+                    'name': surah.nameSimple.toUpperCase(),
+                  }),
+                  style: AppTheme.body(
+                    11,
+                    weight: FontWeight.w800,
+                    color: AppColors.emeraldDeep,
+                    letterSpacing: 1.4,
+                  ),
+                ),
+                Text(
+                  '${surah.nameTranslated} · ${'revelation'.trParams({'order': '${surah.revelationOrder}'})}',
+                  style: AppTheme.body(9.5, color: AppColors.sage),
+                ),
+              ],
+            ),
+          ),
+          if (surah.number != 1 && surah.number != 9) ...[
+            const SizedBox(height: 14),
+            Text(
+              QuranReaderScreen.basmala,
+              textDirection: TextDirection.rtl,
+              style: AppTheme.quran(
+                24 * settings.quranScale,
+                color: AppColors.emerald,
+                height: 1.5,
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// One ayah: number, Arabic, then its translation. Long-press (or the
+/// "more" button) for the ayah's actions.
+class _AyahBlock extends StatelessWidget {
+  const _AyahBlock({
+    super.key,
+    required this.surah,
+    required this.ayah,
+    required this.size,
+    required this.translation,
+    required this.highlighted,
+    required this.bookmarked,
+    required this.onActions,
+  });
+
+  final int surah;
+  final Ayah ayah;
+  final double size;
+  final String translation;
+  final bool highlighted;
+  final bool bookmarked;
+  final VoidCallback onActions;
+
+  @override
+  Widget build(BuildContext context) {
+    final n = ayah.numberInSurah;
+    // The corpus marks most hizb quarters itself; add the missing ones.
+    final mark =
+        QuranService.instance.startsHizbQuarter(ayah) &&
+        !ayah.text.startsWith('۞');
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onLongPress: onActions,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.fromLTRB(14, 10, 14, 12),
+        decoration: BoxDecoration(
+          color: highlighted ? AppColors.goldTint : AppColors.surface,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(
+            color: highlighted
+                ? AppColors.gold.withValues(alpha: 0.5)
+                : AppColors.hairline,
+          ),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Row(
+              children: [
+                _AyahMedallion(n: n, isSajda: ayah.sajda),
+                const SizedBox(width: 6),
+                Text(
+                  '$surah:$n',
+                  style: AppTheme.body(10.5, color: AppColors.sage),
+                ),
+                if (bookmarked) ...[
+                  const SizedBox(width: 6),
+                  Icon(
+                    Icons.bookmark,
+                    key: ValueKey('ayah-bookmarked-$n'),
+                    size: 14,
+                    color: AppColors.gold,
+                  ),
+                ],
+                const Spacer(),
+                InkWell(
+                  key: ValueKey('ayah-more-$n'),
+                  borderRadius: BorderRadius.circular(999),
+                  onTap: onActions,
+                  child: Padding(
+                    padding: const EdgeInsets.all(4),
+                    child: Icon(
+                      Icons.more_horiz,
+                      size: 20,
+                      color: AppColors.sage,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+            Text.rich(
+              TextSpan(
+                children: [
+                  if (mark)
+                    TextSpan(
+                      text: '۞ ',
+                      style: TextStyle(color: AppColors.gold),
+                    ),
+                  TextSpan(text: ayah.text),
+                ],
+              ),
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.start,
+              style: AppTheme.quran(size, height: 2.05),
+            ),
+            if (translation.isNotEmpty) ...[
+              const SizedBox(height: 6),
+              Text(
+                translation,
+                style: AppTheme.body(13, color: AppColors.ink, height: 1.55),
+              ),
+            ],
+            const SizedBox(height: 4),
+            Align(
+              alignment: AlignmentDirectional.centerStart,
+              child: GestureDetector(
+                onTap: () => showTafsirSheet(
+                  surahNumber: surah,
+                  ayahNumber: n,
+                  ayahText: ayah.text,
+                ),
+                child: Text(
+                  'tafsirKathir'.tr,
+                  style: AppTheme.body(
+                    9,
+                    weight: FontWeight.w700,
+                    color: AppColors.emerald,
+                    letterSpacing: 0.6,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// End of the surah: recitation note, then previous / next surah.
+class _SurahFooter extends StatelessWidget {
+  const _SurahFooter({required this.surah});
+
+  final Surah surah;
+
+  @override
+  Widget build(BuildContext context) {
+    final quran = QuranService.instance;
+    final n = surah.number;
+    return Padding(
+      padding: const EdgeInsets.only(top: 6, bottom: 8),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Icon(Icons.circle, size: 7, color: AppColors.emerald),
+              const SizedBox(width: 5),
+              Text(
+                'hafsRecitation'.tr,
+                style: AppTheme.body(10.5, color: AppColors.sage),
+              ),
+              const Spacer(),
+              Text(
+                'mushafSharif'.tr,
+                style: AppTheme.body(
+                  10.5,
+                  fontStyle: FontStyle.italic,
+                  color: AppColors.gold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              if (n > 1)
+                Expanded(
+                  child: OutlinedButton.icon(
+                    key: const ValueKey('reader-prev'),
+                    onPressed: () => Get.offNamed(Routes.reader(n - 1)),
+                    icon: const Icon(Icons.arrow_back, size: 16),
+                    label: Text(
+                      'prevSurah'.trParams({
+                        'name': quran.surah(n - 1).nameSimple,
+                      }),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTheme.body(12, weight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              if (n > 1 && n < 114) const SizedBox(width: 10),
+              if (n < 114)
+                Expanded(
+                  child: FilledButton.icon(
+                    key: const ValueKey('reader-next'),
+                    style: FilledButton.styleFrom(
+                      backgroundColor: AppColors.emerald,
+                    ),
+                    onPressed: () => Get.offNamed(Routes.reader(n + 1)),
+                    icon: const Icon(Icons.arrow_forward, size: 16),
+                    label: Text(
+                      'nextSurah'.trParams({
+                        'name': quran.surah(n + 1).nameSimple,
+                      }),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTheme.body(
+                        12,
+                        weight: FontWeight.w700,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+            ],
+          ),
+        ],
       ),
     );
   }

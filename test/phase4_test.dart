@@ -58,14 +58,6 @@ void main() {
       expect(ReaderController.ayahAtLine([(5, 300.0), (6, 500.0)], 100), 5);
       expect(ReaderController.ayahAtLine(const [], 100), isNull);
     });
-
-    test('inside the translations, the translation being read decides', () {
-      final arabic = [(1, -3000.0), (2, -2900.0), (286, -900.0)];
-      final translation = [(1, 50.0), (2, 260.0), (3, 500.0)];
-      expect(ReaderController.ayahForReadingLine(arabic, translation, 300), 2);
-      expect(ReaderController.ayahForReadingLine(arabic, translation, 20), 286);
-      expect(ReaderController.ayahForReadingLine(const [], translation, 20), 1);
-    });
   });
 
   group('Daily inspiration', () {

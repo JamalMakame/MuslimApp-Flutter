@@ -1,6 +1,6 @@
 # Deen — Current Features & Architecture
 
-_Last updated: start anywhere in the Quran (Go to, search shortcuts, links, live chips)._
+_Last updated: ayah-level reader (ayah menu, ayah bookmarks + notes, next/previous surah, Juz tab)._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
@@ -65,16 +65,27 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
   Ayah of the Day (40 well-known ayahs, rotates daily, opens the reader at
   that ayah), Hadith of the Day / Dua of the Day cards (rotate daily, tap
   for full text), Hijri + Gregorian dates.
-- **Quran index** — search field, Surahs/Ayat segment, Go to button,
+- **Quran index** — search field, Surahs / Juz / Ayat segment (Juz: 30
+  juz, each expanding into its 8 hizb-quarter starts), Go to and Bookmarks
+  buttons,
   continue-reading card (last-read persisted), 114 surah tiles with gold-ring numbers,
   Makki/Madani chips, revelation order, sort toggle, Juz-30 divider.
-- **Reader** — mushaf-style card with gold frame; flowing RTL Arabic with
-  gold ayah medallions; basmala cartouche (suppressed for Al-Fatihah,
-  where ayah 1 is the basmala, and At-Tawbah which has none); translation
-  section with per-ayah TAFSIR links; ۞ at every hizb quarter; Juz /
-  Hizb / Page chips that follow the ayah being read (tap to Go to); Go to
-  button; text-size and
-  translation toggles; audio bar (Alafasy) with play/pause/seek/speed.
+- **Reader** — surah cartouche + basmala (suppressed for Al-Fatihah,
+  where ayah 1 is the basmala, and At-Tawbah which has none), then one
+  block per ayah, built lazily as it scrolls in (`scrollable_positioned_list`):
+  number medallion (sajda in emerald), Arabic with ۞ at every hizb
+  quarter, its translation underneath, TAFSIR link, bookmark marker.
+  Long-press or "⋯" opens the ayah menu: play from here, bookmark /
+  remove, add / edit note, copy, share (Arabic, translation, reference
+  and a `deen://` link), tafsir, memorise from here (Hifz at that ayah).
+  Header: Go to, bookmark the ayah being read. Juz / Hizb / Page chips
+  follow the reading line (tap to Go to). Footer: previous / next surah.
+  Audio bar: full surah (Alafasy stream) or ayah-by-ayah from the chosen
+  ayah with the Hifz reciter (downloaded files when present), highlighting
+  and scrolling to the ayah being recited; play/pause/seek/speed.
+- **Bookmarks** (`/bookmarks`, index header) — bookmarked ayahs newest
+  first with Arabic snippet and note; edit note, delete, tap to open.
+  Older surah bookmarks are migrated to ayah 1 of that surah.
 - **Go to sheet** — surah + ayah (validated against the surah's length),
   juz 1–30, hizb 1–60 or mushaf page 1–604; resolves to the first ayah
   from the bundled juz/hizb-quarter/page data. In the reader, the same
