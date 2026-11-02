@@ -1,6 +1,6 @@
 # Deen — Current Features & Architecture
 
-_Last updated: habits and memorisation (Khatmah plan, daily goal + streak, reading reminder, Hifz self-test and review list)._
+_Last updated: content (azkar categories and transliteration, An-Nawawi's 40 Hadith, offline tafsir)._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
@@ -46,6 +46,7 @@ English (Sahih Intl.), Swahili (Al-Barwani), or Arabic-only.
 | `/calendar` | Dual Hijri/Gregorian calendar | CalendarController |
 | `/memorize/:surah` | Hifz and offline per-ayah audio | MemorizeController |
 | `/habits` | Reading goal, streak, Khatmah plan, reading reminder, memorisation progress | HabitService |
+| `/hadith` | An-Nawawi's 40 Hadith, Arabic + English | HadithService |
 | `/settings` | Settings | SettingsController (permanent) |
 
 Navigation shell: floating 4-slot pill — Home / Quran / Azkar / Settings.
@@ -61,6 +62,14 @@ daily reading reminder joins the prayer notifications (works without a
 location). Hifz has a self-test: hide the ayah, reveal word by word or all,
 then mark memorised (next review after 1, 3, 7, 14, 30, 60 days) or needs
 review (due tomorrow); `/habits` lists ayahs due and memorised counts per surah.
+
+**Content.** Azkar come in 15 named buckets plus Other (whose cards show the
+source chapter); Settings → Transliteration adds an approximate Latin line
+generated from the vowel marks. `/hadith` bundles An-Nawawi's 40 (42) in
+Arabic and English (`assets/json/nawawi40.json`, The Unlicense). Tafsir can
+be saved per surah (tafsir sheet) or for all 114 (Settings → Offline
+tafsir) into `tafsir/{edition}/{surah}.json`; the reader checks these files
+before the network, and Clear local data deletes them.
 
 ## Screens
 

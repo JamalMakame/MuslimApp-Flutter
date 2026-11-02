@@ -60,6 +60,7 @@ class StorageService {
   static const kKhatmah = 'khatmah'; // {start, days, done: [pages]}
   static const kReadReminder = 'read_reminder'; // minutes after 0:00, -1 off
   static const kHifz = 'hifz'; // {'s:a': {l: level, d: next review}}
+  static const kAzkarTranslit = 'azkar_translit';
   static const kDownloadedAudio =
       'downloaded_audio'; // {edition: {surah: bytes}}
 

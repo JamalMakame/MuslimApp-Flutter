@@ -439,6 +439,7 @@ class HomeScreen extends GetView<HomeController> {
                           label: 'hadithOfDay'.tr,
                           arabic: h.text,
                           reference: h.reference,
+                          more: ('hadithLibrary'.tr, Routes.hadith),
                         );
                       },
                     ),
@@ -750,8 +751,11 @@ class _InspirationCard extends StatelessWidget {
     required this.arabic,
     this.reference = '',
     this.onTap,
+    this.more,
   });
 
+  /// An extra dialog action: (label, route).
+  final (String, String)? more;
   final IconData icon;
   final String label;
   final String arabic;
@@ -786,6 +790,15 @@ class _InspirationCard extends StatelessWidget {
         ),
       ),
       actions: [
+        if (more != null)
+          TextButton(
+            key: const ValueKey('dialog-more'),
+            onPressed: () {
+              Get.back();
+              Get.toNamed(more!.$2);
+            },
+            child: Text(more!.$1, style: AppTheme.body(13)),
+          ),
         TextButton(
           onPressed: Get.back,
           child: Text('done'.tr, style: AppTheme.body(13)),

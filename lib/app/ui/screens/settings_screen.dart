@@ -279,6 +279,15 @@ class SettingsScreen extends GetView<SettingsController> {
                     onChanged: controller.setAyahAudio,
                   ),
                 ),
+                const _OfflineTafsirRow(),
+                Obx(
+                  () => _SettingsSwitch(
+                    title: 'transliteration'.tr,
+                    subtitle: 'transliterationDesc'.tr,
+                    value: controller.azkarTranslit.value,
+                    onChanged: controller.setAzkarTranslit,
+                  ),
+                ),
                 Obx(
                   () => _SettingsSwitch(
                     title: 'showTranslations'.tr,
@@ -578,6 +587,7 @@ class SettingsScreen extends GetView<SettingsController> {
             onPressed: () async {
               try {
                 await AudioCacheService.clearAllAudio();
+                await QuranService.clearTafsirFiles();
                 await StorageService.instance.clearAll();
                 QuranService.instance.resetUserState();
                 HabitService.instance.reset();
@@ -916,4 +926,84 @@ class _RoundIconBtn extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Downloads Ibn Kathir for every surah, one file each, in the app's language.
+class _OfflineTafsirRow extends StatefulWidget {
+  const _OfflineTafsirRow();
+
+  @override
+  State<_OfflineTafsirRow> createState() => _OfflineTafsirRowState();
+}
+
+class _OfflineTafsirRowState extends State<_OfflineTafsirRow> {
+  int _saved = 0;
+  bool _running = false;
+  bool _stop = false;
+  int? _countedEdition;
+
+  int get _edition =>
+      QuranService.tafsirEdition(Get.locale?.languageCode ?? 'en');
+
+  Future<void> _count() async {
+    final edition = _countedEdition = _edition;
+    final n = await QuranService.instance.tafsirOfflineCount(
+      lang: edition == 14 ? 'ar' : 'en',
+    );
+    if (mounted && edition == _countedEdition) setState(() => _saved = n);
+  }
+
+  @override
+  void dispose() {
+    _stop = true;
+    super.dispose();
+  }
+
+  Future<void> _run() async {
+    final lang = _edition == 14 ? 'ar' : 'en';
+    final generation = QuranService.tafsirGeneration;
+    setState(() {
+      _running = true;
+      _stop = false;
+    });
+    final q = QuranService.instance;
+    var failed = false;
+    bool live() =>
+        mounted && !_stop && generation == QuranService.tafsirGeneration;
+    for (var s = 1; s <= 114 && live(); s++) {
+      if (await q.hasTafsirOffline(s, lang: lang)) continue;
+      if (!await q.downloadTafsir(s, lang: lang)) {
+        failed = live();
+        break;
+      }
+      if (!mounted) return;
+      if (lang == (_edition == 14 ? 'ar' : 'en')) setState(() => _saved++);
+    }
+    if (!mounted) return;
+    setState(() => _running = false);
+    if (failed) Get.snackbar('offlineTafsir'.tr, 'downloadFailed'.tr);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_countedEdition != _edition) _count();
+    return _tile();
+  }
+
+  Widget _tile() => ListTile(
+    key: const ValueKey('offline-tafsir'),
+    title: Text('offlineTafsir'.tr, style: AppTheme.body(14)),
+    subtitle: Text(
+      (_running ? 'tafsirDownloading' : 'offlineTafsirDesc').trParams({
+        'n': '$_saved',
+      }),
+      style: AppTheme.body(12, color: AppColors.sage),
+    ),
+    trailing: _saved >= 114
+        ? Icon(Icons.check_circle, color: AppColors.emerald)
+        : TextButton(
+            onPressed: _running ? () => setState(() => _stop = true) : _run,
+            child: Text((_running ? 'stopDownload' : 'downloadAll').tr),
+          ),
+  );
 }

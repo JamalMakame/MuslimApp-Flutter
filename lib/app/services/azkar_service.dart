@@ -6,7 +6,7 @@ import '../data/models.dart';
 import 'storage_service.dart';
 
 /// Bundled Hisnul-Muslim corpus. The JSON ships 39 Arabic categories;
-/// we group them into the 10 design buckets (plus an "Other" bucket so
+/// we group them into 15 named buckets (plus an "Other" bucket so
 /// nothing is dropped).
 class AzkarService {
   AzkarService._();
@@ -30,6 +30,19 @@ class AzkarService {
       'الدعاء إذا نزل مترلا في سفر أو غيره',
       'ذكر الرجوع من السفر',
     ],
+    'catHomeWudu': [' قبل الوضوء', ' عند الخروج من المنزل'],
+    'catIstighfar': ['الاستغفار و التوبة'],
+    'catSalawat': ['فضل الصلاة على النبي صلى الله عليه و سلم'],
+    'catSalam': ['إفشاء السلام', 'كيف يرد السلام على الكافر إذا سلم'],
+    'catHajj': [
+      'كيف يلبي المحرم في الحج أو العمرة ؟',
+      'التكبير إذا أتى الركن الأسود',
+      'الدعاء بين الركن اليماني والحجر الأسود',
+      'دعاء الوقوف على الصفا والمروة',
+      'الدعاء يوم عرفة',
+      'الذكر عند المشعر الحرام',
+      'التكبير عند رمي الجمار مع كل حصاة',
+    ],
     'catRuqyahQuran': ['الرُّقية بالقران'],
     'catRuqyahSunnah': ['الرُّقية بالسنه'],
     'catGratitude': [
@@ -48,6 +61,11 @@ class AzkarService {
     'catWaking',
     'catAdhan',
     'catTravel',
+    'catHomeWudu',
+    'catIstighfar',
+    'catSalawat',
+    'catSalam',
+    'catHajj',
     'catRuqyahQuran',
     'catRuqyahSunnah',
     'catGratitude',

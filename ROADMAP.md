@@ -33,7 +33,9 @@ See `FEATURES.md` for the full current-state reference. In short:
 - ✅ Azkar (all 39 source categories), tasbeeh with targets and haptics
 - ✅ Dual Hijri/Gregorian calendar with occasions and day adjustment
 - ✅ Light / Dark (true-black) / System theme
-- ⬜ Hadith library, word-by-word, mosque finder,
+- ✅ An-Nawawi's 40 Hadith (Arabic + English), offline tafsir downloads,
+  azkar transliteration and 15 named azkar categories
+- ⬜ Larger hadith library, word-by-word, mosque finder,
   widgets, analytics, background audio
 
 ---
@@ -144,6 +146,8 @@ Scholarly resources, search, community integration.
 - ✅ Named tafsir: Ibn Kathir from quran.com (`/tafsirs/{14|169}/by_ayah`,
   Arabic / English abridged), cached locally after first load; offline
   state when never fetched
+- ✅ Offline tafsir: save one surah from the tafsir sheet, or all 114 from
+  Settings (one file per surah, `/tafsirs/{id}/by_chapter`)
 - 🔶 More collections / Swahili — **Swahili tafsir resources are scarce**;
   Swahili users get the English text
 - ⬜ Word-by-word grammar — api.quran.com provides per-word translations
@@ -159,8 +163,10 @@ Scholarly resources, search, community integration.
   separately and labelled)
 
 ### Verified Hadith Library
-- ⬜ Sahih al-Bukhari, Sahih Muslim, Nawawi's 40, with authenticity grades
-  (only a curated daily-hadith list of 16 referenced narrations exists)
+- ✅ An-Nawawi's 40 Hadith (42), Arabic + English, bundled offline at
+  `/hadith` (fawazahmed0/hadith-api, The Unlicense); Home's Hadith of the
+  Day opens it
+- ⬜ Sahih al-Bukhari, Sahih Muslim with authenticity grades
 - ⬜ Translations: Arabic + English readily available (e.g. Sunnah.com
   datasets); **Swahili hadith translations are rare** — likely ar/en only
   initially
