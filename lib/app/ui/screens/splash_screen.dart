@@ -186,13 +186,42 @@ class _SplashScreenState extends State<SplashScreen>
                       ),
                     ),
                     const SizedBox(height: 16),
-                    Text(
-                      'preparing'.tr,
-                      style: AppTheme.body(
-                        12,
-                        color: AppColors.onBrand.withValues(alpha: 0.6),
-                      ),
-                    ),
+                    Obx(() {
+                      final app = Get.find<AppController>();
+                      if (!app.bootFailed.value) {
+                        return Text(
+                          'preparing'.tr,
+                          style: AppTheme.body(
+                            12,
+                            color: AppColors.onBrand.withValues(alpha: 0.6),
+                          ),
+                        );
+                      }
+                      return Column(
+                        children: [
+                          Text(
+                            'bootFailed'.tr,
+                            textAlign: TextAlign.center,
+                            style: AppTheme.body(
+                              12,
+                              color: AppColors.onBrand.withValues(alpha: 0.8),
+                            ),
+                          ),
+                          TextButton(
+                            key: const ValueKey('boot-retry'),
+                            onPressed: app.retryBoot,
+                            child: Text(
+                              'retry'.tr,
+                              style: AppTheme.body(
+                                13,
+                                weight: FontWeight.w700,
+                                color: AppColors.gold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
                     const SizedBox(height: 8),
                     Text(
                       'hijriYear'.trParams({'year': '${hijri.hYear}'}),

@@ -14,6 +14,8 @@ class DeenTranslations extends Translations {
       'navAzkar': 'Azkar',
       'navSettings': 'Settings',
       // Splash
+      'bootFailed': 'Could not load the Quran and azkar data on this device.',
+      'retry': 'Retry',
       'preparing': 'Preparing your prayer times…',
       'hijriYear': '@year AH',
       // Onboarding
@@ -359,6 +361,8 @@ class DeenTranslations extends Translations {
       'navQuran': 'القرآن',
       'navAzkar': 'الأذكار',
       'navSettings': 'الإعدادات',
+      'bootFailed': 'تعذّر تحميل بيانات القرآن والأذكار على هذا الجهاز.',
+      'retry': 'إعادة المحاولة',
       'preparing': 'جارٍ تجهيز أوقات الصلاة…',
       'hijriYear': '@year هـ',
       'onboardTitle': 'رفيقك الهادئ والخاص للصلاة والتأمل.',
@@ -691,6 +695,9 @@ class DeenTranslations extends Translations {
       'navQuran': 'Quran',
       'navAzkar': 'Azkar',
       'navSettings': 'Mipangilio',
+      'bootFailed':
+          'Imeshindwa kupakia data ya Qur\'ani na adhkari kwenye kifaa hiki.',
+      'retry': 'Jaribu tena',
       'preparing': 'Inaandaa nyakati za swala…',
       'hijriYear': '@year AH',
       'onboardTitle': 'Msaidizi wako wa faragha kwa swala na kutafakari.',

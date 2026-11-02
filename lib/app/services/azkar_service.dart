@@ -90,13 +90,28 @@ class AzkarService {
 
   List<DhikrItem> items(String bucket) => _byBucket[bucket] ?? [];
 
-  /// Supplications short enough for the Home "Dua of the Day" card
-  /// (Quranic ruqyah verses excluded).
-  List<DhikrItem> get dailyDuaPool => [
-    for (final e in _byBucket.entries)
-      if (e.key != 'catRuqyahQuran')
-        ...e.value.where((d) => d.zekr.length <= 220),
-  ];
+  /// Supplications short enough for the Home "Dua of the Day" card: entries
+  /// that address Allah (اللهم / رب… / أعوذ), not instructions or verses.
+  List<DhikrItem> get dailyDuaPool {
+    final seen = <String>{};
+    return [
+      for (final e in _byBucket.entries)
+        if (e.key != 'catRuqyahQuran')
+          for (final d in e.value)
+            if (d.zekr.length <= 220 &&
+                isSupplication(d.zekr) &&
+                seen.add(d.zekr))
+              d,
+    ];
+  }
+
+  static final _marks = RegExp('[\u064B-\u0652\u0670\u06D6-\u06ED\u0640]');
+
+  static bool isSupplication(String zekr) {
+    final t = zekr.replaceAll(_marks, '').trim();
+    return t.contains('اللهم') || t.startsWith('رب') || t.contains('أعوذ');
+  }
+
   int totalCount(String bucket) => items(bucket).length;
   int totalRepeats(String bucket) =>
       items(bucket).fold(0, (sum, e) => sum + e.count);

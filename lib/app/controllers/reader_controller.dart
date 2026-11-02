@@ -28,6 +28,11 @@ class ReaderController extends GetxController {
   GlobalKey ayahKey(int ayahInSurah) =>
       _ayahKeys.putIfAbsent(ayahInSurah, GlobalKey.new);
 
+  final _translationKeys = <int, GlobalKey>{};
+
+  GlobalKey translationKey(int ayahInSurah) =>
+      _translationKeys.putIfAbsent(ayahInSurah, GlobalKey.new);
+
   Surah get surah => _quran.surah(surahNumber);
   List<Ayah> get ayahs => _quran.ayahsFor(surahNumber);
 
@@ -96,17 +101,32 @@ class ReaderController extends GetxController {
   /// Saves the ayah at the reading line (global y) once the reader's own
   /// scrolling settles.
   void saveVisiblePosition(double readingLine) {
-    final anchors = <(int, double)>[];
-    for (final e in _ayahKeys.entries) {
-      final box = e.value.currentContext?.findRenderObject();
-      if (box is RenderBox && box.attached && box.hasSize) {
-        anchors.add((e.key, box.localToGlobal(Offset.zero).dy));
-      }
-    }
-    final ayah = ayahAtLine(anchors, readingLine);
+    List<(int, double)> anchors(Map<int, GlobalKey> keys) => [
+      for (final e in keys.entries)
+        if (e.value.currentContext?.findRenderObject() case final RenderBox box
+            when box.attached && box.hasSize)
+          (e.key, box.localToGlobal(Offset.zero).dy),
+    ];
+    final ayah = ayahForReadingLine(
+      anchors(_ayahKeys),
+      anchors(_translationKeys),
+      readingLine,
+    );
     if (ayah != null && ayah >= 1 && ayah <= ayahs.length) {
       _savePosition(ayahs[ayah - 1]);
     }
+  }
+
+  /// The translations follow the whole Arabic text, so once the reading
+  /// line is inside them, the translation being read decides.
+  static int? ayahForReadingLine(
+    List<(int, double)> arabic,
+    List<(int, double)> translation,
+    double line,
+  ) {
+    final inTranslation =
+        translation.any((a) => a.$2 <= line) || arabic.isEmpty;
+    return ayahAtLine(inTranslation ? translation : arabic, line);
   }
 
   /// The last ayah whose start is at or above [line]; the first ayah when

@@ -58,6 +58,14 @@ void main() {
       expect(ReaderController.ayahAtLine([(5, 300.0), (6, 500.0)], 100), 5);
       expect(ReaderController.ayahAtLine(const [], 100), isNull);
     });
+
+    test('inside the translations, the translation being read decides', () {
+      final arabic = [(1, -3000.0), (2, -2900.0), (286, -900.0)];
+      final translation = [(1, 50.0), (2, 260.0), (3, 500.0)];
+      expect(ReaderController.ayahForReadingLine(arabic, translation, 300), 2);
+      expect(ReaderController.ayahForReadingLine(arabic, translation, 20), 286);
+      expect(ReaderController.ayahForReadingLine(const [], translation, 20), 1);
+    });
   });
 
   group('Daily inspiration', () {
@@ -84,7 +92,9 @@ void main() {
     test('dua pool comes from the bundled azkar and fits the card', () async {
       await AzkarService.instance.load();
       final pool = AzkarService.instance.dailyDuaPool;
-      expect(pool.length, greaterThan(30));
+      expect(pool.length, greaterThanOrEqualTo(20));
+      expect(pool.map((d) => d.zekr).toSet().length, pool.length);
+      expect(pool.every((d) => AzkarService.isSupplication(d.zekr)), isTrue);
       expect(
         pool.every((d) => d.zekr.isNotEmpty && d.zekr.length <= 220),
         isTrue,
@@ -93,15 +103,38 @@ void main() {
   });
 
   group('Splash boot', () {
-    test('a failing or hanging step still lets the app open', () async {
-      final app = _BootOnly();
-      await app.boot({
-        'ok': () async {},
-        'broken': () async => throw StateError('bad asset'),
-        'stuck': () => Completer<void>().future,
-      }, timeout: const Duration(milliseconds: 50));
-      expect(app.ready.value, isTrue);
-      expect(app.bootFailures, unorderedEquals(['broken', 'stuck']));
-    });
+    test(
+      'a failing or hanging optional step still lets the app open',
+      () async {
+        final app = _BootOnly();
+        await app.boot({
+          'quran': () async {},
+          'azkar': () async {},
+          'notifications': () => Completer<void>().future,
+        }, timeout: const Duration(milliseconds: 50));
+        expect(app.ready.value, isTrue);
+        expect(app.bootFailed.value, isFalse);
+        expect(app.bootFailures, ['notifications']);
+      },
+    );
+
+    test(
+      'a failed corpus keeps splash up with a retry that recovers',
+      () async {
+        final app = _BootOnly();
+        var attempts = 0;
+        Future<void> quran() async {
+          if (attempts++ == 0) throw StateError('bad asset');
+        }
+
+        final steps = {'quran': quran, 'azkar': () async {}};
+        await app.boot(steps, timeout: const Duration(milliseconds: 50));
+        expect(app.ready.value, isFalse);
+        expect(app.bootFailed.value, isTrue);
+        await app.boot(steps, timeout: const Duration(milliseconds: 50));
+        expect(app.ready.value, isTrue);
+        expect(app.bootFailed.value, isFalse);
+      },
+    );
   });
 }

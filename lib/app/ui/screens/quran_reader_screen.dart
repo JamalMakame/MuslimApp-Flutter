@@ -298,6 +298,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                                   const SizedBox(height: 8),
                                   for (final a in c.ayahs)
                                     Padding(
+                                      key: c.translationKey(a.numberInSurah),
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 7,
                                       ),
