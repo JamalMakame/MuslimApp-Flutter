@@ -108,6 +108,14 @@ void main() {
     expect(h.hifzOf(1, 1), isNull);
   });
 
+  test('clearing local data turns the reading reminder off', () async {
+    final h = HabitService.instance;
+    await h.setReadReminder(20 * 60);
+    await StorageService.instance.clearAll();
+    h.reset();
+    expect(h.readReminder.value, -1);
+  });
+
   test('the reading reminder is planned daily, with or without prayers', () {
     final now = DateTime(2026, 11, 2, 21);
     final plan = NotificationService.plan(

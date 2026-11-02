@@ -267,7 +267,9 @@ class _MemorizeScreenState extends State<MemorizeScreen> {
                       ),
                     const SizedBox(height: 8),
                     _SelfTest(c: c),
-                    if (c.translation.isNotEmpty) ...[
+                    if (c.translation.isNotEmpty &&
+                        (!c.testMode.value ||
+                            c.revealed.value >= c.words.length)) ...[
                       const SizedBox(height: 10),
                       Directionality(
                         textDirection: TextDirection.ltr,

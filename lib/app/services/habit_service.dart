@@ -114,6 +114,12 @@ class HabitService {
 
   void _bump() => version.value++;
 
+  /// Resets in-memory state after local data was erased.
+  void reset() {
+    readReminder.value = -1;
+    _bump();
+  }
+
   // ---- Reading log ---------------------------------------------------------
 
   Map<String, Set<int>> get _log {

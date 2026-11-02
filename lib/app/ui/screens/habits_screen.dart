@@ -200,7 +200,7 @@ class HabitsScreen extends StatelessWidget {
                     child: Text('noReviewDue'.tr, style: AppTheme.body(13)),
                   ),
                 if (quran.isLoaded)
-                  for (final (s, a) in due.take(20))
+                  for (final (s, a) in due)
                     ListTile(
                       key: ValueKey('due-$s-$a'),
                       contentPadding: EdgeInsets.zero,
