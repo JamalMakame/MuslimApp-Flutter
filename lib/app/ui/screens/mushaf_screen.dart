@@ -47,9 +47,15 @@ class _MushafScreenState extends State<MushafScreen> {
   void _changed(int i) {
     final p = i + 1;
     if (p == _page + 1) HabitService.instance.recordPage(_page);
-    if (p == QuranService.pageCount) HabitService.instance.recordPage(p);
     setState(() => _page = p);
     _save();
+  }
+
+  bool _finished = false;
+
+  void _finish() {
+    HabitService.instance.recordPage(QuranService.pageCount);
+    setState(() => _finished = true);
   }
 
   @override
@@ -94,24 +100,30 @@ class _MushafScreenState extends State<MushafScreen> {
                     ),
                     onPressed: first == null
                         ? null
-                        : () => Get.offNamed(
-                            Routes.reader(
-                              first.$1,
-                              ayah: first.$2.numberInSurah,
-                            ),
+                        : () => openQuranAt(
+                            first.$1,
+                            first.$2.numberInSurah,
+                            fromSurah: first.$1,
                           ),
                   ),
                 ],
               ),
             ),
             Expanded(
-              child: PageView.builder(
-                key: const ValueKey('mushaf-pages'),
-                controller: _controller,
-                reverse: true,
-                itemCount: QuranService.pageCount,
-                onPageChanged: _changed,
-                itemBuilder: (_, i) => _MushafPage(page: i + 1),
+              child: Directionality(
+                textDirection: TextDirection.ltr,
+                child: PageView.builder(
+                  key: const ValueKey('mushaf-pages'),
+                  controller: _controller,
+                  reverse: true,
+                  itemCount: QuranService.pageCount,
+                  onPageChanged: _changed,
+                  itemBuilder: (_, i) => _MushafPage(
+                    page: i + 1,
+                    finished: _finished,
+                    onFinish: _finish,
+                  ),
+                ),
               ),
             ),
             Padding(
@@ -129,8 +141,14 @@ class _MushafScreenState extends State<MushafScreen> {
 }
 
 class _MushafPage extends StatelessWidget {
-  const _MushafPage({required this.page});
+  const _MushafPage({
+    required this.page,
+    required this.finished,
+    required this.onFinish,
+  });
   final int page;
+  final bool finished;
+  final VoidCallback onFinish;
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +196,18 @@ class _MushafPage extends StatelessWidget {
             style: style,
           ),
         ],
+        if (page == QuranService.pageCount)
+          Padding(
+            padding: const EdgeInsets.only(top: 16),
+            child: Center(
+              child: FilledButton.icon(
+                key: const ValueKey('mushaf-finish'),
+                onPressed: finished ? null : onFinish,
+                icon: Icon(finished ? Icons.check_circle : Icons.check),
+                label: Text('done'.tr),
+              ),
+            ),
+          ),
       ],
     );
   }

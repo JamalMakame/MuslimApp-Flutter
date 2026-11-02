@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:fquran_app/app/i18n/app_translations.dart';
 import 'package:fquran_app/app/routes/app_pages.dart';
 import 'package:fquran_app/app/services/crash_log.dart';
+import 'package:fquran_app/app/services/habit_service.dart';
 import 'package:fquran_app/app/services/prayer_service.dart';
 import 'package:fquran_app/app/services/prayer_widget.dart';
 import 'package:fquran_app/app/services/quran_service.dart';
@@ -121,5 +122,61 @@ void main() {
     await t.pumpAndSettle();
     expect(find.textContaining('Page 2'), findsWidgets);
     expect(QuranService.instance.lastRead?.$3, 2);
+  });
+
+  testWidgets('Arabic (RTL) also swipes right for the next page', (t) async {
+    await t.pumpWidget(
+      GetMaterialApp(
+        translations: DeenTranslations(),
+        locale: const Locale('ar'),
+        builder: (_, child) =>
+            Directionality(textDirection: TextDirection.rtl, child: child!),
+        initialRoute: Routes.mushaf(10),
+        getPages: AppPages.pages,
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.fling(
+      find.byKey(const ValueKey('mushaf-pages')),
+      const Offset(600, 0),
+      2000,
+    );
+    await t.pumpAndSettle();
+    expect(QuranService.instance.lastRead?.$3, 11);
+  });
+
+  testWidgets('page 604 counts only after Done', (t) async {
+    final habits = HabitService.instance;
+    int today() => habits.pagesOn(DateTime.now());
+    final before = today();
+    await t.pumpWidget(
+      GetMaterialApp(
+        translations: DeenTranslations(),
+        locale: const Locale('en'),
+        initialRoute: Routes.mushaf(603),
+        getPages: AppPages.pages,
+      ),
+    );
+    await t.pumpAndSettle();
+    await t.fling(
+      find.byKey(const ValueKey('mushaf-pages')),
+      const Offset(600, 0),
+      2000,
+    );
+    await t.pumpAndSettle();
+    expect(today(), before + 1);
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('mushaf-finish')),
+      200,
+      scrollable: find
+          .descendant(
+            of: find.byKey(const ValueKey('mushaf-pages')),
+            matching: find.byType(Scrollable),
+          )
+          .last,
+    );
+    await t.tap(find.byKey(const ValueKey('mushaf-finish')));
+    await t.pump();
+    expect(today(), before + 2);
   });
 }
