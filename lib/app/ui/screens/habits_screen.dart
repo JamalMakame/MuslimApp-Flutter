@@ -200,18 +200,17 @@ class HabitsScreen extends StatelessWidget {
                     child: Text('noReviewDue'.tr, style: AppTheme.body(13)),
                   ),
                 if (quran.isLoaded)
-                  for (final (s, a) in due)
-                    ListTile(
-                      key: ValueKey('due-$s-$a'),
-                      contentPadding: EdgeInsets.zero,
-                      dense: true,
-                      leading: const Icon(Icons.replay, size: 18),
-                      title: Text(
-                        '${quran.surah(s).nameSimple} $s:$a',
-                        style: AppTheme.body(13, weight: FontWeight.w600),
-                      ),
-                      onTap: () => Get.toNamed(Routes.memorize(s, ayah: a)),
+                  for (final (s, a) in due.take(_dueInline)) _DueTile(s, a),
+                if (quran.isLoaded && due.length > _dueInline)
+                  TextButton(
+                    key: const ValueKey('due-all'),
+                    onPressed: () => Get.bottomSheet(
+                      _DueSheet(due),
+                      isScrollControlled: true,
+                      backgroundColor: AppColors.surface,
                     ),
+                    child: Text('allDueN'.trParams({'n': '${due.length}'})),
+                  ),
                 if (quran.isLoaded)
                   for (final e in perSurah)
                     ListTile(
@@ -264,6 +263,46 @@ class _Section extends StatelessWidget {
           const SizedBox(height: 8),
           ...children,
         ],
+      ),
+    ),
+  );
+}
+
+const _dueInline = 20;
+
+class _DueTile extends StatelessWidget {
+  const _DueTile(this.surah, this.ayah);
+  final int surah;
+  final int ayah;
+
+  @override
+  Widget build(BuildContext context) => ListTile(
+    key: ValueKey('due-$surah-$ayah'),
+    contentPadding: EdgeInsets.zero,
+    dense: true,
+    leading: const Icon(Icons.replay, size: 18),
+    title: Text(
+      '${QuranService.instance.surah(surah).nameSimple} $surah:$ayah',
+      style: AppTheme.body(13, weight: FontWeight.w600),
+    ),
+    onTap: () => Get.toNamed(Routes.memorize(surah, ayah: ayah)),
+  );
+}
+
+/// Every due ayah, built lazily so a long backlog stays smooth.
+class _DueSheet extends StatelessWidget {
+  const _DueSheet(this.due);
+  final List<(int, int)> due;
+
+  @override
+  Widget build(BuildContext context) => SafeArea(
+    child: SizedBox(
+      height: MediaQuery.sizeOf(context).height * 0.7,
+      child: ListView.builder(
+        key: const ValueKey('due-sheet'),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+        itemCount: due.length,
+        itemBuilder: (_, i) => _DueTile(due[i].$1, due[i].$2),
       ),
     ),
   );

@@ -151,6 +151,7 @@ void main() {
       'revealWord',
       'memorised',
       'needsReview',
+      'allDueN',
       'habitsSetup',
     ]) {
       for (final lang in ['en', 'ar', 'sw']) {
