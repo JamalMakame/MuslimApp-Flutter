@@ -56,7 +56,9 @@ class PrayerReminderController extends GetxController
 
   Future<void> _sync() async {
     final notifications = NotificationService.instance;
-    if (!settings.notifyPrayers.value || !settings.hasLocation) {
+    final prayersOn = settings.notifyPrayers.value;
+    final azkar = settings.azkarReminders.value;
+    if ((!prayersOn && !azkar) || !settings.hasLocation) {
       await notifications.cancelAll();
       return;
     }
@@ -70,8 +72,9 @@ class PrayerReminderController extends GetxController
     final madhab = settings.madhab.value;
     final code = settings.localeCode.value;
     final tuning = settings.tuning;
-    final leads = Map.of(settings.prayerLeads);
-    final azkar = settings.azkarReminders.value;
+    final leads = prayersOn
+        ? Map.of(settings.prayerLeads)
+        : {for (final k in PrayerService.keys) k: -1};
     final now = DateTime.now();
     await notifications.schedule(
       signature: [

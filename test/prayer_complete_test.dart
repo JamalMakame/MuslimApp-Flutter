@@ -92,6 +92,20 @@ void main() {
       expect(plan.map((r) => r.id).toSet(), hasLength(plan.length));
       expect(plan, hasLength(NotificationService.days * 7));
     });
+
+    test('azkar reminders work with every prayer reminder off', () {
+      final plan = NotificationService.plan(
+        z,
+        now,
+        leads: {for (final k in PrayerService.keys) k: -1},
+        azkar: true,
+      );
+      expect(plan.map((r) => r.key).toSet(), {
+        NotificationService.azkarMorning,
+        NotificationService.azkarEvening,
+      });
+      expect(plan, hasLength(NotificationService.days * 2));
+    });
   });
 
   test('new strings exist in every language', () {

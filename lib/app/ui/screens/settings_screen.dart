@@ -427,27 +427,34 @@ class SettingsScreen extends GetView<SettingsController> {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              for (final o in options)
-                ListTile(
-                  title: Text(
-                    labelFor(o),
-                    style: AppTheme.body(13.5, weight: FontWeight.w600),
-                  ),
-                  trailing: o == selected
-                      ? Icon(
-                          Icons.check_circle,
-                          color: AppColors.emerald,
-                          size: 20,
-                        )
-                      : null,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  onTap: () {
-                    onPick(o);
-                    Get.back();
-                  },
+              Flexible(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: [
+                    for (final o in options)
+                      ListTile(
+                        title: Text(
+                          labelFor(o),
+                          style: AppTheme.body(13.5, weight: FontWeight.w600),
+                        ),
+                        trailing: o == selected
+                            ? Icon(
+                                Icons.check_circle,
+                                color: AppColors.emerald,
+                                size: 20,
+                              )
+                            : null,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        onTap: () {
+                          onPick(o);
+                          Get.back();
+                        },
+                      ),
+                  ],
                 ),
+              ),
             ],
           ),
         ),
