@@ -6,6 +6,7 @@ import '../../data/models.dart';
 import '../../routes/app_pages.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
+import '../widgets/go_to_sheet.dart';
 import '../widgets/floating_nav_pill.dart';
 
 /// Quran index — search, Surahs/Ayat segment, continue-reading card,
@@ -47,8 +48,17 @@ class QuranIndexScreen extends GetView<QuranController> {
                     ],
                   ),
                 ),
-                Icon(Icons.tune, size: 18, color: AppColors.sage),
-                const SizedBox(width: 24),
+                IconButton(
+                  key: const ValueKey('index-goto'),
+                  tooltip: 'goTo'.tr,
+                  onPressed: () => showGoToSheet(),
+                  icon: Icon(
+                    Icons.near_me_outlined,
+                    size: 20,
+                    color: AppColors.emerald,
+                  ),
+                ),
+                const SizedBox(width: 12),
               ],
             ),
             const SizedBox(height: 14),
@@ -314,7 +324,7 @@ class _ContinueCard extends StatelessWidget {
                   style: AppTheme.headline(14, weight: FontWeight.w700),
                 ),
                 Text(
-                  '${'juz'.tr} ${surah.juzStart} · ${'page'.tr} $page',
+                  '${'juz'.tr} ${QuranService.instance.ayahAt(surah.number, ayah)?.juz ?? surah.juzStart} · ${'page'.tr} $page',
                   style: AppTheme.body(11, color: AppColors.sage),
                 ),
               ],

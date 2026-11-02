@@ -4,11 +4,13 @@ import 'package:intl/intl.dart' show DateFormat;
 
 import '../../controllers/home_controller.dart';
 import '../../controllers/settings_controller.dart';
+import '../../data/daily_ayah.dart';
 import '../../data/daily_hadith.dart';
 import '../../routes/app_pages.dart';
 import '../../services/azkar_service.dart';
 import '../../services/hijri_date_service.dart';
 import '../../services/prayer_service.dart';
+import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
 
@@ -181,6 +183,89 @@ class HomeScreen extends GetView<HomeController> {
                 const SizedBox(height: 16),
               ],
 
+              // ---- Continue reading ---------------------------------------
+              Obx(() {
+                final quran = QuranService.instance;
+                final last = quran.lastReadRx.value;
+                if (last == null || !quran.isLoaded) {
+                  return const SizedBox.shrink();
+                }
+                final surah = quran.surah(last.$1);
+                final at = quran.ayahAt(last.$1, last.$2);
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: _Card(
+                    key: const ValueKey('home-continue'),
+                    onTap: () =>
+                        Get.toNamed(Routes.reader(last.$1, ayah: last.$2)),
+                    child: Padding(
+                      padding: const EdgeInsets.all(14),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 42,
+                            height: 42,
+                            decoration: BoxDecoration(
+                              color: AppColors.goldTint,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.menu_book,
+                              color: AppColors.gold,
+                              size: 20,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'continueReading'.tr,
+                                  style: AppTheme.body(
+                                    9.5,
+                                    weight: FontWeight.w700,
+                                    color: AppColors.sage,
+                                    letterSpacing: 0.9,
+                                  ),
+                                ),
+                                Text(
+                                  '${surah.nameSimple}, ${'ayahN'.trParams({'n': '${last.$2}'})}',
+                                  style: AppTheme.body(
+                                    13.5,
+                                    weight: FontWeight.w700,
+                                  ),
+                                ),
+                                Text(
+                                  '${'juz'.tr} ${at?.juz ?? surah.juzStart} · ${'page'.tr} ${at?.page ?? last.$3}',
+                                  style: AppTheme.body(
+                                    11.5,
+                                    color: AppColors.sage,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Text(
+                            'resume'.tr,
+                            style: AppTheme.body(
+                              12,
+                              weight: FontWeight.w700,
+                              color: AppColors.emerald,
+                            ),
+                          ),
+                          Icon(
+                            Icons.chevron_right,
+                            color: AppColors.emerald,
+                            size: 18,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              }),
+
               // ---- Qibla card ---------------------------------------------
               _Card(
                 onTap: () => Get.toNamed(Routes.qibla),
@@ -247,11 +332,24 @@ class HomeScreen extends GetView<HomeController> {
               Row(
                 children: [
                   Expanded(
-                    child: _InspirationCard(
-                      icon: Icons.auto_stories,
-                      label: 'ayahOfDay'.tr,
-                      arabic:
-                          '﴿ٱللَّهُ لَا إِلَٰهَ إِلَّا هُوَ ٱلْحَىُّ ٱلْقَيُّومُ﴾',
+                    child: Builder(
+                      builder: (_) {
+                        final quran = QuranService.instance;
+                        final (s, a) = pickForDay(
+                          dailyAyahs,
+                          controller.currentDate.value,
+                        );
+                        final ayah = quran.isLoaded ? quran.ayahAt(s, a) : null;
+                        return _InspirationCard(
+                          key: const ValueKey('ayah-of-day'),
+                          icon: Icons.auto_stories,
+                          label: 'ayahOfDay'.tr,
+                          arabic: ayah == null ? '' : '﴿${ayah.text}﴾',
+                          onTap: ayah == null
+                              ? null
+                              : () => Get.toNamed(Routes.reader(s, ayah: a)),
+                        );
+                      },
                     ),
                   ),
                   const SizedBox(width: 10),
@@ -313,7 +411,7 @@ class HomeScreen extends GetView<HomeController> {
 }
 
 class _Card extends StatelessWidget {
-  const _Card({required this.child, this.onTap});
+  const _Card({super.key, required this.child, this.onTap});
   final Widget child;
   final VoidCallback? onTap;
 
@@ -578,12 +676,16 @@ class _InspirationCard extends StatelessWidget {
     required this.label,
     required this.arabic,
     this.reference = '',
+    this.onTap,
   });
 
   final IconData icon;
   final String label;
   final String arabic;
   final String reference;
+
+  /// Replaces the default "show in a dialog".
+  final VoidCallback? onTap;
 
   void _open() => Get.dialog(
     AlertDialog(
@@ -623,7 +725,7 @@ class _InspirationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       borderRadius: BorderRadius.circular(16),
-      onTap: arabic.isEmpty ? null : _open,
+      onTap: arabic.isEmpty ? null : (onTap ?? _open),
       child: Container(
         decoration: appCardDecoration(),
         padding: const EdgeInsets.all(14),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 import '../data/models.dart';
@@ -62,6 +63,16 @@ class QuranService {
   bool _loaded = false;
   Future<void>? _loading;
 
+  static const juzCount = 30;
+  static const hizbCount = 60;
+  static const pageCount = 604;
+
+  /// First (surah, ayah) of each juz / hizb quarter / mushaf page, in order.
+  final List<(int, int)> _juzStarts = [];
+  final List<(int, int)> _quarterStarts = [];
+  final List<(int, int)> _pageStarts = [];
+  final Set<int> _quarterStartGlobals = {};
+
   bool get isLoaded => _loaded;
 
   Future<void> load() async {
@@ -76,6 +87,10 @@ class QuranService {
         _ar.clear();
         _en.clear();
         _sw.clear();
+        _juzStarts.clear();
+        _quarterStarts.clear();
+        _pageStarts.clear();
+        _quarterStartGlobals.clear();
         _index = null;
       }
       rethrow;
@@ -110,8 +125,51 @@ class QuranService {
         });
       }
     }
+    _buildDivisions();
     _loaded = true;
   }
+
+  void _buildDivisions() {
+    Ayah? prev;
+    for (var si = 0; si < _ar.length; si++) {
+      for (final a in _ar[si]) {
+        final at = (si + 1, a.numberInSurah);
+        if (prev == null || a.juz != prev.juz) _juzStarts.add(at);
+        if (prev == null || a.hizbQuarter != prev.hizbQuarter) {
+          _quarterStarts.add(at);
+          _quarterStartGlobals.add(a.number);
+        }
+        if (prev == null || a.page != prev.page) _pageStarts.add(at);
+        prev = a;
+      }
+    }
+  }
+
+  /// Where juz [n] (1–30) starts; null when out of range.
+  (int surah, int ayah)? juzStart(int n) => _at(_juzStarts, n);
+
+  /// Where hizb [n] (1–60) starts.
+  (int surah, int ayah)? hizbStart(int n) => _at(_quarterStarts, n * 4 - 3);
+
+  /// Where hizb quarter [n] (1–240) starts.
+  (int surah, int ayah)? hizbQuarterStart(int n) => _at(_quarterStarts, n);
+
+  /// Where mushaf page [n] (1–604) starts.
+  (int surah, int ayah)? pageStart(int n) => _at(_pageStarts, n);
+
+  static (int, int)? _at(List<(int, int)> starts, int n) =>
+      n >= 1 && n <= starts.length ? starts[n - 1] : null;
+
+  /// The ayah at [surah]:[ayah]; null when either is out of range.
+  Ayah? ayahAt(int surah, int ayah) {
+    if (surah < 1 || surah > _ar.length) return null;
+    final list = _ar[surah - 1];
+    return ayah >= 1 && ayah <= list.length ? list[ayah - 1] : null;
+  }
+
+  /// True when [a] opens a hizb quarter (the mushaf's ۞ mark), except 1:1.
+  bool startsHizbQuarter(Ayah a) =>
+      a.number != 1 && _quarterStartGlobals.contains(a.number);
 
   List<Ayah> ayahsFor(int surahNumber) => _ar[surahNumber - 1];
   Surah surah(int number) => surahs[number - 1];
@@ -193,7 +251,12 @@ class QuranService {
     );
   }
 
+  /// [lastRead], kept current so Home and the index follow the reader.
+  Rxn<(int, int, int)> get lastReadRx => _lastReadRx ??= Rxn(lastRead);
+  Rxn<(int, int, int)>? _lastReadRx;
+
   Future<void> saveLastRead(int surah, int ayah, int page) async {
+    lastReadRx.value = (surah, ayah, page);
     await _s.write(StorageService.kLastReadSurah, surah);
     await _s.write(StorageService.kLastReadAyah, ayah);
     await _s.write(StorageService.kLastReadPage, page);
@@ -218,6 +281,13 @@ class QuranService {
   static final _arabicLetter = RegExp('[\u0621-\u064A\u0671-\u06D3]');
   static final _nonWord = RegExp(r'[^\p{L}\p{N}]+', unicode: true);
   static final _verseRef = RegExp(r'^(\d{1,3})\s*[:.]\s*(\d{1,3})$');
+  static final _verseRange = RegExp(
+    r'^(\d{1,3})\s*[:.]\s*(\d{1,3})\s*[-–—]\s*(\d{1,3})$',
+  );
+  static final _divisionRef = RegExp(
+    r'^(juz|juzu|juzuu|juzz|para|jz|hizb|hizbu|page|pg|p|ukurasa|uk|'
+    r'الجزء|جزء|الحزب|حزب|الصفحة|صفحة|ص)\.?\s*(\d{1,3})$',
+  );
 
   List<_SearchRow>? _index;
 
@@ -292,6 +362,8 @@ class QuranService {
       }
       return [_result(s, _ar[s - 1][a - 1], 'ar')];
     }
+    final shortcut = _divisionResults(_westernDigits(trimmed).toLowerCase());
+    if (shortcut != null) return shortcut.take(limit).toList();
 
     final out = <AyahSearchResult>[];
     if (_arabicLetter.hasMatch(trimmed)) {
@@ -323,6 +395,60 @@ class QuranService {
     }
     return out;
   }
+
+  /// `2:255-260`, `juz 5`, `hizb 12`, `page 300` (and their Arabic and
+  /// Swahili words). Null when [q] is none of these. A juz or hizb lists
+  /// where each of its quarters starts; a page or range lists its ayahs.
+  List<AyahSearchResult>? _divisionResults(String q) {
+    final range = _verseRange.firstMatch(q);
+    if (range != null) {
+      final s = int.parse(range[1]!);
+      final from = int.parse(range[2]!);
+      final to = int.parse(range[3]!);
+      if (s < 1 || s > _ar.length || from < 1 || to < from) return [];
+      final list = _ar[s - 1];
+      if (from > list.length) return [];
+      return [
+        for (final a in list.sublist(from - 1, to.clamp(from, list.length)))
+          _result(s, a, 'ar'),
+      ];
+    }
+    final m = _divisionRef.firstMatch(q);
+    if (m == null) return null;
+    final word = m[1]!;
+    final n = int.parse(m[2]!);
+    AyahSearchResult res((int, int) p) => _result(p.$1, _ayahOf(p), 'ar');
+    if (const {
+      'juz',
+      'juzu',
+      'juzuu',
+      'juzz',
+      'para',
+      'jz',
+      'الجزء',
+      'جزء',
+    }.contains(word)) {
+      if (juzStart(n) == null) return [];
+      return [
+        for (var i = 0; i < _quarterStarts.length; i++)
+          if (_ayahOf(_quarterStarts[i]).juz == n) res(_quarterStarts[i]),
+      ];
+    }
+    if (const {'hizb', 'hizbu', 'الحزب', 'حزب'}.contains(word)) {
+      if (n < 1 || n > hizbCount) return [];
+      return [
+        for (var q = n * 4 - 3; q <= n * 4; q++) res(_quarterStarts[q - 1]),
+      ];
+    }
+    if (n < 1 || n > _pageStarts.length) return [];
+    return [
+      for (var si = 0; si < _ar.length; si++)
+        for (final a in _ar[si])
+          if (a.page == n) _result(si + 1, a, 'ar'),
+    ];
+  }
+
+  Ayah _ayahOf((int, int) p) => _ar[p.$1 - 1][p.$2 - 1];
 
   AyahSearchResult _result(int surah, Ayah a, String lang) => AyahSearchResult(
     verseKey: '$surah:${a.numberInSurah}',

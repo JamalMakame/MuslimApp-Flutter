@@ -5,8 +5,10 @@ import 'package:get/get.dart';
 import '../../controllers/reader_controller.dart';
 import '../../controllers/settings_controller.dart';
 import '../../routes/app_pages.dart';
+import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
+import '../widgets/go_to_sheet.dart';
 import '../widgets/tafsir_sheet.dart';
 
 /// Mushaf reader — white canvas, gold inner frame, basmala cartouche,
@@ -53,6 +55,15 @@ class QuranReaderScreen extends GetView<ReaderController> {
                       ],
                     ),
                   ),
+                  _RoundIconBtn(
+                    key: const ValueKey('reader-goto'),
+                    icon: Icons.near_me_outlined,
+                    onTap: () => showGoToSheet(
+                      fromSurah: s.number,
+                      onSameSurah: c.jumpTo,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   Obx(
                     () => _RoundIconBtn(
                       icon: c.bookmarked.value
@@ -85,38 +96,55 @@ class QuranReaderScreen extends GetView<ReaderController> {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Row(
                 children: [
-                  Container(
-                    width: 30,
-                    height: 30,
-                    decoration: BoxDecoration(
-                      color: AppColors.goldTint,
-                      shape: BoxShape.circle,
-                    ),
-                    alignment: Alignment.center,
-                    child: Text(
-                      '${s.juzStart}',
-                      style: AppTheme.headline(
-                        12,
-                        weight: FontWeight.w700,
-                        color: AppColors.gold,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
                   Expanded(
-                    child: Text(
-                      'juzPage'.trParams({
-                        'juz': '${s.juzStart}',
-                        'page': '${s.pageStart}',
-                      }),
-                      style: AppTheme.body(
-                        11.5,
-                        weight: FontWeight.w700,
-                        color: AppColors.sage,
-                        letterSpacing: 0.6,
+                    child: GestureDetector(
+                      key: const ValueKey('reader-position'),
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => showGoToSheet(
+                        fromSurah: s.number,
+                        onSameSurah: c.jumpTo,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
+                      child: Obx(() {
+                        final at = c.current.value ?? c.ayahs.first;
+                        return Row(
+                          children: [
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                color: AppColors.goldTint,
+                                shape: BoxShape.circle,
+                              ),
+                              alignment: Alignment.center,
+                              child: Text(
+                                '${at.juz}',
+                                style: AppTheme.headline(
+                                  12,
+                                  weight: FontWeight.w700,
+                                  color: AppColors.gold,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Expanded(
+                              child: Text(
+                                'hizbPage'.trParams({
+                                  'hizb': at.hizbLabel,
+                                  'page': '${at.page}',
+                                }),
+                                style: AppTheme.body(
+                                  11.5,
+                                  weight: FontWeight.w700,
+                                  color: AppColors.sage,
+                                  letterSpacing: 0.6,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                          ],
+                        );
+                      }),
                     ),
                   ),
                   const SizedBox(width: 6),
@@ -243,6 +271,19 @@ class QuranReaderScreen extends GetView<ReaderController> {
                                   TextSpan(
                                     children: [
                                       for (final a in c.ayahs) ...[
+                                        // The corpus marks most quarters
+                                        // itself; add the missing ones.
+                                        if (QuranService.instance
+                                                .startsHizbQuarter(a) &&
+                                            !a.text.startsWith('۞'))
+                                          TextSpan(
+                                            text: '۞ ',
+                                            style: AppTheme.quran(
+                                              size,
+                                              color: AppColors.gold,
+                                              height: 2.05,
+                                            ),
+                                          ),
                                         WidgetSpan(
                                           child: SizedBox(
                                             key: c.ayahKey(a.numberInSurah),
@@ -656,7 +697,12 @@ class _ChipBtn extends StatelessWidget {
 }
 
 class _RoundIconBtn extends StatelessWidget {
-  const _RoundIconBtn({required this.icon, required this.onTap, this.color});
+  const _RoundIconBtn({
+    super.key,
+    required this.icon,
+    required this.onTap,
+    this.color,
+  });
 
   final IconData icon;
   final VoidCallback onTap;

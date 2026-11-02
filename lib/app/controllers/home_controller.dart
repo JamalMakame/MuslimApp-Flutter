@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 
+import '../services/link_service.dart';
 import '../services/prayer_service.dart';
 import '../services/storage_service.dart';
 import 'settings_controller.dart';
@@ -33,6 +34,12 @@ class HomeController extends GetxController {
       settings.calcMethod,
       settings.madhab,
     ], (_) => recompute());
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    LinkService.instance.openPending();
   }
 
   void recompute() {

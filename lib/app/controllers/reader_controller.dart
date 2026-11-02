@@ -23,6 +23,9 @@ class ReaderController extends GetxController {
   AudioPlayer get player => _player ??= _createPlayer();
 
   final highlightAyah = RxnInt();
+
+  /// The ayah at the reading line: drives the Juz / Hizb / Page chips.
+  final current = Rxn<Ayah>();
   final _ayahKeys = <int, GlobalKey>{};
 
   GlobalKey ayahKey(int ayahInSurah) =>
@@ -55,12 +58,15 @@ class ReaderController extends GetxController {
     final target = initialAyah;
     final valid = target != null && target >= 1 && target <= ayahs.length;
     highlightAyah.value = valid ? target : null;
-    _savePosition(ayahs[valid ? target - 1 : 0]);
+    current.value = ayahs[valid ? target - 1 : 0];
   }
 
+  /// Saving waits for the first frame: the controller is created while the
+  /// route builds, and Home / the index rebuild on a new last-read.
   @override
   void onReady() {
     super.onReady();
+    _savePosition(current.value!);
     final target = highlightAyah.value;
     if (target != null) scrollToAyah(target);
   }
@@ -92,7 +98,16 @@ class ReaderController extends GetxController {
 
   int? _savedAyah;
 
+  /// Highlights and scrolls to [ayahInSurah] in this surah (Go to sheet).
+  Future<void> jumpTo(int ayahInSurah) async {
+    if (ayahInSurah < 1 || ayahInSurah > ayahs.length) return;
+    highlightAyah.value = ayahInSurah;
+    _savePosition(ayahs[ayahInSurah - 1]);
+    await scrollToAyah(ayahInSurah);
+  }
+
   void _savePosition(Ayah a) {
+    current.value = a;
     if (_savedAyah == a.numberInSurah) return;
     _savedAyah = a.numberInSurah;
     _quran.saveLastRead(surahNumber, a.numberInSurah, a.page);
