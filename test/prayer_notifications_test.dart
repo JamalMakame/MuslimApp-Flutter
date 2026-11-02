@@ -40,12 +40,13 @@ void main() {
 
     final fajrs = plan.where((r) => r.key == 'fajr').toList();
     final dayOne = zanzibar(DateTime(2026, 11, 3)).first.time;
-    final daySix = zanzibar(DateTime(2026, 11, 8)).first.time;
+    final daySeven = zanzibar(DateTime(2026, 11, 9)).first.time;
     expect(fajrs.first.time, dayOne);
-    expect(fajrs.last.time, daySix);
+    expect(plan, hasLength(NotificationService.days * 5));
+    expect(fajrs.last.time, daySeven);
     expect(
       fajrs.first.time.hour * 60 + fajrs.first.time.minute,
-      isNot(daySix.hour * 60 + daySix.minute),
+      isNot(daySeven.hour * 60 + daySeven.minute),
     );
   });
 

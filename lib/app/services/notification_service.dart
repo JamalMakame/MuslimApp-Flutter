@@ -63,24 +63,24 @@ class NotificationService {
     return granted ?? true;
   }
 
-  /// Reminders for the next [days] days from [now], in time order.
-  /// Ids are stable per (day offset, prayer): 100 + day * 10 + prayer.
+  /// The next [days] × 5 reminders after [now], in time order. Starts one
+  /// calendar day back so a location far from the device's time zone still
+  /// gets a full week. Ids are stable per (day offset, prayer).
   static List<PrayerReminder> plan(
     List<PrayerSlot> Function(DateTime date) slotsOn,
     DateTime now,
   ) {
     final out = <PrayerReminder>[];
-    final today = DateTime(now.year, now.month, now.day);
-    for (var d = 0; d < days; d++) {
-      final date = DateTime(today.year, today.month, today.day + d);
+    for (var d = -1; d <= days; d++) {
+      final date = DateTime(now.year, now.month, now.day + d);
       for (final slot in slotsOn(date)) {
         final i = _prayers.indexOf(slot.key);
         if (i < 0 || !slot.time.isAfter(now)) continue;
-        out.add(PrayerReminder(100 + d * 10 + i, slot.key, slot.time));
+        out.add(PrayerReminder(110 + d * 10 + i, slot.key, slot.time));
       }
     }
     out.sort((a, b) => a.time.compareTo(b.time));
-    return out;
+    return out.take(days * _prayers.length).toList();
   }
 
   /// Schedules [plan] unless the same [signature] is already scheduled.
