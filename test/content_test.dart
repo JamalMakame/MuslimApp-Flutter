@@ -143,6 +143,29 @@ void main() {
       },
     );
 
+    test('a save started after a clear does not join the old one', () async {
+      var calls = 0;
+      final client = MockClient((r) async {
+        if (++calls == 1) await QuranService.clearTafsirFiles();
+        return http.Response(
+          jsonEncode({
+            'tafsirs': [
+              {'verse_key': '6:1', 'text': 'x'},
+            ],
+            'pagination': {'next_page': null},
+          }),
+          200,
+        );
+      });
+      final q = QuranService.instance;
+      final old = q.downloadTafsir(6, client: client);
+      await Future<void>.delayed(Duration.zero);
+      final fresh = q.downloadTafsir(6, client: client);
+      expect(await old, isFalse);
+      expect(await fresh, isTrue);
+      expect(await q.hasTafsirOffline(6), isTrue);
+    });
+
     test('two saves of one surah share a single download', () async {
       var calls = 0;
       final client = MockClient((r) async {

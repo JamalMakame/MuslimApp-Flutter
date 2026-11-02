@@ -73,7 +73,7 @@ class QuranService {
     String lang = 'en',
     http.Client? client,
   }) {
-    final key = '${tafsirEdition(lang)}:$surah';
+    final key = '$tafsirGeneration:${tafsirEdition(lang)}:$surah';
     return _tafsirSaves[key] ??= _downloadTafsir(surah, lang, client)
         .whenComplete(() {
           _tafsirSaves.remove(key);
@@ -81,6 +81,7 @@ class QuranService {
   }
 
   /// One save per edition:surah at a time; a second caller shares it.
+  /// Keyed by generation too, so a save after a clear starts fresh.
   static final _tafsirSaves = <String, Future<bool>>{};
 
   Future<bool> _downloadTafsir(
