@@ -1,10 +1,10 @@
 # Deen — Current Features & Architecture
 
-_Last updated: Phase 2 calendar and memorization implementation._
+_Last updated: offline search, Android reminders, dark mode and daily cards._
 
 Deen is a Flutter Islamic companion app. All core data is bundled locally;
 nothing requires an account or a server. Remote calls are optional
-enhancements (ayah audio streaming, remote search, remote tafsir).
+enhancements (audio streaming and downloads, tafsir).
 
 ## Stack
 
@@ -54,13 +54,15 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
 
 - **Splash** — native iOS emerald launch with the Deen mark and wordmark
   hands off to a full-screen Flutter splash with matching gold dome and
-  progress hairline; initializes services in parallel, then routes to
-  onboarding (first run) or home.
+  progress hairline; initializes services in parallel (each bounded by a
+  timeout), then routes to onboarding (first run) or home. If the bundled
+  Quran/azkar data fails to load it shows an error with Retry.
 - **Onboarding** — language pills, prayer location (GPS or manual city
   lookup), calculation method; privacy copy ("100% On-Device").
 - **Home** — emerald hero card with next-prayer countdown, prayer tiles
   (current prayer highlighted gold), sunrise row, Qibla card, daily
-  inspiration cards, Hijri + Gregorian dates.
+  Hadith of the Day / Dua of the Day cards (rotate daily, tap for full
+  text), Hijri + Gregorian dates.
 - **Quran index** — search field, Surahs/Ayat segment, continue-reading
   card (last-read persisted), 114 surah tiles with gold-ring numbers,
   Makki/Madani chips, revelation order, sort toggle, Juz-30 divider.
@@ -103,9 +105,11 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
 - `location_service` — GPS + city-name geocoding → `PlaceInfo`
 - `prayer_service` — `adhan`-based `PrayerDay` (slots, current/next,
   countdown, Hijri/Gregorian dates)
-- `notification_service` — tz-scheduled daily prayer reminders
-- `quran_service` — bundled surah/ayah data + translations, remote
-  search/tafsir with local cache, audio URL building and download manifest
+- `notification_service` — tz-scheduled one-shot prayer reminders for the
+  next 7 days at each day's real times (localized; renewed app-wide)
+- `quran_service` — bundled surah/ayah data + translations, offline
+  ar/en/sw search, last read + bookmarks, remote tafsir with local cache,
+  audio URL building and download manifest
 - `audio_cache_service` — validates local MP3s, downloads per ayah via
   temporary files, resumes interrupted downloads and verifies full surahs
 - `hijri_date_service` — converts dates using a locally persisted offset
@@ -120,9 +124,10 @@ Qibla and calendar are reached from Home; Hifz from the Quran reader.
 
 ## Remote endpoints (optional)
 
-- `api.quran.com` — search, tafsir (fallback cache in storage)
+- `api.quran.com` — Ibn Kathir tafsir (cached in storage)
 - `server8.mp3quran.net/afs` — Alafasy per-surah audio
-- `cdn.islamic.network/quran/audio/128` — on-demand per-ayah Hifz MP3s
+- `cdn.islamic.network/quran/audio/{128|192}` — on-demand per-ayah Hifz
+  MP3s (Abdul Basit is served at 192 only)
 
 ## Design
 
@@ -137,7 +142,9 @@ Emerald `#0E6B5C` / gold `#C9A24B` / ivory `#F8F6F1` palette.
   settings → ar/en locale round-trip).
 - `integration_test/locale_test.dart` — locale switch.
 - `integration_test/tour_test.dart` — per-screen screenshot tour.
-- `test/widget_test.dart` — theme token smoke test.
+- `test/` — unit and widget tests: offline search, reminders scheduling,
+  calendar, Hifz, splash, Phase 4 behaviour and a dark-mode screen pass
+  (`flutter test test`).
 - `test/calendar_test.dart` — calibrated dates, grid and event ordering.
 - `test/memorize_test.dart` — repeat decisions, mocked MP3 downloads,
   interruption, stale cache and local-data cleanup.

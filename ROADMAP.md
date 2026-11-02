@@ -1,19 +1,18 @@
 # Muslim App — Product Roadmap & Direction
 
-> Planning snapshot from before Deen's local-first rebuild. Phase 1 is
-> implemented in English, Arabic and Swahili. Phase 2 now includes the
-> calibrated Hijri calendar and Hifz audio/offline cache; see `FEATURES.md`
-> for current behaviour and the remaining content and device-QA gaps.
+> Status reflects the code on `main` (checked item by item against the app,
+> November 2026). `FEATURES.md` describes current behaviour screen by screen.
+> Device QA on real Android/iOS hardware is still outstanding.
 
 Direction: build incrementally — make the core, high-stakes utilities (precise
 prayer times, Qibla, Quran reading) flawless and offline-capable before adding
 complex features like social audio or AI. Privacy-first by design: local
 location processing, no ad networks, no user tracking.
 
-Languages: the app ships **Arabic** today; the roadmap targets **English** and
-**Swahili** as first-class locales across every feature (see the cross-cutting
-Localization track below — it is a Phase 1 architectural prerequisite even
-though translations land progressively).
+Languages: the app ships **English** (default), **Arabic** (RTL) and
+**Swahili** as first-class UI locales (see the cross-cutting Localization
+track below). Religious text stays Arabic; Quran meaning is offered in
+English and Swahili.
 
 Status legend: ✅ implemented · 🔶 partially implemented · ⬜ not started
 
@@ -21,12 +20,18 @@ Status legend: ✅ implemented · 🔶 partially implemented · ⬜ not started
 
 See `FEATURES.md` for the full current-state reference. In short:
 
-- ✅ Prayer times via `adhan` (Umm al-Qura / Shafi, location-based)
-- ✅ Hijri + Gregorian date display on home card
-- ✅ Quran surah index, mushaf page reading (remote scans), surah audio
-- ✅ Ayah search + tafsir bottom sheet + share
-- ✅ Azkar categories/list from bundled `azkar.json`, tasbeeh counter
-- ⬜ Notifications, Qibla compass, offline Quran, bookmarks, widgets
+- ✅ Prayer times via `adhan` on-device, 5 calculation methods + madhab
+- ✅ Android prayer notifications: a week of one-shot reminders at each
+  day's real times, localized, renewed app-wide
+- ✅ Qibla compass with accuracy-based calibration badge + geodesic fallback
+- ✅ Offline Quran text (Uthmani) with English/Swahili translation,
+  bookmarks, last-read tracked as you scroll, offline search (ar/en/sw)
+- ✅ Hifz: 4 per-ayah reciters, repeat loops, speed, offline downloads
+- ✅ Azkar (all 39 source categories), tasbeeh with targets and haptics
+- ✅ Dual Hijri/Gregorian calendar with occasions and day adjustment
+- ✅ Light / Dark (true-black) / System theme
+- ⬜ High-latitude rules, hadith library, word-by-word, mosque finder,
+  widgets, analytics, background audio
 
 ---
 
@@ -36,95 +41,108 @@ Non-negotiable utilities used multiple times daily. Accuracy + offline
 availability are critical.
 
 ### Precise Prayer Times (Salah)
-- 🔶 Location-based calculation — exists (`adhan`, `geolocator`) but only
-  Umm al-Qura method; needs selectable methods (MWL, ISNA, Egypt…)
-- ⬜ Manual overrides / high-latitude adjustments
-- ⬜ Background Adhan notifications when app is closed
-- ⬜ Prayer names, countdown labels, and notification copy localized
-  (ar/en/sw) — currently hardcoded Arabic strings
+- ✅ Location-based calculation (`adhan`, `geolocator`, GPS or city
+  lookup) with selectable methods: Umm al-Qura, MWL, Egypt, Karachi, ISNA;
+  Shafi/Hanafi madhab
+- ⬜ Manual minute overrides / high-latitude adjustments
+- 🔶 Prayer notifications when the app is closed — Android: scheduled
+  one-shot reminders for the next 7 days at each day's computed times,
+  renewed on launch/resume and when location, method, madhab or language
+  change. Plain notification sound (no full Adhan audio); iOS untested
+- ✅ Prayer names, countdown labels, and notification copy localized
+  (ar/en/sw)
 
 ### Dynamic Qibla Finder
-- ⬜ Magnetometer compass
-- ⬜ 2D map fallback indicator
-- ⬜ Compass UI labels + instructions localized (ar/en/sw)
+- ✅ Magnetometer compass (`flutter_compass`); calibration badge shows
+  "calibrated" only when the sensor reports ≤ 30° heading error
+- 🔶 Fallback without a compass — geodesic bearing + distance card and a
+  compass-unavailable state; no 2D map
+- ✅ Compass UI labels + instructions localized (ar/en/sw)
 
 ### The Holy Quran (Reading)
-- 🔶 Reading exists via remote mushaf PNG scans (requires network)
-- ⬜ High-fidelity Uthmanic / Indo-Pak scripts, offline-first rendering
-- ⬜ Ayah bookmarking + last-read memory
-- ⬜ Quran text stays Arabic; **translation layer** for meaning —
-  English (e.g. Saheeh International via api.quran.com) and Swahili
-  (al-Farsy translation available on api.quran.com)
-- ⬜ UI chrome around the mushaf (surah picker, bookmarks) localized;
-  surah names need transliteration for en/sw
+- ✅ Offline-first reading of bundled Uthmani text (Amiri font) in a
+  mushaf-style reader; no network needed
+- ⬜ Indo-Pak script option / page-faithful mushaf layout
+- ✅ Surah bookmarks + last-read memory (saved as you scroll; Continue
+  Reading resumes at that ayah)
+- ✅ Quran text stays Arabic; bundled **translation layer** — English
+  (Sahih International) and Swahili (Al-Barwani), or Arabic only
+- ✅ UI chrome (surah index, sort, search, bookmarks) localized; surah
+  names transliterated/translated for en/sw
 
 ### Privacy-First Architecture
-- 🔶 Location is processed locally only (geolocator → adhan on-device)
+- ✅ Location is processed locally only (geolocator → adhan on-device);
+  no account, no server, no analytics
 - ✅ No ad networks (none present)
 
-**Packages:** `adhan` ✅ installed · `geolocator` ✅ installed ·
-`flutter_compass` or `smooth_compass` (new) · `flutter_local_notifications`
-or `awesome_notifications` (new) · `quran` / `quran_flutter` (new, offline
-text)
+**Packages:** `adhan` ✅ · `geolocator` ✅ · `flutter_compass` ✅ ·
+`flutter_local_notifications` + `timezone` ✅ · offline text is bundled JSON
+in `assets/json/` (no Quran package needed)
 
 ## Phase 2 — Engagement & Daily Rituals
 
 Personalization, audio, supplementary texts — the daily habit loop.
 
 ### Quranic Audio & Memorization
-- 🔶 Surah audio streaming exists (`audioplayers`, Alafasy via mp3quran.net)
-- ⬜ Offline downloads, multiple reciters (Qurra)
-- ⬜ Ayah repeat loops + playback speed for Hifz
-- ⬜ Player controls, reciter picker, download states localized (ar/en/sw)
+- ✅ Surah audio streaming in the reader (`audioplayers`, Alafasy via
+  mp3quran.net) with seek and speed
+- ✅ Offline per-surah downloads (resumable, verified) and 4 per-ayah
+  reciters for Hifz: Alafasy, Abdul Basit, Al-Husary, Al-Minshawi
+- ✅ Ayah repeat loops + playback speed for Hifz
+- ✅ Player controls, reciter picker, download states localized (ar/en/sw)
+- ⬜ Background / lock-screen playback controls
 
 ### Supplications (Hisnul Muslim / Duas)
-- 🔶 39 azkar categories bundled in `azkar.json` (only first 10 rendered —
-  `take(10)`); per-zekr tap-to-count
+- ✅ All 39 bundled `azkar.json` categories surfaced (mapped to display
+  collections + Other); per-zekr tap-to-count, auto-advance, daily progress
 - ⬜ Transliterations + multi-language translations — English translation
   available in standard Hisnul Muslim sources; **Swahili azkar translations
-  will need custom content work** (no canonical public dataset)
-- ⬜ Remaining 29 categories surfaced in UI
+  will need custom content work** (no canonical public dataset). Azkar are
+  Arabic only today
 
 ### Smart Tasbeeh Counter
-- 🔶 Tap counter, 6 phrases, page-swipe reset
-- ⬜ Haptic feedback per tap + milestone pulses
-- ⬜ Custom targets (33/100) with reset alerts
-- ⬜ Phrase list + labels localized (ar/en/sw)
+- ✅ Tap dial, 5 phrases with transliteration + meaning, laps, daily total,
+  streak — persisted
+- ✅ Haptic feedback per tap + milestone pulse (toggleable)
+- ✅ Targets 33/100 with lap completion
+- ✅ Phrase list + labels localized (ar/en/sw)
 
 ### Islamic (Hijri) Calendar
-- 🔶 Hijri date string on home card (`hijri` package, `ar` format only)
-- ⬜ Dual calendar view, significant dates (Ramadan, Eid, Ashura),
-  moon-sighting offsets
-- ⬜ Month/day names rendered in the active locale (`intl` is already
-  installed and supports en/sw date formatting)
+- ✅ Hijri + Gregorian dates on the home card
+- ✅ Dual calendar month view, White Days and upcoming occasions (Ramadan,
+  Eid, Ashura…), local −2…+2 day moon-sighting adjustment
+- ✅ Month/day names rendered in the active locale
 
-**Packages:** `just_audio` + `audio_service` (new — evaluate migrating from
-`audioplayers` for background/lock-screen controls) · `vibration` /
-`haptic_feedback` (new) · `hive` / `isar` / `objectbox` (new, local DB) ·
-`hijri` ✅ installed
+**Packages:** `audioplayers` ✅ (evaluate `just_audio` + `audio_service`
+for background/lock-screen controls) · haptics via Flutter's
+`HapticFeedback` ✅ · persistence via `get_storage` ✅ (a local DB is only
+needed for hadith/tafsir FTS) · `hijri` ✅
 
 ## Phase 3 — Knowledge & Context
 
 Scholarly resources, search, community integration.
 
 ### Tafsir & Word-by-Word
-- 🔶 Tafsir via `api.quran.com/v4/verses/{id}/tafsirs` (first result only,
-  unnamed source)
-- ⬜ Named tafsir collections — Ibn Kathir exists in Arabic and English;
-  **Swahili tafsir resources are scarce** (may fall back to translated
-  commentary or mark content ar/en only)
+- ✅ Named tafsir: Ibn Kathir from quran.com (`/tafsirs/{14|169}/by_ayah`,
+  Arabic / English abridged), cached locally after first load; offline
+  state when never fetched
+- 🔶 More collections / Swahili — **Swahili tafsir resources are scarce**;
+  Swahili users get the English text
 - ⬜ Word-by-word grammar — api.quran.com provides per-word translations
   in English; Swahili per-word data is unlikely to exist
 
 ### Advanced Global Search
-- 🔶 Remote ayah text search via `api.quran.com/v4/search` (fires per
-  keystroke — needs debounce)
+- ✅ Offline ayah search over the bundled corpus — Arabic (diacritics,
+  Quranic marks and Uthmani spellings folded), English and Swahili
+  translations, and verse references (`2:255`, `٢:٢٥٥`); jumps to and
+  highlights the ayah
 - ⬜ Semantic search across translations + hadith collections
-- ⬜ Language-scoped search (search Arabic text AND active-locale
-  translations separately)
+- ✅ Language-scoped search (Arabic text and the translations are matched
+  separately and labelled)
 
 ### Verified Hadith Library
 - ⬜ Sahih al-Bukhari, Sahih Muslim, Nawawi's 40, with authenticity grades
+  (only a curated daily-hadith list of 16 referenced narrations exists)
 - ⬜ Translations: Arabic + English readily available (e.g. Sunnah.com
   datasets); **Swahili hadith translations are rare** — likely ar/en only
   initially
@@ -151,34 +169,31 @@ Premium experience via OS features + accessibility.
 - ⬜ Chart axes, streak labels, milestones localized (ar/en/sw)
 
 ### Accessibility & UI Polish
-- ⬜ True-black OLED dark mode (for night reading)
-- ⬜ Dyslexia-friendly fonts, scalable text for elderly users
-- ⬜ Font fallback per script: Arabic Quran font vs. Latin (en/sw) UI font —
-  `google_fonts` covers Latin; Arabic strings need an Arabic-capable family
-  (Cairo/almarai already used)
+- ✅ True-black OLED dark mode (Light / Dark / System setting)
+- 🔶 Scalable Quran text (small / medium / large); no dyslexia-friendly
+  font or app-wide text scaling
+- ✅ Font per script: bundled Amiri for Quran/azkar Arabic, Plus Jakarta
+  Sans + Manrope for the Latin UI
 
 ### Contextual Push Notifications
-- ⬜ "Ayah/Hadith of the Day" pushes in the user's chosen language, with
-  user-controlled frequency
+- 🔶 Hadith of the Day and Dua of the Day cards on Home (rotate daily,
+  Arabic with references); no push notification or frequency setting
 
 ---
 
 ## Localization (i18n) — Cross-Cutting Track
 
-Not a phase — an architectural prerequisite. The current codebase has
-**Arabic hardcoded throughout** (`'ar'` locale in `main.dart`, `DateFormat`,
-hardcoded `Text('الصلاة التالية')`-style strings, forced `TextDirection.rtl`).
-Retrofitting gets exponentially harder as screens grow, so the i18n
-foundation lands in Phase 1 even though translated *content* arrives
-progressively.
+Not a phase — an architectural prerequisite, now in place. UI strings live
+in GetX translation maps (`lib/app/i18n/app_translations.dart`) with every
+key present in en, ar and sw.
 
 ### Foundation (Phase 1)
-- ⬜ Extract all hardcoded strings into ARB resource files (official
-  `gen_l10n` flow via `flutter_localizations`, or `easy_localization`)
-- ⬜ `Locale` switcher in settings; persist choice locally
-- ⬜ Remove forced `TextDirection.rtl` — derive direction from the active
-  locale (ar = RTL, en/sw = LTR)
-- ⬜ Locale-aware formatting via existing `intl` (dates, times, digits)
+- ✅ All UI strings extracted into translation resources (GetX maps
+  rather than ARB); every key is present in en, ar and sw
+- ✅ Language switcher in onboarding and settings; choice persisted
+- ✅ Direction derived from the active locale (ar = RTL, en/sw = LTR);
+  scripture always RTL
+- ✅ Locale-aware formatting via `intl` (dates, times)
 
 ### Content Per Language (what actually exists upstream)
 
@@ -190,19 +205,18 @@ progressively.
 | Tafsir | full collections | Ibn Kathir EN | scarce — custom or omit |
 | Azkar (Hisnul Muslim) | bundled ✅ | standard EN translations exist | custom translation needed |
 | Hadith | full | full | rare — ar/en initially |
-| Daily card content (حديث اليوم etc.) | hardcoded lists | translate the bundled lists | translate the bundled lists |
+| Daily card content (Hadith/Dua of the Day) | bundled ✅ | not yet translated | not yet translated |
 
 Rule: where Swahili content has no upstream source, ship the UI in Swahili
 but keep the religious text in Arabic + English fallback — never machine-
 translate Quran/hadith silently.
 
 ### Packages
-`flutter_localizations` + `gen_l10n` ARB (official, recommended) or
-`easy_localization` · `intl` ✅ already installed
+GetX translations ✅ · `flutter_localizations` ✅ · `intl` ✅
 
 **Packages:** `home_widget` (new) · `fl_chart` (new, analytics graphs) ·
-`flutter_screenutil` (new, foldable/tablet scaling) · `adaptive_theme` /
-`flex_color_scheme` (new, dark mode)
+`flutter_screenutil` (new, foldable/tablet scaling) · dark mode is built
+in (`AppColors` / `AppTheme.current`), no package needed
 
 ---
 
@@ -210,10 +224,10 @@ translate Quran/hadith silently.
 
 | Phase | Focus | Complexity | Tech Stack Impact | Current State |
 |---|---|---|---|---|
-| 1 | Core Utilities | Low–Med | Local sensors, native alarms | ~40% — prayer times done; notifications, Qibla, offline Quran missing |
-| 2 | Habit Building | Medium | Audio pipelines, local SQL | ~50% — audio + azkar + tasbeeh exist; haptics, translations, local DB missing |
-| 3 | Content & Community | Med–High | Network APIs, FTS engines | ~25% — basic tafsir + search exist; hadith, maps, word-by-word missing |
-| 4 | OS Integration | High | Widgets, wearables, state sync | 0% — not started |
+| 1 | Core Utilities | Low–Med | Local sensors, native alarms | ~85% — high-latitude rules, full Adhan audio, iOS notification QA, 2D map fallback, Indo-Pak script left |
+| 2 | Habit Building | Medium | Audio pipelines, local SQL | ~80% — azkar translations/transliteration and background audio left |
+| 3 | Content & Community | Med–High | Network APIs, FTS engines | ~35% — tafsir + offline search done; hadith library, maps, word-by-word missing |
+| 4 | OS Integration | High | Widgets, wearables, state sync | ~20% — dark mode, script fonts, daily cards done; widgets, wearables, analytics missing |
 
 ## Tech Stack Blueprint
 
@@ -225,31 +239,32 @@ translate Quran/hadith silently.
       ┌────────────────────┴────────────────────┐
       ▼                                         ▼
 ┌───────────┐                             ┌───────────┐
-│ SERVICES  │ adhan ✅ · geolocator ✅     │  STORAGE  │ isar / sqflite
-│ & SENSORS │ flutter_compass ⬜           │ & CACHING │ ⬜ (Hadith/Tafsir)
+│ SERVICES  │ adhan ✅ · geolocator ✅     │  STORAGE  │ get_storage ✅
+│ & SENSORS │ flutter_compass ✅           │ & CACHING │ sqflite ⬜ (Hadith FTS)
 └───────────┘                             └───────────┘
                            │
       ┌────────────────────┴────────────────────┐
       ▼                                         ▼
 ┌───────────┐                             ┌───────────┐
-│   AUDIO   │ audioplayers 🔶 →            │  SYSTEM   │ home_widget ⬜
-│ PIPELINE  │ just_audio + audio_service ⬜│INTEGRATION│ local_notifications ⬜
+│   AUDIO   │ audioplayers ✅ →            │  SYSTEM   │ home_widget ⬜
+│ PIPELINE  │ just_audio + audio_service ⬜│INTEGRATION│ local_notifications ✅
 └───────────┘                             └───────────┘
 ```
 
-## Immediate Next Steps (Phase 1 completion)
+## Immediate Next Steps
 
-Ordered by user impact vs. effort:
+The original Phase 1 list (i18n, notifications, method picker, Qibla,
+offline Quran, splash resilience) is done. Next, ordered by user impact
+vs. effort:
 
-1. **i18n foundation first** — extract hardcoded Arabic strings into ARB
-   resources + locale switcher *before* the codebase grows. Everything new
-   then ships trilingual from day one.
-2. **Prayer notifications** — `flutter_local_notifications` + scheduled Adhan;
-   highest daily-value gap in the current build.
-3. **Calculation method picker** — expose `adhan`'s methods in a settings
-   sheet; persist choice locally.
-4. **Qibla compass** — `flutter_compass` + bearing math from stored coords.
-5. **Offline Quran** — bundle mushaf images or a `quran` text package; cache
-   fetched pages.
-6. **Splash resilience** — add timeout + offline fallback so the app opens
-   without network (fix the fragilities listed in `FEATURES.md`).
+1. **Device QA** — run `integration_test/` and a manual pass on a real
+   Android phone and an iPhone (notifications firing with the app closed,
+   compass accuracy, downloads). Bump the Android Gradle wrapper to ≥ 8.14,
+   which Flutter 3.47 requires.
+2. **High-latitude rules + minute overrides** in prayer settings.
+3. **Azkar English translation + transliteration** (Swahili later, custom
+   content).
+4. **Background / lock-screen audio** (`audio_service`).
+5. **Hadith library** (Nawawi's 40 first, then Bukhari/Muslim, ar/en)
+   with local FTS.
+6. **Next-prayer home-screen widget** (`home_widget`).
