@@ -55,12 +55,7 @@ void main() {
   tearDown(Get.reset);
 
   tearDownAll(() async {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(
-          const MethodChannel('plugins.flutter.io/path_provider'),
-          null,
-        );
-    await documents.delete(recursive: true);
+    await documents.delete(recursive: true).catchError((_) => documents);
   });
 
   GetPage<dynamic> page(String name) =>

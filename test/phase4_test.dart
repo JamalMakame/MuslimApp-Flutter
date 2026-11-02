@@ -33,7 +33,7 @@ void main() {
 
   tearDownAll(() async {
     Get.reset();
-    await documents.delete(recursive: true);
+    await documents.delete(recursive: true).catchError((_) => documents);
   });
 
   group('Qibla calibration', () {

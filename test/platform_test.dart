@@ -30,7 +30,7 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (await documents.exists()) await documents.delete(recursive: true);
+    await documents.delete(recursive: true).catchError((_) => documents);
   });
 
   test('the 604 mushaf pages hold every ayah once, in order', () {
