@@ -526,6 +526,7 @@ class SettingsScreen extends GetView<SettingsController> {
                 await AudioCacheService.clearAllAudio();
                 await StorageService.instance.clearAll();
                 controller.reload();
+                Get.updateLocale(controller.locale);
                 await NotificationService.instance.cancelAll();
                 Get.back();
                 Get.offAllNamed('/onboarding');
