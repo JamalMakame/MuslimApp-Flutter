@@ -7,7 +7,6 @@ import '../../routes/app_pages.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
-import '../widgets/tafsir_sheet.dart';
 
 /// Quran index — search, Surahs/Ayat segment, continue-reading card,
 /// surah tiles with gold-ring numerals + Makki/Madani chips.
@@ -410,14 +409,17 @@ class _SurahTile extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(width: 6),
-                        Text(
-                          surah.nameTranslated,
-                          style: AppTheme.body(
-                            11.5,
-                            color: AppColors.sage,
-                            fontStyle: FontStyle.italic,
+                        Flexible(
+                          child: Text(
+                            surah.nameTranslated,
+                            style: AppTheme.body(
+                              11.5,
+                              color: AppColors.sage,
+                              fontStyle: FontStyle.italic,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -533,67 +535,161 @@ class _AyahResults extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (controller.offlineSearchError.value) {
-      return Center(
-        child: Padding(
-          padding: const EdgeInsets.all(30),
-          child: Text(
-            'offlineSearch'.tr,
-            textAlign: TextAlign.center,
-            style: AppTheme.body(13, color: AppColors.sage),
-          ),
-        ),
-      );
-    }
-    if (controller.searching.value) {
-      return const Center(
-        child: CircularProgressIndicator(
-          color: AppColors.emerald,
-          strokeWidth: 2,
-        ),
+    if (!controller.hasAyahQuery) {
+      return _SearchMessage(
+        key: const ValueKey('ayah-search-hint'),
+        icon: Icons.search,
+        text: 'searchAyahHint'.tr,
       );
     }
     if (controller.ayahResults.isEmpty) {
-      return Center(
-        child: Text(
-          'searchAyahHint'.tr,
-          style: AppTheme.body(13, color: AppColors.sage),
-        ),
+      return _SearchMessage(
+        key: const ValueKey('ayah-search-empty'),
+        icon: Icons.search_off,
+        text: 'searchNoMatches'.trParams({'q': controller.query.value.trim()}),
       );
     }
+    final results = controller.ayahResults;
+    final limited = controller.resultsLimited.value;
     return ListView.builder(
+      key: const ValueKey('ayah-search-results'),
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 110),
-      itemCount: controller.ayahResults.length,
+      itemCount: results.length + 1,
       itemBuilder: (_, i) {
-        final r = controller.ayahResults[i];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 8),
-          decoration: appCardDecoration(),
-          child: ListTile(
-            contentPadding: const EdgeInsets.all(14),
-            title: Text(
-              r.text,
-              textDirection: TextDirection.rtl,
-              textAlign: TextAlign.right,
-              style: AppTheme.quran(16, height: 1.9),
-              maxLines: 3,
-              overflow: TextOverflow.ellipsis,
-            ),
-            subtitle: Padding(
-              padding: const EdgeInsets.only(top: 6),
-              child: Text(
-                'surahN'.trParams({'n': r.verseKey}),
-                style: AppTheme.body(11, color: AppColors.sage),
+        if (i == 0) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Text(
+              limited
+                  ? 'searchLimited'.trParams({'n': '${results.length}'})
+                  : 'searchCount'.trParams({'n': '${results.length}'}),
+              style: AppTheme.body(
+                10.5,
+                weight: FontWeight.w700,
+                color: AppColors.sage,
+                letterSpacing: 0.6,
               ),
             ),
-            onTap: () => showTafsirSheet(
-              surahNumber: r.surahNumber,
-              ayahNumber: r.ayahNumber,
-              ayahText: r.text,
-            ),
-          ),
+          );
+        }
+        final r = results[i - 1];
+        return _AyahResultTile(
+          result: r,
+          onTap: () => Get.toNamed(
+            Routes.reader(r.surahNumber, ayah: r.ayahNumber),
+          )?.then((_) => controller.refreshLastRead()),
         );
       },
+    );
+  }
+}
+
+class _SearchMessage extends StatelessWidget {
+  const _SearchMessage({super.key, required this.icon, required this.text});
+  final IconData icon;
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(36, 0, 36, 110),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, color: AppColors.sage, size: 26),
+            const SizedBox(height: 10),
+            Text(
+              text,
+              textAlign: TextAlign.center,
+              style: AppTheme.body(13, color: AppColors.sage, height: 1.5),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _AyahResultTile extends StatelessWidget {
+  const _AyahResultTile({required this.result, required this.onTap});
+  final AyahSearchResult result;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final r = result;
+    final surah = QuranService.instance.surah(r.surahNumber);
+    final source = switch (r.matchLanguage) {
+      'en' => 'matchEn'.tr,
+      'sw' => 'matchSw'.tr,
+      _ => 'matchAr'.tr,
+    };
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        key: ValueKey('ayah-result-${r.verseKey}'),
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 8),
+          padding: const EdgeInsets.all(14),
+          decoration: appCardDecoration(),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      '${surah.nameSimple} ${r.verseKey}',
+                      style: AppTheme.headline(13, weight: FontWeight.w700),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 8,
+                      vertical: 3,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.goldTint,
+                      borderRadius: BorderRadius.circular(999),
+                    ),
+                    child: Text(
+                      source,
+                      style: AppTheme.body(
+                        9.5,
+                        weight: FontWeight.w700,
+                        color: AppColors.emeraldDeep,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                r.text,
+                textDirection: TextDirection.rtl,
+                textAlign: TextAlign.right,
+                style: AppTheme.quran(16, height: 1.9),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (r.matchedTranslation != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  r.matchedTranslation!,
+                  style: AppTheme.body(12, color: AppColors.ink, height: 1.5),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

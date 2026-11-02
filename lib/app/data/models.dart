@@ -128,10 +128,17 @@ class TasbeehPhrase {
 
 class AyahSearchResult {
   final String verseKey; // "2:152"
-  final int verseId;
-  final String text;
+  final int verseId; // global ayah number
+  final String text; // uthmani
   final int surahNumber;
   final int ayahNumber;
+
+  /// Corpus the query matched: 'ar' (Uthmani or a verse reference),
+  /// 'en' (Sahih International) or 'sw' (Al-Barwani).
+  final String matchLanguage;
+
+  /// The matched translation text; null for Arabic matches.
+  final String? matchedTranslation;
 
   const AyahSearchResult({
     required this.verseKey,
@@ -139,5 +146,7 @@ class AyahSearchResult {
     required this.text,
     required this.surahNumber,
     required this.ayahNumber,
+    this.matchLanguage = 'ar',
+    this.matchedTranslation,
   });
 }

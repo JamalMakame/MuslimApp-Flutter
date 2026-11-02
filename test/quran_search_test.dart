@@ -29,35 +29,33 @@ void main() {
   });
 
   test('English phrases match the bundled Sahih International translation', () {
-    final result = search('So remember Me').firstWhere(
-      (r) => r.verseKey == '2:152',
-    );
+    final result = search(
+      'So remember Me',
+    ).firstWhere((r) => r.verseKey == '2:152');
     expect(result.matchLanguage, 'en');
-    expect(
-      result.matchedTranslation,
-      quran.translation(2, 152, 'en'),
-    );
+    expect(result.matchedTranslation, quran.translation(2, 152, 'en'));
     expect(result.text, quran.ayahsFor(2)[151].text);
   });
 
   test('Swahili text can be found without switching app locale', () {
-    final result = search('nikumbukeni').firstWhere(
-      (r) => r.verseKey == '2:152',
-    );
+    final result = search(
+      'nikumbukeni',
+    ).firstWhere((r) => r.verseKey == '2:152');
     expect(result.matchLanguage, 'sw');
-    expect(
-      result.matchedTranslation,
-      quran.translation(2, 152, 'sw'),
-    );
+    expect(result.matchedTranslation, quran.translation(2, 152, 'sw'));
   });
 
   test('results favour the active locale when both translations match', () {
-    final english = search('Allah', locale: 'en', limit: 6236).firstWhere(
-      (r) => r.verseKey == '6:102',
-    );
-    final swahili = search('Allah', locale: 'sw', limit: 6236).firstWhere(
-      (r) => r.verseKey == '6:102',
-    );
+    final english = search(
+      'Allah',
+      locale: 'en',
+      limit: 6236,
+    ).firstWhere((r) => r.verseKey == '6:102');
+    final swahili = search(
+      'Allah',
+      locale: 'sw',
+      limit: 6236,
+    ).firstWhere((r) => r.verseKey == '6:102');
     expect(english.matchLanguage, 'en');
     expect(swahili.matchLanguage, 'sw');
     expect(english.matchedTranslation, quran.translation(6, 102, 'en'));

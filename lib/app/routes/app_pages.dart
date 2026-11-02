@@ -33,8 +33,9 @@ abstract class Routes {
   static const tasbeeh = '/tasbeeh';
   static const settings = '/settings';
   static const calendar = '/calendar';
-  // Dynamic: '/reader/1', '/azkar-detail/catMorning', '/memorize/1'
-  static String reader(int surah) => '/reader/$surah';
+  // Dynamic: '/reader/1?ayah=5', '/azkar-detail/catMorning', '/memorize/1'
+  static String reader(int surah, {int? ayah}) =>
+      ayah == null ? '/reader/$surah' : '/reader/$surah?ayah=$ayah';
   static String azkarDetail(String bucket) => '/azkar-detail/$bucket';
   static String memorize(int surah) => '/memorize/$surah';
 }
@@ -84,7 +85,11 @@ class AppPages {
       page: () => QuranReaderScreen(surah: int.parse(Get.parameters['surah']!)),
       binding: BindingsBuilder(() {
         final n = int.parse(Get.parameters['surah']!);
-        Get.lazyPut(() => ReaderController(n), tag: 'reader_$n');
+        final ayah = int.tryParse(Get.parameters['ayah'] ?? '');
+        Get.lazyPut(
+          () => ReaderController(n, initialAyah: ayah),
+          tag: 'reader_$n',
+        );
       }),
     ),
     GetPage(
