@@ -64,3 +64,23 @@ Scope: Ship a truthful offline-first Hijri calendar and a working Quran memoriza
 
 - [ ] G13: EN/AR/SW phone views retain the approved Quran index visual language, readable match sources, Arabic RTL and honest offline/limited-result copy.
   EVIDENCE: pending
+
+## Deen launcher icon
+
+- [ ] G14: All referenced iOS and Android launcher assets have valid sizes, transparency, and an adaptive safe zone; Android shows Deen.
+  CHECK: flutter test --no-pub test/app_icon_assets_test.dart && printf 'launcher resources valid\n'
+  EXPECT: launcher resources valid
+  EVIDENCE: pending
+
+- [ ] G15: The iOS simulator app compiles with the updated AppIcon catalog.
+  CHECK: xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Debug -sdk iphonesimulator -destination 'generic/platform=iOS Simulator' -derivedDataPath "$(mktemp -d /tmp/deen-icon-gate-ios.XXXXXX)" CODE_SIGNING_ALLOWED=NO build -quiet && printf 'iOS launcher compiled\n'
+  EXPECT: iOS launcher compiled
+  EVIDENCE: pending
+
+- [ ] G16: The Android debug APK packages Deen's adaptive and monochrome launcher icons without changing release configuration.
+  CHECK: cd android && JAVA_HOME=$(/usr/libexec/java_home -v 21) ./gradlew :app:assembleDebug && "$HOME/Library/Android/sdk/build-tools/36.0.0/aapt2" dump badging ../build/app/outputs/apk/debug/app-debug.apk | grep -F "application-label:'Deen'" && "$HOME/Library/Android/sdk/build-tools/36.0.0/aapt2" dump resources ../build/app/outputs/apk/debug/app-debug.apk | grep -F 'drawable/ic_launcher_monochrome' && printf 'Android launcher compiled\n'
+  EXPECT: Android launcher compiled
+  EVIDENCE: pending
+
+- [x] G17: The mihrab-star mark remains legible at launcher sizes and Android circular/themed masks do not crop it.
+  EVIDENCE: Inspected design/app-icon-preview.png at 60/40/29px and the 1024px iOS and 512px Play Store exports; Android's 16% adaptive inset and decoded alpha bounds are covered in test/app_icon_assets_test.dart. User chose mihrab-star over the already-merged dome icon.

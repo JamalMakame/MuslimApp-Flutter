@@ -1,12 +1,13 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-<defs><linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
-<stop offset="0" stop-color="#0E6B5C"/><stop offset="1" stop-color="#0A4A3F"/></linearGradient></defs>
+<defs><linearGradient id="bg" gradientUnits="userSpaceOnUse" x1="88" y1="94" x2="915" y2="958">
+<stop stop-color="#0E6B5C"/><stop offset="1" stop-color="#06352E"/>
+</linearGradient><radialGradient id="light" cx="512" cy="304" r="680" gradientUnits="userSpaceOnUse">
+<stop stop-color="#9DA970" stop-opacity="0.13"/><stop offset="1" stop-color="#9DA970" stop-opacity="0"/>
+</radialGradient></defs>
 <rect width="1024" height="1024" fill="url(#bg)"/>
-<circle cx="512" cy="512" r="400" fill="none" stroke="#C9A24B" stroke-opacity="0.3" stroke-width="6"/>
-<g transform="translate(96 161) scale(13)"><g fill="none" stroke="#C9A24B" stroke-linecap="round" stroke-linejoin="round">
-  <path stroke-width="1.6" d="M32 14 C29 19 20 23 20 34 Q20 41 22 44 L42 44 Q44 41 44 34 C44 23 35 19 32 14 Z"/>
-  <path stroke-width="1" stroke-opacity="0.55" d="M26 44 Q24 30 32 23 Q40 30 38 44"/>
-  <path stroke-width="1.5" d="M29 44 L29 37 Q32 31 35 37 L35 44 M16 44 L48 44 M18 48 L46 48 M15 44 L15 34 L17 31 L17 44 M49 44 L49 34 L47 31 L47 44 M32 14 L32 10"/>
-</g>
-<circle cx="34" cy="8" r="2" fill="#C9A24B"/></g>
+<rect width="1024" height="1024" fill="url(#light)"/>
+<defs><linearGradient id="gold" gradientUnits="userSpaceOnUse" x1="180" y1="189" x2="840" y2="839">
+<stop stop-color="#F1D488"/><stop offset="0.5" stop-color="#C9A24B"/><stop offset="1" stop-color="#B07E2D"/>
+</linearGradient></defs>
+<g transform="translate(0 1024) scale(1 -1)"><path fill-rule="evenodd" d="M 274.00 248.00 L 274.00 555.00 C 274.00 692.00 447.00 771.00 512.00 828.00 C 577.00 771.00 750.00 692.00 750.00 555.00 L 750.00 248.00 Z M 356.00 248.00 L 356.00 557.00 C 356.00 635.00 453.00 675.00 512.00 720.00 C 571.00 675.00 668.00 635.00 668.00 557.00 L 668.00 248.00 Z M 512.00 564.00 L 497.08 516.03 L 452.60 539.40 L 475.97 494.92 L 428.00 480.00 L 475.97 465.08 L 452.60 420.60 L 497.08 443.97 L 512.00 396.00 L 526.92 443.97 L 571.40 420.60 L 548.03 465.08 L 596.00 480.00 L 548.03 494.92 L 571.40 539.40 L 526.92 516.03 Z M 769.00 210.00 L 769.00 210.00 C 769.00 219.94 760.94 228.00 751.00 228.00 L 273.00 228.00 C 263.06 228.00 255.00 219.94 255.00 210.00 L 255.00 210.00 C 255.00 200.06 263.06 192.00 273.00 192.00 L 751.00 192.00 C 760.94 192.00 769.00 200.06 769.00 210.00 Z" fill="url(#gold)"/></g>
 </svg>

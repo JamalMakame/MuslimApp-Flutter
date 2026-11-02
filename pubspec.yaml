@@ -147,8 +147,9 @@ flutter:
 
 flutter_launcher_icons:
   android: "ic_launcher"
-  ios: true
-  remove_alpha_ios: true
+  # iOS sizes come from design/generate_app_icons.swift; this plugin also
+  # rewrites an unrelated Xcode asset-symbol setting when ios is enabled.
+  ios: false
   image_path: "assets/branding/app_icon.png"
   adaptive_icon_background: "#0E6B5C"
   adaptive_icon_foreground: "assets/branding/app_icon_foreground.png"

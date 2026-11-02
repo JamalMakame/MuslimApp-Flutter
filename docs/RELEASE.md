@@ -64,7 +64,7 @@ Upload `build/app/outputs/bundle/release/app-release.aab` in Play Console
 - **Content rating, target audience (all ages), ads (none), app access (no
   login).**
 - Store listing: short and full description in English, Arabic and Swahili,
-  512×512 icon (`assets/branding/app_icon.png` scaled), 1024×500 feature
+  512×512 icon (`design/app-icon-play-store.png`), 1024×500 feature
   graphic, at least 2 phone screenshots.
 
 ## iOS
@@ -106,9 +106,11 @@ compass turns, audio downloads, dark mode, all three languages.
 
 ## App icon
 
-The source is `assets/branding/app_icon.svg` (plus the adaptive foreground and
-monochrome layers next to it). After changing the PNGs, regenerate every size:
+The master geometry is in `design/generate_app_icons.swift`. It generates the
+SVGs, PNG sources under `assets/branding/`, iOS catalog, and Play Store export.
+The Flutter icon tool generates the Android launcher layers:
 
 ```sh
+swift design/generate_app_icons.swift
 dart run flutter_launcher_icons
 ```

@@ -26,6 +26,7 @@ with Tailwind tokens — use for exact spacing/colors in Flutter).
 On iOS, `LaunchScreen.storyboard` shows a static emerald Deen mark before
 Flutter can render `/splash`. Regenerate the matching native and Flutter dome
 artwork with `swift ios/generate_splash.swift`.
+Launcher icon artwork and native export instructions: [`APP_ICON.md`](APP_ICON.md).
 
 ## Navigation model
 
