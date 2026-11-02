@@ -21,6 +21,7 @@ import '../ui/screens/hadith_screen.dart';
 import '../ui/screens/calendar_screen.dart';
 import '../ui/screens/home_screen.dart';
 import '../ui/screens/memorize_screen.dart';
+import '../ui/screens/mushaf_screen.dart';
 import '../ui/screens/onboarding_screen.dart';
 import '../ui/screens/qibla_screen.dart';
 import '../ui/screens/quran_index_screen.dart';
@@ -50,6 +51,7 @@ abstract class Routes {
   static const timetable = '/timetable';
   static const habits = '/habits';
   static const hadith = '/hadith';
+  static String mushaf(int page) => '/mushaf?page=$page';
 }
 
 /// Everything the app needs up-front (storage-backed prefs, boot
@@ -120,6 +122,12 @@ class AppPages {
     GetPage(name: Routes.timetable, page: () => const TimetableScreen()),
     GetPage(name: Routes.habits, page: () => const HabitsScreen()),
     GetPage(name: Routes.hadith, page: () => const HadithScreen()),
+    GetPage(
+      name: '/mushaf',
+      page: () => MushafScreen(
+        initialPage: int.tryParse(Get.parameters['page'] ?? '') ?? 1,
+      ),
+    ),
     GetPage(
       name: Routes.calendar,
       page: () => const CalendarScreen(),

@@ -64,6 +64,14 @@ class QuranReaderScreen extends GetView<ReaderController> {
                     onTap: () => showGoToSheet(fromSurah: s.number),
                   ),
                   const SizedBox(width: 8),
+                  _RoundIconBtn(
+                    key: const ValueKey('reader-mushaf'),
+                    icon: Icons.auto_stories_outlined,
+                    onTap: () => Get.toNamed(
+                      Routes.mushaf(c.current.value?.page ?? s.pageStart),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
                   Obx(() {
                     final n = c.current.value?.numberInSurah ?? 1;
                     final on = c.isBookmarked(n);

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../routes/app_pages.dart';
 
 import '../../controllers/settings_controller.dart';
 import '../../services/habit_service.dart';
 import '../../services/audio_cache_service.dart';
+import '../../services/crash_log.dart';
 import '../../services/location_service.dart';
 import '../../services/notification_service.dart';
 import '../../services/quran_service.dart';
@@ -331,6 +333,12 @@ class SettingsScreen extends GetView<SettingsController> {
                   onTap: _confirmClear,
                 ),
                 _SettingsRow(
+                  key: const ValueKey('problem-reports'),
+                  title: 'problemReports'.tr,
+                  subtitle: 'problemReportsDesc'.tr,
+                  onTap: _problemReports,
+                ),
+                _SettingsRow(
                   title: 'privacyPolicy'.tr,
                   subtitle: 'privacyBody'.tr,
                   onTap: () => Get.bottomSheet(
@@ -557,6 +565,40 @@ class SettingsScreen extends GetView<SettingsController> {
       isScrollControlled: true,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+    );
+  }
+
+  void _problemReports() {
+    final n = CrashLog.entries.length;
+    if (n == 0) {
+      Get.snackbar('problemReports'.tr, 'noProblemReports'.tr);
+      return;
+    }
+    Get.dialog(
+      AlertDialog(
+        backgroundColor: AppColors.surface,
+        title: Text('problemReports'.tr, style: AppTheme.headline(16)),
+        content: Text(
+          'problemReportsCount'.trParams({'n': '$n'}),
+          style: AppTheme.body(13),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () async {
+              await CrashLog.clear();
+              Get.back();
+            },
+            child: Text('clearReports'.tr),
+          ),
+          TextButton(
+            onPressed: () {
+              Get.back();
+              Share.share(CrashLog.report());
+            },
+            child: Text('shareReport'.tr),
+          ),
+        ],
       ),
     );
   }

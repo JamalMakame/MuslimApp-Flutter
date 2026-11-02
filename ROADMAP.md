@@ -67,7 +67,8 @@ availability are critical.
 ### The Holy Quran (Reading)
 - ✅ Offline-first reading of bundled Uthmani text (Amiri font) in a
   mushaf-style reader; no network needed
-- ⬜ Indo-Pak script option / page-faithful mushaf layout
+- ✅ Page-by-page mode (604 pages, text laid out per page)
+- ⬜ Indo-Pak script option / page-faithful image mushaf
 - ✅ Start anywhere: Go to surah + ayah / juz / hizb / page, search
   shortcuts (`juz 5`, `page 300`, `2:255-260`), `deen://quran/2/255`
   links, live Juz/Hizb/Page chips, Continue reading + Ayah of the Day on
@@ -184,7 +185,8 @@ Scholarly resources, search, community integration.
 Premium experience via OS features + accessibility.
 
 ### System Integration & Widgets
-- ⬜ Home/lock screen widgets for next prayer — widget strings localized
+- ✅ Android home-screen widget for the next prayer (iOS WidgetKit not built)
+- ⬜ Lock screen widgets — widget strings localized
   (ar/en/sw) since they render outside Flutter's Directionality
 - ⬜ WearOS / watchOS mini-apps (Qibla + notifications)
 

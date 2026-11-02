@@ -342,3 +342,10 @@ screen; a pause between repeats (rest of H4) is not built.
 | **5. Habits and memorisation** | R1 khatmah planner, R2 goal/streak, R3 reminder, H2 self-test, H3 progress | Builds on phases 1–3 |
 | **6. Content** | A1 azkar translations, A2 split Other, D3 Nawawi 40, T2 offline tafsir, T3 transliteration | Mostly curation and licence checks, can run alongside |
 | **7. Platform** | CI, crash reporting, P6 widget, Q10 page mode, P3 adhan sound | Larger or optional |
+
+Phase 7 is built, with these limits:
+- **CI:** `.github/workflows/ci.yml` runs format, analyze and tests on every PR and push to main (Flutter 3.47.0).
+- **Problem reports:** uncaught errors are stored on the phone only (`CrashLog`, newest 20). Settings → Problem reports shares or clears them. There is no remote crash service: one needs an account and DSN (e.g. Sentry or Firebase Crashlytics), and adding one changes the privacy policy and Data Safety answers.
+- **Widget (P6):** an Android home-screen widget (`NextPrayerWidget`) shows the next prayer and its time. The app saves three days of times via `home_widget`, and the widget picks the next one itself while the app is closed. It refreshes when the app syncs reminders, and every 30 minutes. iOS needs a WidgetKit extension and App Group added in Xcode, so it is not built.
+- **Page mode (Q10):** `/mushaf?page=N` shows one of the 604 pages per screen, swiping right for the next page. It's reached from the reader header. It is text laid out per page, not page-faithful images. Moving forward records the page for the reading goal.
+- **Adhan sound (P3):** not built. No adhan recording with a clear redistribution licence was found; the system notification sound is used.

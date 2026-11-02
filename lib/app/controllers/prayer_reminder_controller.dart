@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../services/habit_service.dart';
 import '../services/notification_service.dart';
 import '../services/prayer_service.dart';
+import '../services/prayer_widget.dart';
 import 'settings_controller.dart';
 
 /// Keeps the week of prayer reminders current for the whole app lifetime,
@@ -56,7 +57,32 @@ class PrayerReminderController extends GetxController
     }
   }
 
+  Future<void> _widget() async {
+    if (!settings.hasLocation) return;
+    final code = settings.localeCode.value;
+    final now = DateTime.now();
+    final slots = [
+      for (var d = 0; d < 3; d++)
+        ..._prayers.slotsOn(
+          DateTime(now.year, now.month, now.day + d),
+          lat: settings.latitude.value ?? 0,
+          lng: settings.longitude.value ?? 0,
+          method: settings.calcMethod.value,
+          madhab: settings.madhab.value,
+          tuning: settings.tuning,
+        ),
+    ];
+    await PrayerWidget.update(
+      prayers: PrayerWidget.payload(slots, now, (k) => _t(code, k)),
+      label: _t(code, 'nextPrayer'),
+      city: settings.city.value,
+    );
+  }
+
   Future<void> _sync() async {
+    await _widget().catchError((Object e) {
+      debugPrint('Prayer widget not updated: $e');
+    });
     final notifications = NotificationService.instance;
     final prayersOn = settings.notifyPrayers.value;
     final azkar = settings.azkarReminders.value;

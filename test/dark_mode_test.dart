@@ -75,6 +75,7 @@ void main() {
     'onboarding': Routes.onboarding,
     'habits': Routes.habits,
     'hadith': Routes.hadith,
+    'mushaf': '/mushaf?page=50',
   };
 
   for (final MapEntry(key: name, value: route) in screens.entries) {
