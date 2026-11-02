@@ -223,9 +223,14 @@ class QuranService {
 
   /// Folds Uthmani orthography onto plain Arabic: drops harakat, Quranic
   /// annotation marks and tatweel, and unifies alef/ya/ta-marbuta forms.
-  static String normalizeArabic(String s) => s
-      // Uthmani waw + dagger alef (ٱلصَّلَوٰة) is the plain alef of الصلاة.
-      .replaceAll('\u0648\u0670', '\u0627')
+  /// Uthmani waw + dagger alef (ٱلصَّلَوٰة) is read as the plain alef of
+  /// الصلاة.
+  static String normalizeArabic(String s) =>
+      _foldArabic(s.replaceAll('\u0648\u0670', '\u0627'));
+
+  /// [normalizeArabic] that keeps the Uthmani waw, so undiacritized Uthmani
+  /// spellings (الصلوة, الزكوة) still match.
+  static String _foldArabic(String s) => s
       .replaceAll(_arabicMarks, '')
       .replaceAll(RegExp('[\u0671\u0622\u0623\u0625]'), '\u0627')
       .replaceAll('\u0649', '\u064A')
@@ -257,6 +262,7 @@ class QuranService {
             surah: si + 1,
             ayah: a,
             ar: ar,
+            arWaw: _foldArabic(a.text),
             arSkeleton: _arabicSkeleton(ar),
             en: normalizeLatin(_en[si][a.numberInSurah] ?? ''),
             sw: normalizeLatin(_sw[si][a.numberInSurah] ?? ''),
@@ -294,6 +300,7 @@ class QuranService {
       final skeleton = _arabicSkeleton(q);
       for (final row in _searchIndex) {
         if (row.ar.contains(q) ||
+            row.arWaw.contains(q) ||
             (skeleton.length >= 2 && row.arSkeleton.contains(skeleton))) {
           out.add(_result(row.surah, row.ayah, 'ar'));
           if (out.length >= limit) break;
@@ -357,6 +364,7 @@ class _SearchRow {
     required this.surah,
     required this.ayah,
     required this.ar,
+    required this.arWaw,
     required this.arSkeleton,
     required this.en,
     required this.sw,
@@ -365,6 +373,7 @@ class _SearchRow {
   final int surah;
   final Ayah ayah;
   final String ar;
+  final String arWaw;
   final String arSkeleton;
   final String en;
   final String sw;
