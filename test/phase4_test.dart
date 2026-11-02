@@ -95,6 +95,11 @@ void main() {
       expect(pool.length, greaterThanOrEqualTo(20));
       expect(pool.map((d) => d.zekr).toSet().length, pool.length);
       expect(pool.every((d) => AzkarService.isSupplication(d.zekr)), isTrue);
+      final morning = AzkarService.instance.items('catMorning');
+      final falaq = morning.where((d) => d.zekr.contains('ٱلْفَلَقِ'));
+      expect(falaq, isNotEmpty);
+      expect(pool.any(falaq.contains), isFalse);
+      expect(AzkarService.isSupplication(falaq.first.zekr), isFalse);
       expect(
         pool.every((d) => d.zekr.isNotEmpty && d.zekr.length <= 220),
         isTrue,

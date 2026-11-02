@@ -91,7 +91,8 @@ class AzkarService {
   List<DhikrItem> items(String bucket) => _byBucket[bucket] ?? [];
 
   /// Supplications short enough for the Home "Dua of the Day" card: entries
-  /// that address Allah (اللهم / رب… / أعوذ), not instructions or verses.
+  /// that address Allah (اللهم / رب… / أعوذ), not instructions or Quran
+  /// surahs copied into other categories (al-Falaq, an-Nas, al-Ikhlas).
   List<DhikrItem> get dailyDuaPool {
     final seen = <String>{};
     return [
@@ -109,7 +110,12 @@ class AzkarService {
 
   static bool isSupplication(String zekr) {
     final t = zekr.replaceAll(_marks, '').trim();
-    return t.contains('اللهم') || t.startsWith('رب') || t.contains('أعوذ');
+    final quranic =
+        t.startsWith('بسم الله الرحمن الرحيم') ||
+        t.contains('قل أعوذ') ||
+        t.contains('قل هو الله');
+    return !quranic &&
+        (t.contains('اللهم') || t.startsWith('رب') || t.contains('أعوذ'));
   }
 
   int totalCount(String bucket) => items(bucket).length;
