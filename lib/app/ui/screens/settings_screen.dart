@@ -940,35 +940,44 @@ class _OfflineTafsirRowState extends State<_OfflineTafsirRow> {
   int _saved = 0;
   bool _running = false;
   bool _stop = false;
+  int? _countedEdition;
 
-  String get _lang => Get.locale?.languageCode ?? 'en';
-
-  @override
-  void initState() {
-    super.initState();
-    _count();
-  }
+  int get _edition =>
+      QuranService.tafsirEdition(Get.locale?.languageCode ?? 'en');
 
   Future<void> _count() async {
-    final n = await QuranService.instance.tafsirOfflineCount(lang: _lang);
-    if (mounted) setState(() => _saved = n);
+    final edition = _countedEdition = _edition;
+    final n = await QuranService.instance.tafsirOfflineCount(
+      lang: edition == 14 ? 'ar' : 'en',
+    );
+    if (mounted && edition == _countedEdition) setState(() => _saved = n);
+  }
+
+  @override
+  void dispose() {
+    _stop = true;
+    super.dispose();
   }
 
   Future<void> _run() async {
+    final lang = _edition == 14 ? 'ar' : 'en';
+    final generation = QuranService.tafsirGeneration;
     setState(() {
       _running = true;
       _stop = false;
     });
     final q = QuranService.instance;
     var failed = false;
-    for (var s = 1; s <= 114 && !_stop; s++) {
-      if (await q.hasTafsirOffline(s, lang: _lang)) continue;
-      if (!await q.downloadTafsir(s, lang: _lang)) {
-        failed = true;
+    bool live() =>
+        mounted && !_stop && generation == QuranService.tafsirGeneration;
+    for (var s = 1; s <= 114 && live(); s++) {
+      if (await q.hasTafsirOffline(s, lang: lang)) continue;
+      if (!await q.downloadTafsir(s, lang: lang)) {
+        failed = live();
         break;
       }
       if (!mounted) return;
-      setState(() => _saved++);
+      if (lang == (_edition == 14 ? 'ar' : 'en')) setState(() => _saved++);
     }
     if (!mounted) return;
     setState(() => _running = false);
@@ -976,7 +985,12 @@ class _OfflineTafsirRowState extends State<_OfflineTafsirRow> {
   }
 
   @override
-  Widget build(BuildContext context) => ListTile(
+  Widget build(BuildContext context) {
+    if (_countedEdition != _edition) _count();
+    return _tile();
+  }
+
+  Widget _tile() => ListTile(
     key: const ValueKey('offline-tafsir'),
     title: Text('offlineTafsir'.tr, style: AppTheme.body(14)),
     subtitle: Text(

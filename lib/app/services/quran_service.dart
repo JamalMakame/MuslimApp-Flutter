@@ -45,7 +45,12 @@ class QuranService {
   static Future<File> tafsirFile(int edition, int surah) async =>
       File('${(await documentsDirectory()).path}/tafsir/$edition/$surah.json');
 
+  /// Bumped by [clearTafsirFiles]; a download started before a clear
+  /// never writes its file.
+  static int tafsirGeneration = 0;
+
   static Future<void> clearTafsirFiles() async {
+    tafsirGeneration++;
     final dir = Directory('${(await documentsDirectory()).path}/tafsir');
     if (await dir.exists()) await dir.delete(recursive: true);
   }
@@ -69,6 +74,7 @@ class QuranService {
     http.Client? client,
   }) async {
     final edition = tafsirEdition(lang);
+    final generation = tafsirGeneration;
     final get = client?.get ?? http.get;
     final out = <String, String>{};
     try {
@@ -90,11 +96,21 @@ class QuranService {
     } catch (_) {
       return false;
     }
-    if (out.isEmpty) return false;
-    final file = await tafsirFile(edition, surah);
-    await file.parent.create(recursive: true);
-    await file.writeAsString(jsonEncode(out));
-    return true;
+    if (out.isEmpty || generation != tafsirGeneration) return false;
+    try {
+      final file = await tafsirFile(edition, surah);
+      await file.parent.create(recursive: true);
+      final tmp = File('${file.path}.part');
+      await tmp.writeAsString(jsonEncode(out), flush: true);
+      if (generation != tafsirGeneration) {
+        await tmp.delete();
+        return false;
+      }
+      await tmp.rename(file.path);
+      return true;
+    } catch (_) {
+      return false;
+    }
   }
 
   Future<String?> _offlineTafsir(String verseKey, int edition) async {

@@ -120,6 +120,29 @@ void main() {
       expect(await q.hasTafsirOffline(2), isFalse);
     });
 
+    test(
+      'a clear during a download keeps the file from being written',
+      () async {
+        final client = MockClient((r) async {
+          await QuranService.clearTafsirFiles();
+          return http.Response(
+            jsonEncode({
+              'tafsirs': [
+                {'verse_key': '4:1', 'text': 'x'},
+              ],
+              'pagination': {'next_page': null},
+            }),
+            200,
+          );
+        });
+        expect(
+          await QuranService.instance.downloadTafsir(4, client: client),
+          isFalse,
+        );
+        expect(await QuranService.instance.hasTafsirOffline(4), isFalse);
+      },
+    );
+
     test('a failed page saves nothing', () async {
       var calls = 0;
       final client = MockClient((r) async {
