@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:fquran_app/app/controllers/calendar_controller.dart';
 import 'package:fquran_app/app/i18n/app_translations.dart';
@@ -79,6 +80,7 @@ void main() {
     tearDown(() => Get.delete<CalendarController>(force: true));
 
     tearDownAll(() async {
+      await GetStorage().save();
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
           .setMockMethodCallHandler(
             const MethodChannel('plugins.flutter.io/path_provider'),
