@@ -42,6 +42,7 @@ class SettingsController extends GetxController {
   final prayerLeads = <String, int>{}.obs;
   final azkarReminders = false.obs;
   final showTranslations = true.obs;
+  final azkarTranslit = false.obs;
   final ayahAudio = false.obs;
   final translationLang = 'en'.obs;
 
@@ -79,6 +80,7 @@ class SettingsController extends GetxController {
       true,
     );
     ayahAudio.value = _s.readBool(StorageService.kAyahAudio, false);
+    azkarTranslit.value = _s.readBool(StorageService.kAzkarTranslit, false);
     translationLang.value = _s.readStr(StorageService.kTranslationLang, 'en');
     latitude.value = _s.readDouble(StorageService.kLat);
     longitude.value = _s.readDouble(StorageService.kLng);
@@ -146,6 +148,8 @@ class SettingsController extends GetxController {
 
   Future<void> setShowTranslations(bool v) =>
       _persist(showTranslations, v, StorageService.kShowTranslations);
+  Future<void> setAzkarTranslit(bool v) =>
+      _persist(azkarTranslit, v, StorageService.kAzkarTranslit);
   Future<void> setAyahAudio(bool v) =>
       _persist(ayahAudio, v, StorageService.kAyahAudio);
   Future<void> setReciter(String v) =>

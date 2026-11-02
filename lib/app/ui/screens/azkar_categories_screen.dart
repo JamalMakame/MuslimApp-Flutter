@@ -23,6 +23,11 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
     'catRuqyahQuran': Icons.shield_outlined,
     'catRuqyahSunnah': Icons.shield_moon_outlined,
     'catGratitude': Icons.favorite_outline,
+    'catHomeWudu': Icons.door_front_door_outlined,
+    'catIstighfar': Icons.water_drop_outlined,
+    'catSalawat': Icons.favorite_border,
+    'catSalam': Icons.waving_hand_outlined,
+    'catHajj': Icons.mosque_outlined,
     'catOther': Icons.auto_stories,
   };
 
@@ -262,7 +267,7 @@ class AzkarCategoriesScreen extends GetView<AzkarController> {
                 crossAxisCount: 2,
                 mainAxisSpacing: 12,
                 crossAxisSpacing: 12,
-                childAspectRatio: 1.28,
+                mainAxisExtent: 150,
               ),
               itemCount: controller.categories.length,
               itemBuilder: (_, i) {

@@ -1,8 +1,10 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
 
 import '../data/models.dart';
 import 'storage_service.dart';
@@ -30,7 +32,85 @@ class QuranService {
   static String? parseTafsir(String body) {
     final tafsir = (jsonDecode(body) as Map)['tafsir'];
     final html = tafsir is Map ? tafsir['text'] as String? : null;
-    if (html == null) return null;
+    return html == null ? null : tafsirText(html);
+  }
+
+  static String tafsirChapterUrl(int edition, int surah, int page) =>
+      '$tafsirBase$edition/by_chapter/$surah?per_page=50&page=$page';
+
+  /// Directory for downloaded tafsir; replaceable in tests.
+  static Future<Directory> Function() documentsDirectory =
+      getApplicationDocumentsDirectory;
+
+  static Future<File> tafsirFile(int edition, int surah) async =>
+      File('${(await documentsDirectory()).path}/tafsir/$edition/$surah.json');
+
+  static Future<void> clearTafsirFiles() async {
+    final dir = Directory('${(await documentsDirectory()).path}/tafsir');
+    if (await dir.exists()) await dir.delete(recursive: true);
+  }
+
+  Future<bool> hasTafsirOffline(int surah, {String lang = 'en'}) async =>
+      (await tafsirFile(tafsirEdition(lang), surah)).exists();
+
+  Future<int> tafsirOfflineCount({String lang = 'en'}) async {
+    var n = 0;
+    for (var s = 1; s <= 114; s++) {
+      if (await hasTafsirOffline(s, lang: lang)) n++;
+    }
+    return n;
+  }
+
+  /// Saves a whole surah's tafsir (quran.com `by_chapter`, 50 per page) to a
+  /// file, written only once every ayah is in. Returns false on failure.
+  Future<bool> downloadTafsir(
+    int surah, {
+    String lang = 'en',
+    http.Client? client,
+  }) async {
+    final edition = tafsirEdition(lang);
+    final get = client?.get ?? http.get;
+    final out = <String, String>{};
+    try {
+      for (var page = 1; page <= 20; page++) {
+        final res = await get(
+          Uri.parse(tafsirChapterUrl(edition, surah, page)),
+        ).timeout(const Duration(seconds: 20));
+        if (res.statusCode != 200) return false;
+        final body = jsonDecode(res.body) as Map;
+        for (final t in (body['tafsirs'] as List? ?? const [])) {
+          final key = t['verse_key'] as String?;
+          final html = t['text'] as String?;
+          final text = html == null ? null : tafsirText(html);
+          if (key != null && text != null) out[key] = text;
+        }
+        final next = (body['pagination'] as Map?)?['next_page'];
+        if (next == null) break;
+      }
+    } catch (_) {
+      return false;
+    }
+    if (out.isEmpty) return false;
+    final file = await tafsirFile(edition, surah);
+    await file.parent.create(recursive: true);
+    await file.writeAsString(jsonEncode(out));
+    return true;
+  }
+
+  Future<String?> _offlineTafsir(String verseKey, int edition) async {
+    final surah = int.tryParse(verseKey.split(':').first);
+    if (surah == null) return null;
+    try {
+      final file = await tafsirFile(edition, surah);
+      if (!await file.exists()) return null;
+      final map = jsonDecode(await file.readAsString()) as Map;
+      return map[verseKey] as String?;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static String? tafsirText(String html) {
     final text = html
         .replaceAll(RegExp(r'<br\s*/?>', caseSensitive: false), '\n')
         .replaceAll(
@@ -523,6 +603,8 @@ class QuranService {
 
   // ---- Remote: tafsir (cached locally once fetched) ------------------------
   Future<String?> tafsir(String verseKey, {String lang = 'en'}) async {
+    final offline = await _offlineTafsir(verseKey, tafsirEdition(lang));
+    if (offline != null && offline.isNotEmpty) return offline;
     final cacheKey = '${tafsirEdition(lang)}:$verseKey';
     final cache = (_s.read<Map>(StorageService.kTafsirCache) ?? {})
         .cast<String, String>();

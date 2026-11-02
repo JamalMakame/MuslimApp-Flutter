@@ -17,6 +17,7 @@ import '../ui/screens/bookmarks_screen.dart';
 import '../ui/screens/prayer_tuning_screen.dart';
 import '../ui/screens/timetable_screen.dart';
 import '../ui/screens/habits_screen.dart';
+import '../ui/screens/hadith_screen.dart';
 import '../ui/screens/calendar_screen.dart';
 import '../ui/screens/home_screen.dart';
 import '../ui/screens/memorize_screen.dart';
@@ -48,6 +49,7 @@ abstract class Routes {
   static const prayerTuning = '/prayer-tuning';
   static const timetable = '/timetable';
   static const habits = '/habits';
+  static const hadith = '/hadith';
 }
 
 /// Everything the app needs up-front (storage-backed prefs, boot
@@ -117,6 +119,7 @@ class AppPages {
     GetPage(name: Routes.prayerTuning, page: () => const PrayerTuningScreen()),
     GetPage(name: Routes.timetable, page: () => const TimetableScreen()),
     GetPage(name: Routes.habits, page: () => const HabitsScreen()),
+    GetPage(name: Routes.hadith, page: () => const HadithScreen()),
     GetPage(
       name: Routes.calendar,
       page: () => const CalendarScreen(),

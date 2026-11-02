@@ -230,7 +230,9 @@ Future<void> showTafsirSheet({
                   ),
                   const SizedBox(height: 8),
                   _TafsirBody(verseKey: '$surahNumber:$ayahNumber'),
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 8),
+                  _SaveOffline(surahNumber),
+                  const SizedBox(height: 12),
                 ],
               ),
             ),
@@ -382,6 +384,73 @@ class _ActionBtn extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Saves the whole surah's tafsir to a file so it reads without internet.
+class _SaveOffline extends StatefulWidget {
+  const _SaveOffline(this.surah);
+  final int surah;
+
+  @override
+  State<_SaveOffline> createState() => _SaveOfflineState();
+}
+
+class _SaveOfflineState extends State<_SaveOffline> {
+  bool? _saved;
+  bool _busy = false;
+
+  String get _lang => Get.locale?.languageCode ?? 'en';
+
+  @override
+  void initState() {
+    super.initState();
+    QuranService.instance
+        .hasTafsirOffline(widget.surah, lang: _lang)
+        .then((v) => mounted ? setState(() => _saved = v) : null);
+  }
+
+  Future<void> _save() async {
+    setState(() => _busy = true);
+    final ok = await QuranService.instance.downloadTafsir(
+      widget.surah,
+      lang: _lang,
+    );
+    if (!mounted) return;
+    setState(() {
+      _busy = false;
+      _saved = ok;
+    });
+    if (!ok) Get.snackbar('offlineTafsir'.tr, 'downloadFailed'.tr);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_saved == null) return const SizedBox.shrink();
+    if (_saved!) {
+      return Row(
+        children: [
+          Icon(Icons.offline_pin, size: 16, color: AppColors.emerald),
+          const SizedBox(width: 6),
+          Text(
+            'tafsirSavedOffline'.tr,
+            style: AppTheme.body(12, color: AppColors.sage),
+          ),
+        ],
+      );
+    }
+    return TextButton.icon(
+      key: const ValueKey('save-tafsir'),
+      onPressed: _busy ? null : _save,
+      icon: _busy
+          ? const SizedBox(
+              width: 14,
+              height: 14,
+              child: CircularProgressIndicator(strokeWidth: 2),
+            )
+          : const Icon(Icons.download_outlined, size: 18),
+      label: Text('saveTafsirOffline'.tr),
     );
   }
 }

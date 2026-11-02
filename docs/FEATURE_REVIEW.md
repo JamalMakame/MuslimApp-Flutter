@@ -171,6 +171,16 @@ habits card; `/habits` holds the settings, the review-due list and
 memorised counts per surah. Not built: word-by-word reveal by audio, and
 counting ayahs (the goal is in pages).
 
+**Phase 6 (built).** Azkar: five more named buckets (Home & Wudu, Seeking
+Forgiveness, Salawat, Salam, Hajj & Umrah) take most of "Other", whose
+cards now show their source chapter; an optional transliteration line is
+generated from the vowel marks (`Transliteration`, approximate). Hadith:
+An-Nawawi's 40 (42) in Arabic and English at `/hadith`, bundled from
+fawazahmed0/hadith-api (The Unlicense). Tafsir: save a surah from the
+tafsir sheet or all 114 from Settings; files under `tafsir/{edition}/`,
+read before the network. Not built: English meanings for azkar (no clearly
+licensed source found) and Swahili hadith text.
+
 ---
 
 ## 6. Prayer times and reminders

@@ -439,6 +439,7 @@ class HomeScreen extends GetView<HomeController> {
                           label: 'hadithOfDay'.tr,
                           arabic: h.text,
                           reference: h.reference,
+                          onTap: () => Get.toNamed(Routes.hadith),
                         );
                       },
                     ),

@@ -1,3 +1,5 @@
+import '../../controllers/settings_controller.dart';
+import '../../services/transliteration.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
@@ -201,6 +203,7 @@ class _AzkarDetailScreenState extends State<AzkarDetailScreen> {
                     total: c.totalItems,
                     left: c.remaining[i] ?? c.items[i].count,
                     onTap: () => c.tap(i),
+                    showCategory: widget.bucket == 'catOther',
                   ),
                 );
               }),
@@ -219,8 +222,10 @@ class _DhikrCard extends StatelessWidget {
     required this.total,
     required this.left,
     required this.onTap,
+    this.showCategory = false,
   });
 
+  final bool showCategory;
   final DhikrItem item;
   final int index;
   final int total;
@@ -312,6 +317,30 @@ class _DhikrCard extends StatelessWidget {
             textAlign: TextAlign.right,
             style: AppTheme.quran(17, height: 2.0),
           ),
+          Obx(() {
+            final s = Get.find<SettingsController>();
+            if (!s.azkarTranslit.value) return const SizedBox.shrink();
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: Text(
+                Transliteration.of(item.zekr),
+                key: const ValueKey('azkar-translit'),
+                style: AppTheme.body(
+                  12.5,
+                  color: AppColors.sage,
+                  height: 1.5,
+                ).copyWith(fontStyle: FontStyle.italic),
+              ),
+            );
+          }),
+          if (item.category.isNotEmpty && showCategory) ...[
+            const SizedBox(height: 6),
+            Text(
+              item.category,
+              textDirection: TextDirection.rtl,
+              style: AppTheme.body(10.5, color: AppColors.gold),
+            ),
+          ],
 
           // Description / virtue note
           if (item.description.isNotEmpty) ...[

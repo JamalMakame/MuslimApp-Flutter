@@ -106,6 +106,7 @@ class DhikrItem {
   final String reference;
   final String description;
   final int count;
+  final String category;
 
   const DhikrItem({
     required this.id,
@@ -113,6 +114,7 @@ class DhikrItem {
     required this.reference,
     required this.description,
     required this.count,
+    this.category = '',
   });
 
   factory DhikrItem.fromJson(Map<String, dynamic> j) => DhikrItem(
@@ -127,6 +129,7 @@ class DhikrItem {
               .toString())
         : (j['description'] ?? '').toString(),
     count: int.tryParse((j['count'] ?? '1').toString().trim()) ?? 1,
+    category: (j['category'] ?? '').toString().trim(),
   );
 }
 

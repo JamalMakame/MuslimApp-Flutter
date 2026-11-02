@@ -37,7 +37,7 @@ work offline. The app connects to the internet only when you ask for:
 
 | Feature | Service contacted | What it receives |
 | --- | --- | --- |
-| Tafsir | api.quran.com | the surah and ayah number |
+| Tafsir | api.quran.com | the surah and ayah number (or only the surah when you save it offline) |
 | Ayah audio (Hifz) | cdn.islamic.network | the reciter and ayah number |
 | Surah audio | server8.mp3quran.net | the surah number |
 
