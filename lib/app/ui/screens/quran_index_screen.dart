@@ -325,7 +325,9 @@ class _ContinueCard extends StatelessWidget {
             ),
           ),
           TextButton.icon(
-            onPressed: () => Get.toNamed(Routes.reader(surah.number)),
+            onPressed: () => Get.toNamed(
+              Routes.reader(surah.number, ayah: ayah),
+            )?.then((_) => Get.find<QuranController>().refreshLastRead()),
             icon: Text(
               'resume'.tr,
               style: AppTheme.body(

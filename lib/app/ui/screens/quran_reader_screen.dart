@@ -230,6 +230,13 @@ class QuranReaderScreen extends GetView<ReaderController> {
                                 TextSpan(
                                   children: [
                                     for (final a in c.ayahs) ...[
+                                      WidgetSpan(
+                                        child: SizedBox(
+                                          key: c.ayahKey(a.numberInSurah),
+                                          width: 0,
+                                          height: size,
+                                        ),
+                                      ),
                                       TextSpan(
                                         text: '${a.text} ',
                                         style:
@@ -246,7 +253,6 @@ class QuranReaderScreen extends GetView<ReaderController> {
                                       WidgetSpan(
                                         alignment: PlaceholderAlignment.middle,
                                         child: GestureDetector(
-                                          key: c.ayahKey(a.numberInSurah),
                                           onTap: () => showTafsirSheet(
                                             surahNumber: s.number,
                                             ayahNumber: a.numberInSurah,
