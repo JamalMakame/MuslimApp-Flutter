@@ -224,6 +224,8 @@ class QuranService {
   /// Folds Uthmani orthography onto plain Arabic: drops harakat, Quranic
   /// annotation marks and tatweel, and unifies alef/ya/ta-marbuta forms.
   static String normalizeArabic(String s) => s
+      // Uthmani waw + dagger alef (ٱلصَّلَوٰة) is the plain alef of الصلاة.
+      .replaceAll('\u0648\u0670', '\u0627')
       .replaceAll(_arabicMarks, '')
       .replaceAll(RegExp('[\u0671\u0622\u0623\u0625]'), '\u0627')
       .replaceAll('\u0649', '\u064A')
