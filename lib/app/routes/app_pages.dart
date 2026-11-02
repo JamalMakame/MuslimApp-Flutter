@@ -13,6 +13,7 @@ import '../controllers/settings_controller.dart';
 import '../controllers/tasbeeh_controller.dart';
 import '../ui/screens/azkar_categories_screen.dart';
 import '../ui/screens/azkar_detail_screen.dart';
+import '../ui/screens/bookmarks_screen.dart';
 import '../ui/screens/calendar_screen.dart';
 import '../ui/screens/home_screen.dart';
 import '../ui/screens/memorize_screen.dart';
@@ -38,7 +39,9 @@ abstract class Routes {
   static String reader(int surah, {int? ayah}) =>
       ayah == null ? '/reader/$surah' : '/reader/$surah?ayah=$ayah';
   static String azkarDetail(String bucket) => '/azkar-detail/$bucket';
-  static String memorize(int surah) => '/memorize/$surah';
+  static String memorize(int surah, {int? ayah}) =>
+      ayah == null ? '/memorize/$surah' : '/memorize/$surah?ayah=$ayah';
+  static const bookmarks = '/bookmarks';
 }
 
 /// Everything the app needs up-front (storage-backed prefs, boot
@@ -104,6 +107,7 @@ class AppPages {
         );
       }),
     ),
+    GetPage(name: Routes.bookmarks, page: () => const BookmarksScreen()),
     GetPage(
       name: Routes.calendar,
       page: () => const CalendarScreen(),
@@ -114,7 +118,8 @@ class AppPages {
       page: () => const MemorizeScreen(),
       binding: BindingsBuilder(() {
         final n = int.parse(Get.parameters['surah']!);
-        Get.lazyPut(() => MemorizeController(n));
+        final ayah = int.tryParse(Get.parameters['ayah'] ?? '');
+        Get.lazyPut(() => MemorizeController(n, initialAyah: ayah));
       }),
     ),
   ];

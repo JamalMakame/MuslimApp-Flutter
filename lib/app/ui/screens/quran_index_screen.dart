@@ -7,6 +7,7 @@ import '../../routes/app_pages.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/go_to_sheet.dart';
+import '../widgets/juz_list.dart';
 import '../widgets/floating_nav_pill.dart';
 
 /// Quran index — search, Surahs/Ayat segment, continue-reading card,
@@ -27,8 +28,17 @@ class QuranIndexScreen extends GetView<QuranController> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.bookmark_border, size: 18, color: AppColors.sage),
-                const SizedBox(width: 60),
+                const SizedBox(width: 12),
+                IconButton(
+                  key: const ValueKey('index-bookmarks'),
+                  tooltip: 'bookmarksTitle'.tr,
+                  onPressed: () => Get.toNamed(Routes.bookmarks),
+                  icon: Icon(
+                    Icons.bookmark_border,
+                    size: 20,
+                    color: AppColors.emerald,
+                  ),
+                ),
                 Expanded(
                   child: Column(
                     children: [
@@ -110,16 +120,24 @@ class QuranIndexScreen extends GetView<QuranController> {
                         child: _SegBtn(
                           icon: Icons.menu_book,
                           label: 'surahs'.tr,
-                          selected: !controller.searchAyahs.value,
-                          onTap: () => controller.setSegment(false),
+                          selected: controller.segment.value == 0,
+                          onTap: () => controller.setSegment(0),
+                        ),
+                      ),
+                      Expanded(
+                        child: _SegBtn(
+                          icon: Icons.layers_outlined,
+                          label: 'juz'.tr,
+                          selected: controller.segment.value == 1,
+                          onTap: () => controller.setSegment(1),
                         ),
                       ),
                       Expanded(
                         child: _SegBtn(
                           icon: Icons.format_list_numbered,
                           label: 'ayat'.tr,
-                          selected: controller.searchAyahs.value,
-                          onTap: () => controller.setSegment(true),
+                          selected: controller.segment.value == 2,
+                          onTap: () => controller.setSegment(2),
                         ),
                       ),
                     ],
@@ -131,9 +149,11 @@ class QuranIndexScreen extends GetView<QuranController> {
 
             Expanded(
               child: Obx(() {
-                if (controller.searchAyahs.value) {
+                if (controller.segment.value == 2) {
                   return _AyahResults(controller: controller);
                 }
+                if (controller.segment.value == 1) return const JuzList();
+                final bookmarked = QuranService.instance.bookmarkedSurahs;
                 final list = controller.visibleSurahs;
                 final last = controller.lastRead.value;
                 return ListView(
@@ -194,10 +214,8 @@ class QuranIndexScreen extends GetView<QuranController> {
                     for (final s in list) ...[
                       _SurahTile(
                         surah: s,
-                        bookmarked: controller.bookmarked.value.contains(
-                          s.number,
-                        ),
-                        onBookmark: () => controller.toggleBookmark(s.number),
+                        bookmarked: bookmarked.contains(s.number),
+                        onBookmark: () => controller.surahBookmarkTap(s.number),
                         onTap: () => Get.toNamed(
                           Routes.reader(s.number),
                         )?.then((_) => controller.refreshLastRead()),

@@ -33,10 +33,16 @@ enum MemorizeStep { repeat, advance, stop }
 
 /// Local Hifz state, with optional per-ayah streaming or offline MP3 playback.
 class MemorizeController extends GetxController {
-  MemorizeController(this.surahNumber, {AudioCacheService? cache})
-    : _cache = cache ?? AudioCacheService();
+  MemorizeController(
+    this.surahNumber, {
+    AudioCacheService? cache,
+    this.initialAyah,
+  }) : _cache = cache ?? AudioCacheService();
 
   final int surahNumber;
+
+  /// Ayah to start on ("Memorise from here"); otherwise the saved one.
+  final int? initialAyah;
   final _q = QuranService.instance;
   final _s = StorageService.instance;
   final AudioCacheService _cache;
@@ -91,7 +97,9 @@ class MemorizeController extends GetxController {
     final savedAyah = int.tryParse(
       '${savedPosition?[surahNumber.toString()] ?? ''}',
     );
-    final restored = ayahs.indexWhere((a) => a.numberInSurah == savedAyah);
+    final restored = ayahs.indexWhere(
+      (a) => a.numberInSurah == (initialAyah ?? savedAyah),
+    );
     ayahIndex.value = restored < 0 ? 0 : restored;
 
     unawaited(_refreshOfflineStatus());

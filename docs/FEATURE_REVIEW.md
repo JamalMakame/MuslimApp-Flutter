@@ -296,6 +296,13 @@ links, Ayah of the Day and Continue reading on Home. It also fixed sajda
 ayahs, which were never marked because the corpus stores `sajda` as an
 object, not `true`.
 
+Phase 2 is built: lazy per-ayah reader with the translation under each
+ayah, the ayah menu, ayah bookmarks with notes and a Bookmarks screen,
+previous / next surah and the Juz tab. "Play from here" (ayah-by-ayah
+audio with highlight, the core of Q8) came with the menu. Continuous
+reading across surahs (rest of Q7) is not built; the footer's next-surah
+button covers it for now.
+
 | Phase | Contents | Why first |
 |---|---|---|
 | **1. Start anywhere** | Q2 data, Q1 Go-to sheet, S1 search shortcuts, Q4 live chips, Q11 deep links, D1 Ayah of the Day, D2 Continue on Home | Small changes on existing data; every later feature reuses `locate()` and the Go-to path |

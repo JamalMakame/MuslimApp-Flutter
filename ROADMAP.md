@@ -67,8 +67,12 @@ availability are critical.
   shortcuts (`juz 5`, `page 300`, `2:255-260`), `deen://quran/2/255`
   links, live Juz/Hizb/Page chips, Continue reading + Ayah of the Day on
   Home ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 1)
-- ✅ Surah bookmarks + last-read memory (saved as you scroll; Continue
-  Reading resumes at that ayah)
+- ✅ Ayah bookmarks with notes + Bookmarks screen, last-read memory
+  (saved as you scroll; Continue Reading resumes at that ayah)
+- ✅ Ayah-level reader: lazy per-ayah blocks with translation underneath,
+  ayah menu (play from here, bookmark, note, copy, share, tafsir, memorise
+  from here), previous / next surah, Juz tab
+  ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 2)
 - ✅ Quran text stays Arabic; bundled **translation layer** — English
   (Sahih International) and Swahili (Al-Barwani), or Arabic only
 - ✅ UI chrome (surah index, sort, search, bookmarks) localized; surah
