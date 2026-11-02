@@ -60,7 +60,7 @@ void main() {
 
   tearDownAll(() async {
     AppColors.isDark = false;
-    await documents.delete(recursive: true);
+    await documents.delete(recursive: true).catchError((_) => documents);
   });
 
   const screens = {

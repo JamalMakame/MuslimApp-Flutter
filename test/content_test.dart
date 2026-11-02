@@ -27,7 +27,7 @@ void main() {
   });
 
   tearDownAll(() async {
-    if (await documents.exists()) await documents.delete(recursive: true);
+    await documents.delete(recursive: true).catchError((_) => documents);
   });
 
   test('transliteration follows the vowel marks', () {

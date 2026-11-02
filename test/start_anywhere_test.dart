@@ -23,7 +23,9 @@ void main() {
     await quran.load();
   });
 
-  tearDownAll(() => documents.delete(recursive: true));
+  tearDownAll(
+    () => documents.delete(recursive: true).catchError((_) => documents),
+  );
 
   test('ayahs keep hizb quarter, manzil, ruku and the 15 sajdas', () {
     final kursi = quran.ayahAt(2, 255)!;

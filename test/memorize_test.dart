@@ -73,12 +73,7 @@ void main() {
     tearDown(() async => audioDir.delete(recursive: true));
 
     tearDownAll(() async {
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('plugins.flutter.io/path_provider'),
-            null,
-          );
-      await storageDir.delete(recursive: true);
+      await storageDir.delete(recursive: true).catchError((_) => storageDir);
     });
 
     test(

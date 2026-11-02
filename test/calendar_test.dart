@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:fquran_app/app/controllers/calendar_controller.dart';
 import 'package:fquran_app/app/i18n/app_translations.dart';
@@ -71,7 +70,7 @@ void main() {
 
     // GetStorage flushes to disk asynchronously; keep the documents
     // directory mocked for every test so a late flush never hits a missing
-    // plugin.
+    // plugin. It stays mocked after tearDownAll for the same reason.
     setUp(() async {
       mockDocuments();
       await StorageService.instance.clearAll();
@@ -80,13 +79,7 @@ void main() {
     tearDown(() => Get.delete<CalendarController>(force: true));
 
     tearDownAll(() async {
-      await GetStorage().save();
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('plugins.flutter.io/path_provider'),
-            null,
-          );
-      await documents.delete(recursive: true);
+      await documents.delete(recursive: true).catchError((_) => documents);
     });
 
     test(
