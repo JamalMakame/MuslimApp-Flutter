@@ -20,7 +20,10 @@ Status legend: ✅ implemented · 🔶 partially implemented · ⬜ not started
 
 See `FEATURES.md` for the full current-state reference. In short:
 
-- ✅ Prayer times via `adhan` on-device, 5 calculation methods + madhab
+- ✅ Prayer times via `adhan` on-device, 12 calculation methods + madhab,
+  high-latitude rule, per-prayer minute adjustments, monthly timetable
+- ✅ Per-prayer reminders (off / at the time / 5–30 min before), morning and
+  evening azkar reminders, "you've moved" prompt for GPS locations
 - ✅ Android prayer notifications: a week of one-shot reminders at each
   day's real times, localized, renewed app-wide
 - ✅ Qibla compass with accuracy-based calibration badge + geodesic fallback
@@ -30,7 +33,7 @@ See `FEATURES.md` for the full current-state reference. In short:
 - ✅ Azkar (all 39 source categories), tasbeeh with targets and haptics
 - ✅ Dual Hijri/Gregorian calendar with occasions and day adjustment
 - ✅ Light / Dark (true-black) / System theme
-- ⬜ High-latitude rules, hadith library, word-by-word, mosque finder,
+- ⬜ Hadith library, word-by-word, mosque finder,
   widgets, analytics, background audio
 
 ---
@@ -44,7 +47,7 @@ availability are critical.
 - ✅ Location-based calculation (`adhan`, `geolocator`, GPS or city
   lookup) with selectable methods: Umm al-Qura, MWL, Egypt, Karachi, ISNA;
   Shafi/Hanafi madhab
-- ⬜ Manual minute overrides / high-latitude adjustments
+- ✅ Manual minute overrides / high-latitude adjustments
 - 🔶 Prayer notifications when the app is closed — Android: scheduled
   one-shot reminders for the next 7 days at each day's computed times,
   renewed on launch/resume and when location, method, madhab or language
@@ -272,7 +275,7 @@ vs. effort:
    Android phone and an iPhone (notifications firing with the app closed,
    compass accuracy, downloads). Then the store release in
    [docs/RELEASE.md](docs/RELEASE.md).
-2. **High-latitude rules + minute overrides** in prayer settings.
+2. ~~**High-latitude rules + minute overrides** in prayer settings.~~ Done.
 3. **Azkar English translation + transliteration** (Swahili later, custom
    content).
 4. **Background / lock-screen audio** (`audio_service`).

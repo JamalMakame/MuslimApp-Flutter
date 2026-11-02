@@ -21,6 +21,10 @@ class StorageService {
   static const kThemeMode = 'theme_mode';
   static const kTextScale = 'text_scale'; // 0 | 1 | 2
   static const kNotifyPrayers = 'notify_prayers';
+  static const kHighLatRule = 'high_lat_rule'; // middle | seventh | angle
+  static const kPrayerOffsets = 'prayer_offsets'; // {prayer: minutes}
+  static const kPrayerLeads = 'prayer_leads'; // {prayer: min before, -1 off}
+  static const kAzkarReminders = 'azkar_reminders';
   static const kShowTranslations = 'show_translations';
   static const kAyahAudio = 'ayah_audio';
   static const kTranslationLang = 'translation_lang'; // 'en' | 'sw' | 'ar'
@@ -67,6 +71,13 @@ class StorageService {
   bool readBool(String key, [bool fallback = false]) =>
       _box.read<bool>(key) ?? fallback;
   double? readDouble(String key) => _box.read<double>(key);
+  Map<String, int> readIntMap(String key) {
+    final raw = _box.read<Map>(key) ?? const {};
+    return {
+      for (final e in raw.entries)
+        if (e.value is num) '${e.key}': (e.value as num).toInt(),
+    };
+  }
 
   /// Wipe user content + prefs (keeps the install itself).
   Future<void> clearAll() => _box.erase();

@@ -174,7 +174,14 @@ changes. `PrayerReminderController` schedules one-shot notifications for
 the next 7 days (≤ 35, under iOS's limit of 64), exact on Android when
 allowed. Location comes from GPS or a typed city (`geocoding`).
 
-**Limits.** No high-latitude rule, no per-prayer minute adjustments,
+**Phase 4 (built).** 12 methods (adds Dubai, Kuwait, Qatar, Singapore,
+Diyanet, Tehran, Moonsighting Committee), a high-latitude rule, per-prayer
+± minutes, per-prayer reminders (off, at the time, or 5–30 min before),
+morning/evening azkar reminders 20 min after Fajr/Asr, a shareable
+monthly timetable, and a "you've moved" prompt (> 30 km, GPS only).
+Still open: P3 adhan sound, P6 widget.
+
+**Limits before phase 4.** No high-latitude rule, no per-prayer minute adjustments,
 fewer methods than users expect (Tehran, Gulf, Kuwait, Qatar, Singapore,
 Turkey, Moonsighting Committee are missing), and no per-prayer reminder
 on/off switch or "N minutes before" option. The adhan sound is the system

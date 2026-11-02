@@ -53,18 +53,28 @@ void main() {
   group('CalendarController', () {
     late Directory documents;
 
+    void mockDocuments() => TestDefaultBinaryMessengerBinding
+        .instance
+        .defaultBinaryMessenger
+        .setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/path_provider'),
+          (call) async => documents.path,
+        );
+
     setUpAll(() async {
       documents = await Directory.systemTemp.createTemp('deen-calendar-test-');
-      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-          .setMockMethodCallHandler(
-            const MethodChannel('plugins.flutter.io/path_provider'),
-            (call) async => documents.path,
-          );
+      mockDocuments();
       await StorageService.init();
       Get.testMode = true;
     });
 
-    setUp(() async => StorageService.instance.clearAll());
+    // GetStorage flushes to disk asynchronously; keep the documents
+    // directory mocked for every test so a late flush never hits a missing
+    // plugin.
+    setUp(() async {
+      mockDocuments();
+      await StorageService.instance.clearAll();
+    });
 
     tearDown(() => Get.delete<CalendarController>(force: true));
 

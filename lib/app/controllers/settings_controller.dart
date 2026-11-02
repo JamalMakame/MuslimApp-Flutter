@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../services/prayer_service.dart';
 import '../services/storage_service.dart';
 
 /// Central persisted preferences — locale, prayer calc, appearance, privacy.
@@ -8,7 +9,24 @@ class SettingsController extends GetxController {
   final _s = StorageService.instance;
 
   static const localeCodes = ['en', 'ar', 'sw'];
-  static const methods = ['umm_al_qura', 'mwl', 'egypt', 'karachi', 'isna'];
+  static const methods = [
+    'umm_al_qura',
+    'mwl',
+    'egypt',
+    'karachi',
+    'isna',
+    'dubai',
+    'kuwait',
+    'qatar',
+    'singapore',
+    'turkey',
+    'tehran',
+    'moonsighting',
+  ];
+  static const highLatRules = ['middle', 'seventh', 'angle'];
+
+  /// Reminder choices: -1 off, 0 at the time, else minutes before.
+  static const reminderLeads = [-1, 0, 5, 10, 15, 30];
   static const madhabs = ['shafi', 'hanafi'];
   static const translationLangs = ['en', 'sw', 'ar'];
 
@@ -19,6 +37,10 @@ class SettingsController extends GetxController {
   final themeMode = 'system'.obs; // light | system | dark
   final textScale = 1.obs; // 0 small, 1 medium, 2 large
   final notifyPrayers = false.obs;
+  final highLatRule = 'middle'.obs;
+  final prayerOffsets = <String, int>{}.obs;
+  final prayerLeads = <String, int>{}.obs;
+  final azkarReminders = false.obs;
   final showTranslations = true.obs;
   final ayahAudio = false.obs;
   final translationLang = 'en'.obs;
@@ -48,6 +70,10 @@ class SettingsController extends GetxController {
     themeMode.value = _s.readStr(StorageService.kThemeMode, 'system');
     textScale.value = _s.readInt(StorageService.kTextScale, 1);
     notifyPrayers.value = _s.readBool(StorageService.kNotifyPrayers, false);
+    highLatRule.value = _s.readStr(StorageService.kHighLatRule, 'middle');
+    prayerOffsets.assignAll(_s.readIntMap(StorageService.kPrayerOffsets));
+    prayerLeads.assignAll(_s.readIntMap(StorageService.kPrayerLeads));
+    azkarReminders.value = _s.readBool(StorageService.kAzkarReminders, false);
     showTranslations.value = _s.readBool(
       StorageService.kShowTranslations,
       true,
@@ -95,6 +121,29 @@ class SettingsController extends GetxController {
       _persist(textScale, v, StorageService.kTextScale);
   Future<void> setNotifyPrayers(bool v) =>
       _persist(notifyPrayers, v, StorageService.kNotifyPrayers);
+  Future<void> setHighLatRule(String v) =>
+      _persist(highLatRule, v, StorageService.kHighLatRule);
+  Future<void> setAzkarReminders(bool v) =>
+      _persist(azkarReminders, v, StorageService.kAzkarReminders);
+
+  /// Minutes added to [prayer]'s computed time (-30..30).
+  Future<void> setPrayerOffset(String prayer, int minutes) async {
+    prayerOffsets[prayer] = minutes.clamp(-30, 30);
+    await _s.write(StorageService.kPrayerOffsets, Map.of(prayerOffsets));
+  }
+
+  /// When [prayer]'s reminder fires: -1 off, 0 at the time, else minutes
+  /// before.
+  Future<void> setPrayerLead(String prayer, int minutes) async {
+    prayerLeads[prayer] = minutes;
+    await _s.write(StorageService.kPrayerLeads, Map.of(prayerLeads));
+  }
+
+  int leadFor(String prayer) => prayerLeads[prayer] ?? 0;
+
+  PrayerTuning get tuning =>
+      PrayerTuning(highLat: highLatRule.value, offsets: Map.of(prayerOffsets));
+
   Future<void> setShowTranslations(bool v) =>
       _persist(showTranslations, v, StorageService.kShowTranslations);
   Future<void> setAyahAudio(bool v) =>

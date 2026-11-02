@@ -9,10 +9,15 @@ import 'prayer_service.dart';
 
 /// One scheduled prayer reminder.
 class PrayerReminder {
-  const PrayerReminder(this.id, this.key, this.time);
+  const PrayerReminder(this.id, this.key, this.time, {this.lead = 0});
   final int id;
+
+  /// A prayer key, or [azkarMorning] / [azkarEvening].
   final String key;
   final DateTime time;
+
+  /// Minutes before the prayer (0 = at its time).
+  final int lead;
 }
 
 /// Local prayer reminders: one-shot notifications at each prayer time
@@ -75,24 +80,52 @@ class NotificationService {
     return granted ?? true;
   }
 
-  /// The next [days] × 5 reminders after [now], in time order. Starts one
-  /// calendar day back so a location far from the device's time zone still
-  /// gets a full week. Ids are stable per (day offset, prayer).
+  static const azkarMorning = 'azkarMorningNotify';
+  static const azkarEvening = 'azkarEveningNotify';
+
+  /// Minutes after Fajr / Asr for the morning / evening azkar reminder.
+  static const azkarDelay = 20;
+
+  /// The next [days] days of reminders after [now], in time order. Starts
+  /// one calendar day back so a location far from the device's time zone
+  /// still gets a full week. [leads] gives minutes before each prayer
+  /// (missing = at its time, negative = off); [azkar] adds the morning and
+  /// evening azkar reminders. Ids are stable per (day offset, slot).
   static List<PrayerReminder> plan(
     List<PrayerSlot> Function(DateTime date) slotsOn,
-    DateTime now,
-  ) {
+    DateTime now, {
+    Map<String, int> leads = const {},
+    bool azkar = false,
+  }) {
     final out = <PrayerReminder>[];
+    final per =
+        _prayers.where((p) => (leads[p] ?? 0) >= 0).length + (azkar ? 2 : 0);
     for (var d = -1; d <= days; d++) {
       final date = DateTime(now.year, now.month, now.day + d);
       for (final slot in slotsOn(date)) {
         final i = _prayers.indexOf(slot.key);
-        if (i < 0 || !slot.time.isAfter(now)) continue;
-        out.add(PrayerReminder(110 + d * 10 + i, slot.key, slot.time));
+        if (i < 0) continue;
+        final lead = leads[slot.key] ?? 0;
+        final at = slot.time.subtract(Duration(minutes: lead));
+        if (lead >= 0 && at.isAfter(now)) {
+          out.add(PrayerReminder(110 + d * 10 + i, slot.key, at, lead: lead));
+        }
+        if (!azkar || (slot.key != 'fajr' && slot.key != 'asr')) continue;
+        final z = slot.time.add(const Duration(minutes: azkarDelay));
+        if (z.isAfter(now)) {
+          final morning = slot.key == 'fajr';
+          out.add(
+            PrayerReminder(
+              210 + d * 10 + (morning ? 0 : 1),
+              morning ? azkarMorning : azkarEvening,
+              z,
+            ),
+          );
+        }
       }
     }
     out.sort((a, b) => a.time.compareTo(b.time));
-    return out.take(days * _prayers.length).toList();
+    return out.take(days * per).toList();
   }
 
   /// Schedules [plan] unless the same [signature] is already scheduled.
@@ -100,8 +133,8 @@ class NotificationService {
   Future<void> schedule({
     required String signature,
     required List<PrayerReminder> reminders,
-    required String Function(String key) title,
-    required String Function(String key) body,
+    required String Function(PrayerReminder r) title,
+    required String Function(PrayerReminder r) body,
   }) => _serial(() async {
     if (signature == _scheduledFor) return;
     await init();
@@ -114,8 +147,8 @@ class NotificationService {
     for (final r in reminders) {
       await _plugin.zonedSchedule(
         r.id,
-        title(r.key),
-        body(r.key),
+        title(r),
+        body(r),
         tz.TZDateTime.from(r.time, tz.UTC),
         const NotificationDetails(
           iOS: DarwinNotificationDetails(presentSound: true),
