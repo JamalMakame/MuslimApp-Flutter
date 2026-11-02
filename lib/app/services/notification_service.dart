@@ -28,8 +28,12 @@ class NotificationService {
 
   /// Runs [op] after every earlier schedule/cancel has finished, so a
   /// cancel can never be overtaken by a schedule that started before it.
-  Future<void> _serial(Future<void> Function() op) =>
-      _queue = _queue.then((_) => op()).catchError((Object _) {});
+  /// Errors reach the caller; the queue itself carries on.
+  Future<void> _serial(Future<void> Function() op) {
+    final run = _queue.then((_) => op());
+    _queue = run.catchError((Object _) {});
+    return run;
+  }
 
   static const days = 7;
   static const _channelId = 'prayer_times';
@@ -100,6 +104,8 @@ class NotificationService {
     if (signature == _scheduledFor) return;
     await init();
     await _plugin.cancelAll();
+    _scheduledFor = null;
+    _cleared = true;
     final exact =
         defaultTargetPlatform == TargetPlatform.android &&
         (await _android?.canScheduleExactNotifications() ?? false);

@@ -41,7 +41,16 @@ class PrayerReminderController extends GetxController
   String _t(String code, String key) =>
       Get.translations[code]?[key] ?? Get.translations['en']?[key] ?? key;
 
+  /// A failed run leaves no signature behind, so the next tick retries.
   Future<void> sync() async {
+    try {
+      await _sync();
+    } catch (e) {
+      debugPrint('Prayer reminders not scheduled: $e');
+    }
+  }
+
+  Future<void> _sync() async {
     final notifications = NotificationService.instance;
     if (!settings.notifyPrayers.value || !settings.hasLocation) {
       await notifications.cancelAll();

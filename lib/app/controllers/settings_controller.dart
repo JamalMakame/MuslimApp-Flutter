@@ -32,6 +32,12 @@ class SettingsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    reload();
+  }
+
+  /// Re-reads every preference from storage (also after local data is
+  /// cleared, so app-wide listeners see the defaults).
+  void reload() {
     localeCode.value = _s.readStr(StorageService.kLocale, 'en');
     calcMethod.value = _s.readStr(StorageService.kCalcMethod, 'umm_al_qura');
     madhab.value = _s.readStr(StorageService.kMadhab, 'shafi');
