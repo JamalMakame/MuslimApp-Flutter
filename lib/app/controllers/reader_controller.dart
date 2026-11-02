@@ -128,7 +128,7 @@ class ReaderController extends GetxController {
   Future<String?> tafsirFor(int ayahInSurah) async {
     tafsirLoading.value = true;
     final key = '$surahNumber:$ayahInSurah';
-    final t = await _quran.tafsir(key);
+    final t = await _quran.tafsir(key, lang: Get.locale?.languageCode ?? 'en');
     tafsirLoading.value = false;
     return t;
   }
