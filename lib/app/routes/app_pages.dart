@@ -119,3 +119,19 @@ class AppPages {
     ),
   ];
 }
+
+/// Opens the reader at [surah]:[ayah]. A reader of that surah already on
+/// the stack (its controller is tagged per surah, so a second route would
+/// reuse it) is popped back to and scrolled. From inside another reader
+/// ([fromSurah]), the new surah replaces it instead of stacking.
+void openQuranAt(int surah, int ayah, {int? fromSurah}) {
+  final tag = 'reader_$surah';
+  if (Get.isRegistered<ReaderController>(tag: tag)) {
+    final name = RegExp('^/reader/$surah(\\?|\$)');
+    Get.until((route) => name.hasMatch(route.settings.name ?? ''));
+    Get.find<ReaderController>(tag: tag).jumpTo(ayah);
+    return;
+  }
+  final route = Routes.reader(surah, ayah: ayah);
+  fromSurah == null ? Get.toNamed(route) : Get.offNamed(route);
+}

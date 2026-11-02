@@ -58,10 +58,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                   _RoundIconBtn(
                     key: const ValueKey('reader-goto'),
                     icon: Icons.near_me_outlined,
-                    onTap: () => showGoToSheet(
-                      fromSurah: s.number,
-                      onSameSurah: c.jumpTo,
-                    ),
+                    onTap: () => showGoToSheet(fromSurah: s.number),
                   ),
                   const SizedBox(width: 8),
                   Obx(
@@ -100,10 +97,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                     child: GestureDetector(
                       key: const ValueKey('reader-position'),
                       behavior: HitTestBehavior.opaque,
-                      onTap: () => showGoToSheet(
-                        fromSurah: s.number,
-                        onSameSurah: c.jumpTo,
-                      ),
+                      onTap: () => showGoToSheet(fromSurah: s.number),
                       child: Obx(() {
                         final at = c.current.value ?? c.ayahs.first;
                         return Row(

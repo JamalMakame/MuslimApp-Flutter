@@ -67,6 +67,6 @@ class LinkService {
     _pending = null;
     if (uri == null || !QuranService.instance.isLoaded) return;
     final at = parse(uri, QuranService.instance);
-    if (at != null) Get.toNamed(Routes.reader(at.$1, ayah: at.$2));
+    if (at != null) openQuranAt(at.$1, at.$2);
   }
 }

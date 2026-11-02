@@ -318,7 +318,8 @@ class QuranService {
   static String normalizeLatin(String s) =>
       s.toLowerCase().replaceAll(_nonWord, ' ').trim();
 
-  static String _westernDigits(String s) => s.replaceAllMapped(
+  /// Arabic-Indic (٠–٩) and Eastern Arabic-Indic (۰–۹) digits as 0–9.
+  static String westernDigits(String s) => s.replaceAllMapped(
     RegExp('[\u0660-\u0669\u06F0-\u06F9]'),
     (m) => '${m[0]!.codeUnitAt(0) & 0xF}',
   );
@@ -353,7 +354,7 @@ class QuranService {
     if (!_loaded || limit <= 0) return [];
     final trimmed = query.trim();
 
-    final ref = _verseRef.firstMatch(_westernDigits(trimmed));
+    final ref = _verseRef.firstMatch(westernDigits(trimmed));
     if (ref != null) {
       final s = int.parse(ref[1]!);
       final a = int.parse(ref[2]!);
@@ -362,7 +363,7 @@ class QuranService {
       }
       return [_result(s, _ar[s - 1][a - 1], 'ar')];
     }
-    final shortcut = _divisionResults(_westernDigits(trimmed).toLowerCase());
+    final shortcut = _divisionResults(westernDigits(trimmed).toLowerCase());
     if (shortcut != null) return shortcut.take(limit).toList();
 
     final out = <AyahSearchResult>[];

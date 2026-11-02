@@ -151,6 +151,25 @@ void main() {
     expectOnScreen(tester, find.byKey(reader(1).ayahKey(5)));
   });
 
+  testWidgets('Go to takes Arabic-Indic digits for ayah and page', (
+    tester,
+  ) async {
+    await pump(tester, Routes.quran, locale: 'ar');
+    await tap(tester, 'index-goto');
+    await tester.enterText(find.byKey(const ValueKey('goto-ayah')), '٥');
+    expect(find.text('٥'), findsOneWidget);
+    await tap(tester, 'goto-go');
+    expect(reader(1).highlightAyah.value, 5);
+
+    Get.back<void>();
+    await tester.pumpAndSettle();
+    await tap(tester, 'index-goto');
+    await tap(tester, 'goto-mode-3');
+    await tester.enterText(find.byKey(const ValueKey('goto-page')), '۶۰۴');
+    await tap(tester, 'goto-go');
+    expect(reader(112).highlightAyah.value, 1);
+  });
+
   testWidgets('Go to page 604 opens 112:1', (tester) async {
     await pump(tester, Routes.quran);
     await tap(tester, 'index-goto');
@@ -242,5 +261,17 @@ void main() {
     LinkService.instance.receive(Uri.parse('deen://quran/200/1'));
     await tester.pumpAndSettle();
     expect(Get.currentRoute, startsWith('/reader/36'));
+  });
+
+  testWidgets('a link to the open surah scrolls that reader', (tester) async {
+    await pump(tester, Routes.reader(2));
+    final baqarah = reader(2);
+    LinkService.instance.receive(Uri.parse('deen://quran/2/255'));
+    await tester.pumpAndSettle();
+    expect(identical(reader(2), baqarah), isTrue);
+    expect(baqarah.highlightAyah.value, 255);
+    expectOnScreen(tester, find.byKey(baqarah.ayahKey(255)));
+    expect(Get.currentRoute, startsWith('/reader/2'));
+    expect(tester.takeException(), isNull);
   });
 }

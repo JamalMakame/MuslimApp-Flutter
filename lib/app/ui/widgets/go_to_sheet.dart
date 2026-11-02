@@ -6,32 +6,13 @@ import '../../routes/app_pages.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 
-/// Opens the reader at [surah]:[ayah]. From inside a reader ([fromSurah]),
-/// the same surah scrolls in place and another surah replaces the reader.
-void openQuranAt(
-  int surah,
-  int ayah, {
-  int? fromSurah,
-  void Function(int ayah)? onSameSurah,
-}) {
-  if (fromSurah != null && surah == fromSurah && onSameSurah != null) {
-    onSameSurah(ayah);
-    return;
-  }
-  final route = Routes.reader(surah, ayah: ayah);
-  fromSurah == null ? Get.toNamed(route) : Get.offNamed(route);
-}
-
 /// "Go to" sheet: surah + ayah, juz, hizb or mushaf page.
-Future<void> showGoToSheet({
-  int? fromSurah,
-  void Function(int ayah)? onSameSurah,
-}) => Get.bottomSheet<void>(
+Future<void> showGoToSheet({int? fromSurah}) => Get.bottomSheet<void>(
   GoToSheet(
     initialSurah: fromSurah ?? 1,
     onPick: (surah, ayah) {
       Get.back<void>();
-      openQuranAt(surah, ayah, fromSurah: fromSurah, onSameSurah: onSameSurah);
+      openQuranAt(surah, ayah, fromSurah: fromSurah);
     },
   ),
   backgroundColor: AppColors.surface,
@@ -68,7 +49,7 @@ class _GoToSheetState extends State<GoToSheet> {
 
   void _goSurah() {
     final max = _quran.surah(_surah).ayahs;
-    final text = _ayah.text.trim();
+    final text = QuranService.westernDigits(_ayah.text.trim());
     final n = text.isEmpty ? 1 : int.tryParse(text);
     if (n == null || n < 1 || n > max) {
       setState(() => _error = 'invalidNumber'.trParams({'max': '$max'}));
@@ -78,7 +59,9 @@ class _GoToSheetState extends State<GoToSheet> {
   }
 
   void _goPage() {
-    final at = _quran.pageStart(int.tryParse(_page.text.trim()) ?? 0);
+    final at = _quran.pageStart(
+      int.tryParse(QuranService.westernDigits(_page.text.trim())) ?? 0,
+    );
     if (at == null) {
       setState(
         () => _error = 'invalidNumber'.trParams({
@@ -151,7 +134,11 @@ class _GoToSheetState extends State<GoToSheet> {
   @override
   Widget build(BuildContext context) {
     final modes = ['goToSurah'.tr, 'juz'.tr, 'hizb'.tr, 'page'.tr];
-    final digits = [FilteringTextInputFormatter.digitsOnly];
+    final digits = [
+      FilteringTextInputFormatter.allow(
+        RegExp('[0-9\u0660-\u0669\u06F0-\u06F9]'),
+      ),
+    ];
     return SafeArea(
       child: Padding(
         padding: EdgeInsets.fromLTRB(
