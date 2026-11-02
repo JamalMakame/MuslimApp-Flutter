@@ -82,9 +82,15 @@ class DeenTranslations extends Translations {
       'juz': 'Juz',
       'page': 'Page',
       'noResults': 'No results found.',
-      'searchAyahHint': 'Type to search the Quran…',
-      'offlineSearch':
-          'Ayah search needs a connection. Surah search works offline.',
+      'searchAyahHint':
+          'Search the Arabic, English or Swahili text, or type a verse like 2:255.',
+      'searchNoMatches': 'No ayah matches “@q”.',
+      'searchLimited': 'Showing the first @n matches. Add words to narrow it.',
+      'searchCount': '@n matches',
+      'matchAr': 'Arabic text',
+      'matchEn': 'Sahih International',
+      'matchSw': 'Al-Barwani (Swahili)',
+      'ayahRef': 'Surah @surah · Ayah @ayah',
       // Reader
       'juzPage': 'JUZ @juz · PAGE @page',
       'trans': 'Trans',
@@ -415,9 +421,15 @@ class DeenTranslations extends Translations {
       'juz': 'الجزء',
       'page': 'الصفحة',
       'noResults': 'لا توجد نتائج.',
-      'searchAyahHint': 'اكتب للبحث في القرآن…',
-      'offlineSearch':
-          'البحث في الآيات يتطلب اتصالًا. البحث في السور يعمل دون اتصال.',
+      'searchAyahHint':
+          'ابحث في النص العربي أو الترجمة الإنجليزية أو السواحيلية، أو اكتب رقم آية مثل ٢:٢٥٥.',
+      'searchNoMatches': 'لا توجد آية تطابق «@q».',
+      'searchLimited': 'تُعرض أول @n نتيجة. أضف كلمات لتضييق البحث.',
+      'searchCount': '@n نتيجة',
+      'matchAr': 'النص العربي',
+      'matchEn': 'صحيح إنترناشونال',
+      'matchSw': 'البرواني (السواحيلية)',
+      'ayahRef': 'سورة @surah · آية @ayah',
       'juzPage': 'الجزء @juz · صفحة @page',
       'trans': 'الترجمة',
       'surahHeader': 'سورة @name',
@@ -741,9 +753,16 @@ class DeenTranslations extends Translations {
       'juz': 'Juzuu',
       'page': 'Ukurasa',
       'noResults': 'Hakuna matokeo.',
-      'searchAyahHint': 'Andika kutafuta Quran…',
-      'offlineSearch':
-          'Utafutaji wa aya unahitaji mtandao. Utafutaji wa sura unafanya kazi nje ya mtandao.',
+      'searchAyahHint':
+          'Tafuta maandishi ya Kiarabu, Kiingereza au Kiswahili, au andika aya kama 2:255.',
+      'searchNoMatches': 'Hakuna aya inayolingana na “@q”.',
+      'searchLimited':
+          'Inaonyesha matokeo @n ya kwanza. Ongeza maneno kupunguza.',
+      'searchCount': 'Matokeo @n',
+      'matchAr': 'Maandishi ya Kiarabu',
+      'matchEn': 'Sahih International',
+      'matchSw': 'Al-Barwani (Kiswahili)',
+      'ayahRef': 'Sura @surah · Aya @ayah',
       'juzPage': 'JUZUU @juz · UKURASA @page',
       'trans': 'Tafsiri',
       'surahHeader': 'SURA @name',

@@ -10,16 +10,15 @@ import 'storage_service.dart';
 ///
 /// Offline-first: all 114 surahs' metadata, Uthmani text, and the
 /// English (Sahih Intl) & Swahili (Al-Barwani) translations are bundled
-/// as assets. Remote calls are only used for ayah search and tafsir.
+/// as assets, and ayah search runs over them. Only tafsir is remote.
 class QuranService {
   QuranService._();
   static final QuranService instance = QuranService._();
 
   static const audioBase = 'https://server8.mp3quran.net/afs/';
-  static const searchBase = 'https://api.quran.com/api/v4/search?q=';
   static const tafsirBase = 'https://api.quran.com/api/v4/verses/';
 
-  final _s = StorageService.instance;
+  StorageService get _s => StorageService.instance;
 
   List<Surah> surahs = [];
 
@@ -46,6 +45,7 @@ class QuranService {
         _ar.clear();
         _en.clear();
         _sw.clear();
+        _index = null;
       }
       rethrow;
     }
@@ -174,26 +174,123 @@ class QuranService {
     await _s.write(StorageService.kBookmarks, b.toList());
   }
 
-  // ---- Remote: ayah search -------------------------------------------------
-  Future<List<AyahSearchResult>> searchAyahs(String query) async {
-    if (query.trim().isEmpty) return [];
-    final res = await http
-        .get(Uri.parse('$searchBase${Uri.encodeComponent(query)}'))
-        .timeout(const Duration(seconds: 10));
-    if (res.statusCode != 200) return [];
-    final results = jsonDecode(res.body)['search']['results'] as List;
-    return results.map((r) {
-      final key = (r['verse_key'] ?? '') as String;
-      final parts = key.split(':');
-      return AyahSearchResult(
-        verseKey: key,
-        verseId: r['verse_id'] ?? 0,
-        text: (r['text'] ?? '') as String,
-        surahNumber: int.tryParse(parts.first) ?? 0,
-        ayahNumber: parts.length > 1 ? int.tryParse(parts[1]) ?? 0 : 0,
-      );
-    }).toList();
+  // ---- Offline ayah search -------------------------------------------------
+  static const defaultSearchLimit = 80;
+
+  static final _arabicMarks = RegExp(
+    '[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u0640]',
+  );
+  static final _arabicLetter = RegExp('[\u0621-\u064A\u0671-\u06D3]');
+  static final _nonWord = RegExp(r'[^\p{L}\p{N}]+', unicode: true);
+  static final _verseRef = RegExp(r'^(\d{1,3})\s*[:.]\s*(\d{1,3})$');
+
+  List<_SearchRow>? _index;
+
+  /// Folds Uthmani orthography onto plain Arabic: drops harakat, Quranic
+  /// annotation marks and tatweel, and unifies alef/ya/ta-marbuta forms.
+  static String normalizeArabic(String s) => s
+      .replaceAll(_arabicMarks, '')
+      .replaceAll(RegExp('[\u0671\u0622\u0623\u0625]'), '\u0627')
+      .replaceAll('\u0649', '\u064A')
+      .replaceAll('\u0626', '\u064A')
+      .replaceAll('\u0624', '\u0648')
+      .replaceAll('\u0629', '\u0647')
+      .replaceAll(_nonWord, ' ')
+      .trim();
+
+  /// Uthmani spells many long-a vowels with a dagger alef (stripped above),
+  /// so a second, alef-free form lets "العالمين" find "ٱلْعَٰلَمِينَ".
+  static String _arabicSkeleton(String normalized) =>
+      normalized.replaceAll('\u0627', '');
+
+  static String normalizeLatin(String s) =>
+      s.toLowerCase().replaceAll(_nonWord, ' ').trim();
+
+  static String _westernDigits(String s) => s.replaceAllMapped(
+    RegExp('[\u0660-\u0669\u06F0-\u06F9]'),
+    (m) => '${m[0]!.codeUnitAt(0) & 0xF}',
+  );
+
+  List<_SearchRow> get _searchIndex => _index ??= [
+    for (var si = 0; si < _ar.length; si++)
+      for (final a in _ar[si])
+        () {
+          final ar = normalizeArabic(a.text);
+          return _SearchRow(
+            surah: si + 1,
+            ayah: a,
+            ar: ar,
+            arSkeleton: _arabicSkeleton(ar),
+            en: normalizeLatin(_en[si][a.numberInSurah] ?? ''),
+            sw: normalizeLatin(_sw[si][a.numberInSurah] ?? ''),
+          );
+        }(),
+  ];
+
+  /// Searches the bundled corpus — no network. Arabic queries match the
+  /// Uthmani text ignoring diacritics; other queries match the English and
+  /// Swahili translations, preferring [locale]'s translation when both
+  /// match. "2:255" (Western or Arabic-Indic digits) opens one ayah.
+  /// Results are in mushaf order, one per ayah, at most [limit].
+  List<AyahSearchResult> searchAyahs(
+    String query, {
+    String locale = 'en',
+    int limit = defaultSearchLimit,
+  }) {
+    if (!_loaded || limit <= 0) return [];
+    final trimmed = query.trim();
+
+    final ref = _verseRef.firstMatch(_westernDigits(trimmed));
+    if (ref != null) {
+      final s = int.parse(ref[1]!);
+      final a = int.parse(ref[2]!);
+      if (s < 1 || s > _ar.length || a < 1 || a > _ar[s - 1].length) {
+        return [];
+      }
+      return [_result(s, _ar[s - 1][a - 1], 'ar')];
+    }
+
+    final out = <AyahSearchResult>[];
+    if (_arabicLetter.hasMatch(trimmed)) {
+      final q = normalizeArabic(trimmed);
+      if (q.length < 2) return [];
+      final skeleton = _arabicSkeleton(q);
+      for (final row in _searchIndex) {
+        if (row.ar.contains(q) ||
+            (skeleton.length >= 2 && row.arSkeleton.contains(skeleton))) {
+          out.add(_result(row.surah, row.ayah, 'ar'));
+          if (out.length >= limit) break;
+        }
+      }
+      return out;
+    }
+
+    final q = normalizeLatin(trimmed);
+    if (q.length < 2) return [];
+    final order = locale == 'sw' ? const ['sw', 'en'] : const ['en', 'sw'];
+    for (final row in _searchIndex) {
+      for (final lang in order) {
+        if ((lang == 'sw' ? row.sw : row.en).contains(q)) {
+          out.add(_result(row.surah, row.ayah, lang));
+          break;
+        }
+      }
+      if (out.length >= limit) break;
+    }
+    return out;
   }
+
+  AyahSearchResult _result(int surah, Ayah a, String lang) => AyahSearchResult(
+    verseKey: '$surah:${a.numberInSurah}',
+    verseId: a.number,
+    text: a.text,
+    surahNumber: surah,
+    ayahNumber: a.numberInSurah,
+    matchLanguage: lang,
+    matchedTranslation: lang == 'ar'
+        ? null
+        : translation(surah, a.numberInSurah, lang),
+  );
 
   // ---- Remote: tafsir (cached locally once fetched) ------------------------
   Future<String?> tafsir(String verseKey) async {
@@ -223,4 +320,22 @@ class QuranService {
       return null;
     }
   }
+}
+
+class _SearchRow {
+  const _SearchRow({
+    required this.surah,
+    required this.ayah,
+    required this.ar,
+    required this.arSkeleton,
+    required this.en,
+    required this.sw,
+  });
+
+  final int surah;
+  final Ayah ayah;
+  final String ar;
+  final String arSkeleton;
+  final String en;
+  final String sw;
 }

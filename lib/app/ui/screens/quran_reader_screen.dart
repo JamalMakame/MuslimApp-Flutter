@@ -102,19 +102,23 @@ class QuranReaderScreen extends GetView<ReaderController> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  Text(
-                    'juzPage'.trParams({
-                      'juz': '${s.juzStart}',
-                      'page': '${s.pageStart}',
-                    }),
-                    style: AppTheme.body(
-                      11.5,
-                      weight: FontWeight.w700,
-                      color: AppColors.sage,
-                      letterSpacing: 0.6,
+                  Expanded(
+                    child: Text(
+                      'juzPage'.trParams({
+                        'juz': '${s.juzStart}',
+                        'page': '${s.pageStart}',
+                      }),
+                      style: AppTheme.body(
+                        11.5,
+                        weight: FontWeight.w700,
+                        color: AppColors.sage,
+                        letterSpacing: 0.6,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const Spacer(),
+                  const SizedBox(width: 6),
                   _ChipBtn(
                     icon: Icons.graphic_eq,
                     label: 'hifzMode'.tr,
@@ -219,6 +223,7 @@ class QuranReaderScreen extends GetView<ReaderController> {
                           Obx(() {
                             final scale = settings.textScale.value;
                             final size = [19.0, 21.0, 26.0][scale];
+                            final highlight = c.highlightAyah.value;
                             return Directionality(
                               textDirection: TextDirection.rtl,
                               child: Text.rich(
@@ -227,14 +232,21 @@ class QuranReaderScreen extends GetView<ReaderController> {
                                     for (final a in c.ayahs) ...[
                                       TextSpan(
                                         text: '${a.text} ',
-                                        style: AppTheme.quran(
-                                          size,
-                                          height: 2.05,
-                                        ),
+                                        style:
+                                            AppTheme.quran(
+                                              size,
+                                              height: 2.05,
+                                            ).copyWith(
+                                              backgroundColor:
+                                                  highlight == a.numberInSurah
+                                                  ? AppColors.goldTint
+                                                  : null,
+                                            ),
                                       ),
                                       WidgetSpan(
                                         alignment: PlaceholderAlignment.middle,
                                         child: GestureDetector(
+                                          key: c.ayahKey(a.numberInSurah),
                                           onTap: () => showTafsirSheet(
                                             surahNumber: s.number,
                                             ayahNumber: a.numberInSurah,

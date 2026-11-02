@@ -1,4 +1,5 @@
 import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 
 import '../data/models.dart';
@@ -7,13 +8,25 @@ import 'settings_controller.dart';
 
 /// Mushaf reader state: ayahs, audio playback, bookmark/last-read.
 class ReaderController extends GetxController {
-  ReaderController(this.surahNumber);
+  ReaderController(this.surahNumber, {this.initialAyah});
 
   final int surahNumber;
+
+  /// Ayah (in surah) to scroll to and highlight on open, e.g. from search.
+  final int? initialAyah;
   final _quran = QuranService.instance;
   final settings = Get.find<SettingsController>();
 
-  final player = AudioPlayer();
+  AudioPlayer? _player;
+
+  /// Created on first use so opening the reader never touches native audio.
+  AudioPlayer get player => _player ??= _createPlayer();
+
+  final highlightAyah = RxnInt();
+  final _ayahKeys = <int, GlobalKey>{};
+
+  GlobalKey ayahKey(int ayahInSurah) =>
+      _ayahKeys.putIfAbsent(ayahInSurah, GlobalKey.new);
 
   Surah get surah => _quran.surah(surahNumber);
   List<Ayah> get ayahs => _quran.ayahsFor(surahNumber);
@@ -34,21 +47,46 @@ class ReaderController extends GetxController {
     super.onInit();
     showTrans.value = settings.showTranslations.value;
     bookmarked.value = _quran.bookmarks.contains(surahNumber);
-    player.onPlayerStateChanged.listen(
+    final target = initialAyah;
+    final valid = target != null && target >= 1 && target <= ayahs.length;
+    highlightAyah.value = valid ? target : null;
+    _savePosition(ayahs[valid ? target - 1 : 0]);
+  }
+
+  @override
+  void onReady() {
+    super.onReady();
+    final target = highlightAyah.value;
+    if (target != null) scrollToAyah(target);
+  }
+
+  Future<void> scrollToAyah(int ayahInSurah) async {
+    final ctx = _ayahKeys[ayahInSurah]?.currentContext;
+    if (ctx == null || !ctx.mounted) return;
+    await Scrollable.ensureVisible(
+      ctx,
+      alignment: 0.25,
+      duration: const Duration(milliseconds: 350),
+      curve: Curves.easeOutCubic,
+    );
+  }
+
+  AudioPlayer _createPlayer() {
+    final p = AudioPlayer();
+    p.onPlayerStateChanged.listen(
       (s) => playing.value = s == PlayerState.playing,
     );
-    player.onDurationChanged.listen((d) => duration.value = d);
-    player.onPositionChanged.listen((p) => position.value = p);
-    player.onPlayerComplete.listen((_) {
+    p.onDurationChanged.listen((d) => duration.value = d);
+    p.onPositionChanged.listen((pos) => position.value = pos);
+    p.onPlayerComplete.listen((_) {
       playing.value = false;
       position.value = Duration.zero;
     });
-    _savePosition();
+    return p;
   }
 
-  void _savePosition() {
-    final first = ayahs.first;
-    _quran.saveLastRead(surahNumber, first.numberInSurah, first.page);
+  void _savePosition(Ayah a) {
+    _quran.saveLastRead(surahNumber, a.numberInSurah, a.page);
   }
 
   String translationOf(int ayahInSurah) => _quran.translation(
@@ -72,13 +110,14 @@ class ReaderController extends GetxController {
     audioLoading.value = false;
   }
 
-  Future<void> seekTo(double seconds) =>
-      player.seek(Duration(seconds: seconds.toInt()));
+  Future<void> seekTo(double seconds) async {
+    await _player?.seek(Duration(seconds: seconds.toInt()));
+  }
 
   Future<void> cycleSpeed() async {
     final i = speeds.indexOf(speed.value);
     speed.value = speeds[(i + 1) % speeds.length];
-    await player.setPlaybackRate(speed.value);
+    await _player?.setPlaybackRate(speed.value);
   }
 
   Future<void> toggleBookmark() async {
@@ -102,7 +141,7 @@ class ReaderController extends GetxController {
 
   @override
   void onClose() {
-    player.dispose();
+    _player?.dispose();
     super.onClose();
   }
 }

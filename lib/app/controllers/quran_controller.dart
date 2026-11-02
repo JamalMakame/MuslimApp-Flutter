@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import '../data/models.dart';
 import '../services/quran_service.dart';
 
-/// Quran index: search (surah local / ayah remote), sort mode,
+/// Quran index: offline search (surah names / ayah text), sort mode,
 /// continue-reading + bookmarks.
 class QuranController extends GetxController {
   final _quran = QuranService.instance;
@@ -11,11 +11,14 @@ class QuranController extends GetxController {
   final query = ''.obs;
   final searchAyahs = false.obs; // Surahs | Ayat segment
   final sortByRevelation = false.obs;
-  final searching = false.obs;
   final ayahResults = <AyahSearchResult>[].obs;
   final bookmarked = Rx<Set<int>>(<int>{});
   final lastRead = Rx<(int, int, int)?>(null);
-  final offlineSearchError = false.obs;
+
+  /// True when the result list was cut at [QuranService.defaultSearchLimit].
+  final resultsLimited = false.obs;
+
+  bool get hasAyahQuery => _normalizedLength(query.value) >= 2;
 
   @override
   void onInit() {
@@ -42,28 +45,36 @@ class QuranController extends GetxController {
     return list;
   }
 
-  Future<void> onQueryChanged(String q) async {
+  void onQueryChanged(String q) {
     query.value = q;
-    if (!searchAyahs.value) return;
-    if (q.trim().length < 2) {
-      ayahResults.clear();
-      return;
-    }
-    searching.value = true;
-    offlineSearchError.value = false;
-    try {
-      ayahResults.value = await _quran.searchAyahs(q);
-    } catch (_) {
-      ayahResults.clear();
-      offlineSearchError.value = true;
-    } finally {
-      searching.value = false;
-    }
+    _runAyahSearch();
   }
 
   void setSegment(bool ayahs) {
     searchAyahs.value = ayahs;
-    ayahResults.clear();
+    _runAyahSearch();
+  }
+
+  void _runAyahSearch() {
+    if (!searchAyahs.value || !hasAyahQuery) {
+      ayahResults.clear();
+      resultsLimited.value = false;
+      return;
+    }
+    const limit = QuranService.defaultSearchLimit;
+    final results = _quran.searchAyahs(
+      query.value,
+      locale: Get.locale?.languageCode ?? 'en',
+      limit: limit + 1,
+    );
+    resultsLimited.value = results.length > limit;
+    ayahResults.assignAll(results.take(limit));
+  }
+
+  static int _normalizedLength(String q) {
+    final t = q.trim();
+    if (RegExp(r'\d').hasMatch(t)) return t.length;
+    return QuranService.normalizeLatin(QuranService.normalizeArabic(t)).length;
   }
 
   void toggleSort() => sortByRevelation.toggle();
