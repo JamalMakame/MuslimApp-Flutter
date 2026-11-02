@@ -205,7 +205,7 @@ class HabitsScreen extends StatelessWidget {
                   TextButton(
                     key: const ValueKey('due-all'),
                     onPressed: () => Get.bottomSheet(
-                      _DueSheet(due),
+                      const _DueSheet(),
                       isScrollControlled: true,
                       backgroundColor: AppColors.surface,
                     ),
@@ -291,19 +291,23 @@ class _DueTile extends StatelessWidget {
 
 /// Every due ayah, built lazily so a long backlog stays smooth.
 class _DueSheet extends StatelessWidget {
-  const _DueSheet(this.due);
-  final List<(int, int)> due;
+  const _DueSheet();
 
   @override
   Widget build(BuildContext context) => SafeArea(
     child: SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.7,
-      child: ListView.builder(
-        key: const ValueKey('due-sheet'),
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-        itemCount: due.length,
-        itemBuilder: (_, i) => _DueTile(due[i].$1, due[i].$2),
-      ),
+      child: Obx(() {
+        final h = HabitService.instance;
+        h.version.value;
+        final due = h.dueOn(DateTime.now());
+        return ListView.builder(
+          key: const ValueKey('due-sheet'),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+          itemCount: due.length,
+          itemBuilder: (_, i) => _DueTile(due[i].$1, due[i].$2),
+        );
+      }),
     ),
   );
 }
