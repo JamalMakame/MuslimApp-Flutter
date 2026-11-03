@@ -542,27 +542,39 @@ class _History extends StatelessWidget {
             builder: (_) {
               final d = DateTime(today.year, today.month, today.day - i);
               final n = log.prayedOn(d).length;
-              return GestureDetector(
-                key: ValueKey('tracker-history-$i'),
-                onTap: () => onSelect(i),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: n == 0
-                        ? AppColors.hairline.withValues(alpha: 0.5)
-                        : AppColors.emerald.withValues(alpha: 0.2 + n * 0.16),
-                    borderRadius: BorderRadius.circular(6),
-                    border: i == selected
-                        ? Border.all(color: AppColors.ink, width: 2)
-                        : i == 0
-                        ? Border.all(color: AppColors.gold)
-                        : null,
-                  ),
-                  alignment: Alignment.center,
-                  child: Text(
-                    '${d.day}',
-                    style: AppTheme.body(
-                      10,
-                      color: n >= 4 ? Colors.white : AppColors.sage,
+              final label = '${DateFormat('d MMM').format(d)}: $n/5';
+              return Semantics(
+                button: true,
+                selected: i == selected,
+                label: label,
+                excludeSemantics: true,
+                child: Tooltip(
+                  message: label,
+                  child: GestureDetector(
+                    key: ValueKey('tracker-history-$i'),
+                    onTap: () => onSelect(i),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: n == 0
+                            ? AppColors.hairline.withValues(alpha: 0.5)
+                            : AppColors.emerald.withValues(
+                                alpha: 0.2 + n * 0.16,
+                              ),
+                        borderRadius: BorderRadius.circular(6),
+                        border: i == selected
+                            ? Border.all(color: AppColors.ink, width: 2)
+                            : i == 0
+                            ? Border.all(color: AppColors.gold)
+                            : null,
+                      ),
+                      alignment: Alignment.center,
+                      child: Text(
+                        '${d.day}',
+                        style: AppTheme.body(
+                          10,
+                          color: n >= 4 ? Colors.white : AppColors.sage,
+                        ),
+                      ),
                     ),
                   ),
                 ),
