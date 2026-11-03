@@ -8,6 +8,7 @@ import 'package:hijri/hijri_calendar.dart';
 import '../../controllers/app_controller.dart';
 import '../../routes/app_pages.dart';
 import '../../theme/app_theme.dart';
+import '../widgets/motion.dart';
 
 /// Emerald splash — geometric star rosette + dome emblem, gold
 /// progress hairline. Routes once bundled data is parsed.
@@ -28,6 +29,10 @@ class _SplashScreenState extends State<SplashScreen>
     vsync: this,
     duration: const Duration(milliseconds: 2400),
   )..forward();
+  late final AnimationController _pulse = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 1800),
+  )..repeat(reverse: true);
   late final Worker _readyWorker;
   bool _navigated = false;
 
@@ -54,6 +59,7 @@ class _SplashScreenState extends State<SplashScreen>
   void dispose() {
     _readyWorker.dispose();
     _spin.dispose();
+    _pulse.dispose();
     _progress.dispose();
     super.dispose();
   }
@@ -100,60 +106,81 @@ class _SplashScreenState extends State<SplashScreen>
                     SizedBox(
                       width: 208,
                       height: 208,
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          // Ambient glow
-                          Container(
-                            width: 170,
-                            height: 170,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.gold.withValues(alpha: 0.25),
-                                  blurRadius: 80,
-                                  spreadRadius: 10,
+                      child: DeenRive(
+                        'splash',
+                        fallback: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            // Ambient glow
+                            Container(
+                              width: 170,
+                              height: 170,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.gold.withValues(
+                                      alpha: 0.25,
+                                    ),
+                                    blurRadius: 80,
+                                    spreadRadius: 10,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            RotationTransition(
+                              turns: _spin,
+                              child: CustomPaint(
+                                size: const Size(208, 208),
+                                painter: _RosettePainter(),
+                              ),
+                            ),
+                            ScaleTransition(
+                              scale: Tween(begin: 0.94, end: 1.04).animate(
+                                CurvedAnimation(
+                                  parent: _pulse,
+                                  curve: Curves.easeInOut,
                                 ),
-                              ],
-                            ),
-                          ),
-                          RotationTransition(
-                            turns: _spin,
-                            child: CustomPaint(
-                              size: const Size(208, 208),
-                              painter: _RosettePainter(),
-                            ),
-                          ),
-                          Container(
-                            width: 128,
-                            height: 128,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: AppColors.brandDeep.withValues(
-                                alpha: 0.55,
                               ),
-                              border: Border.all(
-                                color: AppColors.gold.withValues(alpha: 0.35),
+                              child: Container(
+                                width: 128,
+                                height: 128,
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: AppColors.brandDeep.withValues(
+                                    alpha: 0.55,
+                                  ),
+                                  border: Border.all(
+                                    color: AppColors.gold.withValues(
+                                      alpha: 0.35,
+                                    ),
+                                  ),
+                                ),
+                                child: Image.asset(
+                                  'assets/images/deen_dome.png',
+                                  width: 64,
+                                  height: 64,
+                                  filterQuality: FilterQuality.high,
+                                ),
                               ),
                             ),
-                            child: Image.asset(
-                              'assets/images/deen_dome.png',
-                              width: 64,
-                              height: 64,
-                              filterQuality: FilterQuality.high,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                     const SizedBox(height: 28),
-                    Text(
-                      'appName'.tr,
-                      style: AppTheme.headline(
-                        42,
-                        weight: FontWeight.w800,
-                        color: AppColors.onBrand,
+                    FadeTransition(
+                      opacity: CurvedAnimation(
+                        parent: _progress,
+                        curve: const Interval(0, 0.3, curve: Curves.easeOut),
+                      ),
+                      child: Text(
+                        'appName'.tr,
+                        style: AppTheme.headline(
+                          42,
+                          weight: FontWeight.w800,
+                          color: AppColors.onBrand,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),

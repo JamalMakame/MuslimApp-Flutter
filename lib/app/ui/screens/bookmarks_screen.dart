@@ -7,6 +7,7 @@ import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/ayah_actions_sheet.dart';
 import '../widgets/floating_nav_pill.dart';
+import '../widgets/motion.dart';
 
 /// Bookmarked ayahs, newest first, with their notes.
 class BookmarksScreen extends StatelessWidget {
@@ -45,10 +46,27 @@ class BookmarksScreen extends StatelessWidget {
                     key: const ValueKey('bookmarks-empty'),
                     child: Padding(
                       padding: const EdgeInsets.all(32),
-                      child: Text(
-                        'noBookmarks'.tr,
-                        textAlign: TextAlign.center,
-                        style: AppTheme.body(13.5, color: AppColors.sage),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(
+                            width: 140,
+                            height: 120,
+                            child: DeenRive(
+                              'empty',
+                              fallback: PopInIcon(
+                                Icons.bookmark_add_outlined,
+                                color: AppColors.emerald,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            'noBookmarks'.tr,
+                            textAlign: TextAlign.center,
+                            style: AppTheme.body(13.5, color: AppColors.sage),
+                          ),
+                        ],
                       ),
                     ),
                   );

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:get/get.dart';
 
 import '../../routes/app_pages.dart';
 import '../../theme/app_theme.dart';
+import 'motion.dart';
 
 /// The floating 4-slot pill nav from the Stitch design —
 /// Home · Quran · Azkar · Settings. Rendered as a Scaffold
@@ -81,35 +83,41 @@ class _NavItem extends StatelessWidget {
     return Tooltip(
       message: label,
       child: GestureDetector(
-        onTap: onTap,
+        onTap: () {
+          HapticFeedback.selectionClick();
+          onTap();
+        },
         behavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 220),
-          curve: Curves.easeOut,
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
-          decoration: BoxDecoration(
-            color: selected ? AppColors.emerald : Colors.transparent,
-            borderRadius: BorderRadius.circular(999),
-          ),
-          child: Row(
-            children: [
-              Icon(
-                icon,
-                size: 19,
-                color: selected ? Colors.white : AppColors.sage,
-              ),
-              if (selected && !compact) ...[
-                const SizedBox(width: 6),
-                Text(
-                  label,
-                  style: AppTheme.body(
-                    12,
-                    weight: FontWeight.w600,
-                    color: Colors.white,
-                  ),
+        child: Pressable(
+          scale: 0.9,
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 220),
+            curve: Curves.easeOut,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 9),
+            decoration: BoxDecoration(
+              color: selected ? AppColors.emerald : Colors.transparent,
+              borderRadius: BorderRadius.circular(999),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  icon,
+                  size: 19,
+                  color: selected ? Colors.white : AppColors.sage,
                 ),
+                if (selected && !compact) ...[
+                  const SizedBox(width: 6),
+                  Text(
+                    label,
+                    style: AppTheme.body(
+                      12,
+                      weight: FontWeight.w600,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ],
-            ],
+            ),
           ),
         ),
       ),

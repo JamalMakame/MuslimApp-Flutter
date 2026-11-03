@@ -9,6 +9,7 @@ import '../../controllers/settings_controller.dart';
 import '../../controllers/tasbeeh_controller.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
+import '../widgets/motion.dart';
 
 /// Tasbeeh — phrase display, large tap dial w/ gold progress ring,
 /// phrase chips, goal/lap cards, daily total + streak footer.
@@ -117,10 +118,13 @@ class TasbeehScreen extends GetView<TasbeehController> {
               child: Obx(
                 () => GestureDetector(
                   onTap: controller.tap,
-                  child: _TapDial(
-                    progress: controller.progress,
-                    count: controller.count.value,
-                    target: controller.target.value,
+                  child: Pressable(
+                    scale: 0.95,
+                    child: _TapDial(
+                      progress: controller.progress,
+                      count: controller.count.value,
+                      target: controller.target.value,
+                    ),
                   ),
                 ),
               ),
@@ -386,12 +390,20 @@ class _TapDial extends StatelessWidget {
           Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
-                '$count',
-                style: AppTheme.headline(
-                  58,
-                  weight: FontWeight.w800,
-                  color: AppColors.emerald,
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 180),
+                transitionBuilder: (child, a) => ScaleTransition(
+                  scale: Tween(begin: 0.7, end: 1.0).animate(a),
+                  child: FadeTransition(opacity: a, child: child),
+                ),
+                child: Text(
+                  '$count',
+                  key: ValueKey(count),
+                  style: AppTheme.headline(
+                    58,
+                    weight: FontWeight.w800,
+                    color: AppColors.emerald,
+                  ),
                 ),
               ),
               Text(

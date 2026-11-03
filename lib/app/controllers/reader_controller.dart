@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 
+import '../ui/widgets/celebration.dart';
 import '../data/models.dart';
 import '../services/audio_cache_service.dart';
 import '../services/quran_service.dart';
@@ -165,12 +166,15 @@ class ReaderController extends GetxController {
   /// don't count.
   void _recordReading(Ayah? from, Ayah to) {
     final habits = HabitService.instance;
+    void record(int p) => habits
+        .recordPage(p)
+        .then((met) => celebrateIf(met, 'readingGoalDone'.tr));
     if (from != null) {
       for (var p = from.page; p < to.page; p++) {
-        habits.recordPage(p);
+        record(p);
       }
     }
-    if (to.numberInSurah == ayahs.length) habits.recordPage(to.page);
+    if (to.numberInSurah == ayahs.length) record(to.page);
   }
 
   /// Saves the ayah at the reading line (a quarter down the list) once the

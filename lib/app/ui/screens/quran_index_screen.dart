@@ -9,6 +9,7 @@ import '../../theme/app_theme.dart';
 import '../widgets/go_to_sheet.dart';
 import '../widgets/juz_list.dart';
 import '../widgets/floating_nav_pill.dart';
+import '../widgets/motion.dart';
 
 /// Quran index — search, Surahs/Ayat segment, continue-reading card,
 /// surah tiles with gold-ring numerals + Makki/Madani chips.
@@ -230,9 +231,25 @@ class QuranIndexScreen extends GetView<QuranController> {
                       Padding(
                         padding: const EdgeInsets.all(30),
                         child: Center(
-                          child: Text(
-                            'noResults'.tr,
-                            style: AppTheme.body(13, color: AppColors.sage),
+                          child: Column(
+                            children: [
+                              SizedBox(
+                                width: 140,
+                                height: 110,
+                                child: DeenRive(
+                                  'empty',
+                                  fallback: PopInIcon(
+                                    Icons.search_off,
+                                    color: AppColors.emerald,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 10),
+                              Text(
+                                'noResults'.tr,
+                                style: AppTheme.body(13, color: AppColors.sage),
+                              ),
+                            ],
                           ),
                         ),
                       ),

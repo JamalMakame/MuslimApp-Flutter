@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:get/get.dart';
 import 'package:intl/intl.dart' show DateFormat;
 
 import '../../services/prayer_log_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/celebration.dart';
+import '../widgets/motion.dart';
 
 /// Tips for the prayer missed most, then general ones (i18n keys).
 const prayerTips = {
@@ -39,6 +41,7 @@ Future<void> togglePrayer(
   DateTime day,
   String prayer,
 ) async {
+  HapticFeedback.lightImpact();
   final done = await PrayerLogService.instance.toggle(day, prayer);
   if (done && context.mounted) celebrate(context, 'allFiveDone'.tr);
 }
@@ -72,7 +75,7 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
         final stats = log.stats(_period, now);
         return ListView(
           padding: const EdgeInsets.fromLTRB(16, 8, 16, 32),
-          children: [
+          children: staggered([
             SizedBox(
               height: 64,
               child: ListView.separated(
@@ -231,7 +234,7 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                 ],
               ),
             ),
-          ],
+          ]),
         );
       }),
     );

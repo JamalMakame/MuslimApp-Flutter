@@ -1,6 +1,7 @@
 import 'package:flutter/services.dart' show HapticFeedback;
 import 'package:get/get.dart';
 
+import '../ui/widgets/celebration.dart';
 import '../data/models.dart';
 import '../services/storage_service.dart';
 
@@ -105,6 +106,7 @@ class TasbeehController extends GetxController {
     if (count.value >= target.value) {
       count.value = 0;
       lap.value++;
+      celebrateIf(true, 'tasbeehLapDone'.trParams({'n': '${lap.value - 1}'}));
     }
     await _persist();
   }

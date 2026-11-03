@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../widgets/celebration.dart';
 import '../../data/models.dart';
 import '../../routes/app_pages.dart';
 import '../../services/habit_service.dart';
@@ -51,9 +52,13 @@ class _MushafScreenState extends State<MushafScreen> {
     _quran.saveLastRead(on.first.$1, on.first.$2.numberInSurah, _page);
   }
 
+  void _record(int page) => HabitService.instance
+      .recordPage(page)
+      .then((met) => celebrateIf(met, 'readingGoalDone'.tr));
+
   void _changed(int i) {
     final p = i + 1;
-    if (p == _page + 1) HabitService.instance.recordPage(_page);
+    if (p == _page + 1) _record(_page);
     setState(() => _page = p);
     _save();
   }
@@ -61,7 +66,7 @@ class _MushafScreenState extends State<MushafScreen> {
   bool _finished = false;
 
   void _finish() {
-    HabitService.instance.recordPage(QuranService.pageCount);
+    _record(QuranService.pageCount);
     setState(() => _finished = true);
   }
 

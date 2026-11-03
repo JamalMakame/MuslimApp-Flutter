@@ -229,7 +229,7 @@ void main() {
       (t.widget(find.byKey(const ValueKey('tracker-count'))) as Text).data,
       '0/5',
     );
-    await t.ensureVisible(find.byKey(const ValueKey('track-asr')));
+    await t.drag(page, const Offset(0, 3000));
     await t.pumpAndSettle();
     await t.tap(find.byKey(const ValueKey('track-asr')));
     await t.pumpAndSettle();
