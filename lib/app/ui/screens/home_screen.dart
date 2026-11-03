@@ -10,11 +10,13 @@ import '../../routes/app_pages.dart';
 import '../../services/azkar_service.dart';
 import '../../services/habit_service.dart';
 import '../../services/hijri_date_service.dart';
+import '../../services/prayer_log_service.dart';
 import '../../services/prayer_service.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
 import 'habits_screen.dart' show openPage;
+import 'prayer_tracker_screen.dart';
 
 /// Salah Times home — date header, location chip, emerald next-prayer
 /// hero, prayer tiles (current highlighted gold), Qibla card,
@@ -31,6 +33,7 @@ class HomeScreen extends GetView<HomeController> {
       body: SafeArea(
         child: Obx(() {
           final day = controller.day.value;
+          PrayerLogService.instance.version.value;
           final locale = settings.localeCode.value;
           final now = controller.currentDate.value;
           final hijri = HijriDateService.on(now, controller.hijriOffset.value);
@@ -170,6 +173,16 @@ class HomeScreen extends GetView<HomeController> {
                         if (i > 0)
                           const Divider(height: 1, indent: 16, endIndent: 16),
                         _PrayerTile(
+                          prayed:
+                              PrayerLogService.prayers.contains(
+                                day.slots[i].key,
+                              )
+                              ? PrayerLogService.instance
+                                    .prayedOn(day.now)
+                                    .contains(day.slots[i].key)
+                              : null,
+                          onToggle: () =>
+                              togglePrayer(context, day.now, day.slots[i].key),
                           slot: day.slots[i],
                           isCurrent:
                               day.slots[i].key == day.currentKey ||
@@ -184,6 +197,86 @@ class HomeScreen extends GetView<HomeController> {
                 ),
                 const SizedBox(height: 16),
               ],
+
+              // ---- Prayer tracker -----------------------------------------
+              Builder(
+                builder: (context) {
+                  final log = PrayerLogService.instance;
+                  final now = DateTime.now();
+                  final n = log.prayedOn(now).length;
+                  final stats = log.stats(7, now);
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 16),
+                    child: _Card(
+                      key: const ValueKey('home-tracker'),
+                      onTap: () => Get.toNamed(Routes.prayerTracker),
+                      child: Padding(
+                        padding: const EdgeInsets.all(14),
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: 42,
+                              height: 42,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  TweenAnimationBuilder<double>(
+                                    tween: Tween(begin: 0, end: n / 5),
+                                    duration: const Duration(milliseconds: 500),
+                                    builder: (_, v, _) =>
+                                        CircularProgressIndicator(
+                                          value: v,
+                                          strokeWidth: 4,
+                                          color: AppColors.emerald,
+                                          backgroundColor: AppColors.hairline,
+                                        ),
+                                  ),
+                                  Text(
+                                    '$n/5',
+                                    style: AppTheme.body(
+                                      11,
+                                      weight: FontWeight.w800,
+                                      color: AppColors.ink,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 12),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'prayerTracker'.tr,
+                                    style: AppTheme.body(
+                                      14,
+                                      weight: FontWeight.w700,
+                                      color: AppColors.ink,
+                                    ),
+                                  ),
+                                  Text(
+                                    '${'streakDays'.trParams({'n': '${log.streak(now)}'})} · ${switch (stats.standing) {
+                                      PrayerStanding.strong || PrayerStanding.steady => 'standingGoodTitle'.tr,
+                                      PrayerStanding.slipping || PrayerStanding.struggling => 'standingWarnTitle'.tr,
+                                      PrayerStanding.none => 'didYouPrayToday'.tr,
+                                    }}',
+                                    style: AppTheme.body(
+                                      12,
+                                      color: AppColors.sage,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.chevron_right, color: AppColors.sage),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
 
               // ---- Continue reading ---------------------------------------
               Obx(() {
@@ -640,12 +733,17 @@ class _HeroCard extends StatelessWidget {
 
 class _PrayerTile extends StatelessWidget {
   const _PrayerTile({
+    required this.prayed,
+    required this.onToggle,
     required this.slot,
     required this.isCurrent,
     required this.isNext,
     required this.locale,
   });
 
+  /// Whether it was marked prayed today; null for sunrise.
+  final bool? prayed;
+  final VoidCallback onToggle;
   final PrayerSlot slot;
   final bool isCurrent;
   final bool isNext;
@@ -737,6 +835,19 @@ class _PrayerTile extends StatelessWidget {
               color: active ? AppColors.emeraldDeep : AppColors.ink,
             ),
           ),
+          if (prayed != null) ...[
+            const SizedBox(width: 10),
+            Semantics(
+              button: true,
+              label: 'markPrayed'.tr,
+              child: GestureDetector(
+                key: ValueKey('home-prayed-${slot.key}'),
+                behavior: HitTestBehavior.opaque,
+                onTap: onToggle,
+                child: PrayedCheck(prayed: prayed!, size: 26),
+              ),
+            ),
+          ],
         ],
       ),
     );

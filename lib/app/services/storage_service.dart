@@ -26,6 +26,8 @@ class StorageService {
   static const kPrayerLeads = 'prayer_leads'; // {prayer: min before, -1 off}
   static const kAzkarReminders = 'azkar_reminders';
   static const kAdhanSound = 'adhan_sound';
+  static const kPrayerLog = 'prayer_log'; // {yyyy-MM-dd: [prayers prayed]}
+  static const kPrayerCheckIn = 'prayer_check_in';
   static const kShowTranslations = 'show_translations';
   static const kAyahAudio = 'ayah_audio';
   static const kTranslationLang = 'translation_lang'; // 'en' | 'sw' | 'ar'

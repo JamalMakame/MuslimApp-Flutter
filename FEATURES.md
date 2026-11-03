@@ -46,6 +46,7 @@ English (Sahih Intl.), Swahili (Al-Barwani), or Arabic-only.
 | `/calendar` | Dual Hijri/Gregorian calendar | CalendarController |
 | `/memorize/:surah` | Hifz and offline per-ayah audio | MemorizeController |
 | `/habits` | Reading goal, streak, Khatmah plan, reading reminder, memorisation progress | HabitService |
+| `/prayer-tracker` | Mark the five prayers per day; streaks, per-prayer consistency, 5-week history, encouragement or a warning with tips | PrayerLogService |
 | `/mushaf?page=N` | Page-by-page reading: the 15 lines of each of the 604 KFGQPC pages | MushafLayout |
 | `/hadith` | An-Nawawi's 40 Hadith, Arabic + English | HadithService |
 | `/settings` | Settings | SettingsController (permanent) |
@@ -63,6 +64,19 @@ daily reading reminder joins the prayer notifications (works without a
 location). Hifz has a self-test: hide the ayah, reveal word by word or all,
 then mark memorised (next review after 1, 3, 7, 14, 30, 60 days) or needs
 review (due tomorrow); `/habits` lists ayahs due and memorised counts per surah.
+
+**Prayer tracker (`PrayerLogService`, all on-device).** Each of the five
+prayers can be marked as prayed for today or any past day, from Home's
+prayer list or `/prayer-tracker` (`prayer_log`, kept 400 days). Stats cover
+the last 7 or 30 days up to today once all five are marked, otherwise up to
+yesterday, and start from the first marked day: the streak of full days, the
+best streak, full days, each prayer's percentage, and a 5-week history.
+At 90 % or more the app encourages; at 70–89 % it points to the prayer
+missed most; below 70 % it warns and lists tips for that prayer plus general
+ones. Completing all five for a day shows confetti. An optional evening
+check-in notification (it follows the prayer reminder switch until changed
+in Settings) comes an hour after Isha on days not
+yet complete.
 
 **Content.** Azkar come in 15 named buckets plus Other (whose cards show the
 source chapter); Settings → Transliteration adds an approximate Latin line

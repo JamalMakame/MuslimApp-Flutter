@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../services/habit_service.dart';
 import '../services/notification_service.dart';
+import '../services/prayer_log_service.dart';
 import '../services/prayer_service.dart';
 import '../services/prayer_widget.dart';
 import 'settings_controller.dart';
@@ -35,6 +36,8 @@ class PrayerReminderController extends GetxController
       settings.prayerLeads,
       settings.azkarReminders,
       settings.adhanSound,
+      settings.prayerCheckIn,
+      PrayerLogService.instance.version,
       HabitService.instance.readReminder,
     ], (_) => sync());
     _timer = Timer.periodic(const Duration(minutes: 15), (_) => sync());
@@ -88,10 +91,12 @@ class PrayerReminderController extends GetxController
     final prayersOn = settings.notifyPrayers.value;
     final azkar = settings.azkarReminders.value;
     final adhan = settings.adhanSound.value;
+    final checkIn = settings.prayerCheckIn.value;
+    final log = PrayerLogService.instance;
     final readAt = HabitService.instance.readReminder.value;
     final reading = readAt >= 0 ? readAt : null;
     final located = settings.hasLocation;
-    if (reading == null && (!located || (!prayersOn && !azkar))) {
+    if (reading == null && (!located || (!prayersOn && !azkar && !checkIn))) {
       await notifications.cancelAll();
       return;
     }
@@ -121,6 +126,8 @@ class PrayerReminderController extends GetxController
         [for (final k in leads.keys.toList()..sort()) '$k${leads[k]}'],
         azkar,
         adhan,
+        checkIn,
+        log.isComplete(now),
         located,
         reading,
         now.year,
@@ -142,12 +149,15 @@ class PrayerReminderController extends GetxController
         leads: leads,
         azkar: azkar,
         readingAt: reading,
+        checkIn: checkIn,
+        checkedIn: log.isComplete,
       ),
       title: (r) => _t(code, r.key),
       body: (r) => switch (r.key) {
         NotificationService.azkarMorning ||
         NotificationService.azkarEvening => _t(code, 'azkarNotifyBody'),
         NotificationService.reading => _t(code, 'readNotifyBody'),
+        NotificationService.prayerCheck => _t(code, 'prayerCheckBody'),
         _ when r.lead > 0 => _t(
           code,
           'prayerSoonBody',
