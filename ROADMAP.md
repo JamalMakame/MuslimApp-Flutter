@@ -53,7 +53,8 @@ availability are critical.
 - 🔶 Prayer notifications when the app is closed — Android: scheduled
   one-shot reminders for the next 7 days at each day's computed times,
   renewed on launch/resume and when location, method, madhab or language
-  change. Plain notification sound (no full Adhan audio); iOS untested
+  change. Optional adhan sound at each prayer time (CC BY-SA recording;
+  iPhone plays the first 26 s); iOS untested
 - ✅ Prayer names, countdown labels, and notification copy localized
   (ar/en/sw)
 
@@ -67,8 +68,10 @@ availability are critical.
 ### The Holy Quran (Reading)
 - ✅ Offline-first reading of bundled Uthmani text (Amiri font) in a
   mushaf-style reader; no network needed
-- ✅ Page-by-page mode (604 pages, text laid out per page)
-- ⬜ Indo-Pak script option / page-faithful image mushaf
+- ✅ Page-by-page mode: the 15 lines of each of the 604 pages from the King
+  Fahd Complex Hafs data, in its Uthmanic Hafs font (line breaks inside a
+  long ayah are balanced, not copied from print)
+- ⬜ Indo-Pak script option
 - ✅ Start anywhere: Go to surah + ayah / juz / hizb / page, search
   shortcuts (`juz 5`, `page 300`, `2:255-260`), `deen://quran/2/255`
   links, live Juz/Hizb/Page chips, Continue reading + Ayah of the Day on
@@ -250,7 +253,7 @@ in (`AppColors` / `AppTheme.current`), no package needed
 
 | Phase | Focus | Complexity | Tech Stack Impact | Current State |
 |---|---|---|---|---|
-| 1 | Core Utilities | Low–Med | Local sensors, native alarms | ~85% — high-latitude rules, full Adhan audio, iOS notification QA, 2D map fallback, Indo-Pak script left |
+| 1 | Core Utilities | Low–Med | Local sensors, native alarms | ~85% — high-latitude rules, iOS notification QA, 2D map fallback, Indo-Pak script left |
 | 2 | Habit Building | Medium | Audio pipelines, local SQL | ~80% — azkar translations/transliteration and background audio left |
 | 3 | Content & Community | Med–High | Network APIs, FTS engines | ~35% — tafsir + offline search done; hadith library, maps, word-by-word missing |
 | 4 | OS Integration | High | Widgets, wearables, state sync | ~20% — dark mode, script fonts, daily cards done; widgets, wearables, analytics missing |

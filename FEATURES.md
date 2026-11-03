@@ -46,7 +46,7 @@ English (Sahih Intl.), Swahili (Al-Barwani), or Arabic-only.
 | `/calendar` | Dual Hijri/Gregorian calendar | CalendarController |
 | `/memorize/:surah` | Hifz and offline per-ayah audio | MemorizeController |
 | `/habits` | Reading goal, streak, Khatmah plan, reading reminder, memorisation progress | HabitService |
-| `/mushaf?page=N` | Page-by-page reading, one of 604 pages per screen | QuranService.ayahsOnPage |
+| `/mushaf?page=N` | Page-by-page reading: the 15 lines of each of the 604 KFGQPC pages | MushafLayout |
 | `/hadith` | An-Nawawi's 40 Hadith, Arabic + English | HadithService |
 | `/settings` | Settings | SettingsController (permanent) |
 

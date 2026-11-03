@@ -87,6 +87,7 @@ flutter:
     - assets/images/
     - assets/json/
     - assets/fonts/
+    - assets/licenses/
 
   fonts:
     - family: Plus Jakarta Sans
@@ -113,6 +114,9 @@ flutter:
           weight: 700
         - asset: assets/fonts/Manrope-ExtraBold.ttf
           weight: 800
+    - family: KFGQPC Hafs
+      fonts:
+        - asset: assets/fonts/UthmanicHafs_V22.ttf
     - family: Amiri
       fonts:
         - asset: assets/fonts/Amiri-Regular.ttf

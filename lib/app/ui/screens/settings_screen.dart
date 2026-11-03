@@ -129,6 +129,15 @@ class SettingsScreen extends GetView<SettingsController> {
                     onChanged: controller.setNotifyPrayers,
                   ),
                 ),
+                Obx(
+                  () => _SettingsSwitch(
+                    key: const ValueKey('settings-adhan-sound'),
+                    title: 'adhanSound'.tr,
+                    subtitle: 'adhanSoundDesc'.tr,
+                    value: controller.adhanSound.value,
+                    onChanged: controller.setAdhanSound,
+                  ),
+                ),
                 _SettingsRow(
                   key: const ValueKey('settings-prayer-tuning'),
                   title: 'prayerTuning'.tr,
@@ -352,6 +361,15 @@ class SettingsScreen extends GetView<SettingsController> {
                         top: Radius.circular(20),
                       ),
                     ),
+                  ),
+                ),
+                _SettingsRow(
+                  key: const ValueKey('settings-licences'),
+                  title: 'licences'.tr,
+                  subtitle: 'licencesDesc'.tr,
+                  onTap: () => showLicensePage(
+                    context: context,
+                    applicationName: 'Deen',
                   ),
                 ),
               ],
@@ -826,6 +844,7 @@ class _SettingsRow extends StatelessWidget {
 
 class _SettingsSwitch extends StatelessWidget {
   const _SettingsSwitch({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.value,

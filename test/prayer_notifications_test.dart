@@ -1,3 +1,4 @@
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fquran_app/app/i18n/app_translations.dart';
 import 'package:fquran_app/app/services/notification_service.dart';
@@ -58,5 +59,30 @@ void main() {
           .value['prayerNotifyBody'];
       expect(body, contains('@prayer'), reason: locale);
     }
+  });
+
+  test('the adhan plays only at a prayer\'s own time when turned on', () {
+    final at = DateTime(2026, 11, 2, 12);
+    final cases = {
+      PrayerReminder(112, 'dhuhr', at): true,
+      PrayerReminder(112, 'dhuhr', at, lead: 10): false,
+      PrayerReminder(210, NotificationService.azkarMorning, at): false,
+      PrayerReminder(310, NotificationService.reading, at): false,
+    };
+    cases.forEach((r, expected) {
+      final on = NotificationService.details(r, adhan: true);
+      expect(on.iOS!.sound, expected ? 'adhan.caf' : isNull, reason: r.key);
+      expect(
+        on.android!.channelId,
+        expected ? NotificationService.adhanChannelId : 'prayer_times',
+      );
+      expect(
+        on.android!.sound,
+        expected ? isA<RawResourceAndroidNotificationSound>() : isNull,
+      );
+      final off = NotificationService.details(r, adhan: false);
+      expect(off.iOS!.sound, isNull);
+      expect(off.android!.channelId, 'prayer_times');
+    });
   });
 }

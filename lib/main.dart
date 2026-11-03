@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show SystemUiOverlayStyle;
+import 'package:flutter/foundation.dart'
+    show LicenseEntryWithLineBreaks, LicenseRegistry;
+import 'package:flutter/services.dart' show SystemUiOverlayStyle, rootBundle;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 
@@ -16,9 +18,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await StorageService.init();
   CrashLog.install();
+  _registerLicences();
   LinkService.instance.init();
   await RecitationAudio.init();
   runApp(const DeenApp());
+}
+
+void _registerLicences() {
+  LicenseRegistry.addLicense(() async* {
+    yield LicenseEntryWithLineBreaks([
+      'KFGQPC Uthmanic Script HAFS',
+    ], await rootBundle.loadString('assets/licenses/kfgqpc_hafs.txt'));
+    yield LicenseEntryWithLineBreaks([
+      'Adhan recording',
+    ], await rootBundle.loadString('assets/licenses/adhan.txt'));
+  });
 }
 
 class DeenApp extends StatefulWidget {

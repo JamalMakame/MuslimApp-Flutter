@@ -9,6 +9,7 @@ import 'package:fquran_app/app/i18n/app_translations.dart';
 import 'package:fquran_app/app/routes/app_pages.dart';
 import 'package:fquran_app/app/services/crash_log.dart';
 import 'package:fquran_app/app/services/habit_service.dart';
+import 'package:fquran_app/app/services/mushaf_layout.dart';
 import 'package:fquran_app/app/services/prayer_service.dart';
 import 'package:fquran_app/app/services/prayer_widget.dart';
 import 'package:fquran_app/app/services/quran_service.dart';
@@ -27,6 +28,7 @@ void main() {
         );
     await StorageService.init();
     await QuranService.instance.load();
+    await MushafLayout.load();
   });
 
   tearDownAll(() async {

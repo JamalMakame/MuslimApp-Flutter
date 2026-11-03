@@ -34,6 +34,7 @@ class PrayerReminderController extends GetxController
       settings.prayerOffsets,
       settings.prayerLeads,
       settings.azkarReminders,
+      settings.adhanSound,
       HabitService.instance.readReminder,
     ], (_) => sync());
     _timer = Timer.periodic(const Duration(minutes: 15), (_) => sync());
@@ -86,6 +87,7 @@ class PrayerReminderController extends GetxController
     final notifications = NotificationService.instance;
     final prayersOn = settings.notifyPrayers.value;
     final azkar = settings.azkarReminders.value;
+    final adhan = settings.adhanSound.value;
     final readAt = HabitService.instance.readReminder.value;
     final reading = readAt >= 0 ? readAt : null;
     final located = settings.hasLocation;
@@ -108,6 +110,7 @@ class PrayerReminderController extends GetxController
         : {for (final k in PrayerService.keys) k: -1};
     final now = DateTime.now();
     await notifications.schedule(
+      adhan: adhan,
       signature: [
         lat,
         lng,
@@ -117,6 +120,7 @@ class PrayerReminderController extends GetxController
         tuning.signature,
         [for (final k in leads.keys.toList()..sort()) '$k${leads[k]}'],
         azkar,
+        adhan,
         located,
         reading,
         now.year,

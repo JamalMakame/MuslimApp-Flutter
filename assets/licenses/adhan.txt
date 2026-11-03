@@ -1,0 +1,8 @@
+Adhan recording: "The Adhan - Muslim Call to Prayer - Aaqib Azeez" by Atcovi
+https://commons.wikimedia.org/wiki/File:The_Adhan_-_Muslim_Call_to_Prayer_-_Aaqib_Azeez.mp3
+Licensed under Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)
+https://creativecommons.org/licenses/by-sa/4.0/
+
+Changes made for Deen: converted to mono, a 2-second fade-out added; the iPhone
+version is the first 26 seconds. These adapted recordings (android res/raw/adhan.mp3
+and ios Runner/adhan.caf) are licensed under the same CC BY-SA 4.0 licence.
