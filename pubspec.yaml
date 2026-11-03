@@ -57,6 +57,7 @@ dependencies:
   audio_service: ^0.18.19
   home_widget: ^0.10.0
   confetti: ^0.8.0
+  rive: ^0.13.20
 
 dev_dependencies:
   flutter_test:
@@ -89,6 +90,7 @@ flutter:
     - assets/json/
     - assets/fonts/
     - assets/licenses/
+    - assets/rive/
 
   fonts:
     - family: Plus Jakarta Sans

@@ -110,6 +110,8 @@ class _DeenAppState extends State<DeenApp> with WidgetsBindingObserver {
       supportedLocales: const [Locale('en'), Locale('ar'), Locale('sw')],
       initialRoute: Routes.splash,
       initialBinding: AppBinding(),
+      defaultTransition: Transition.fadeIn,
+      transitionDuration: const Duration(milliseconds: 280),
       getPages: AppPages.pages,
     );
   }

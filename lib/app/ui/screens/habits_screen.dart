@@ -5,6 +5,7 @@ import '../../routes/app_pages.dart';
 import '../../services/habit_service.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
+import '../widgets/motion.dart';
 
 /// Opens the reader at the start of [page].
 void openPage(int page) {
@@ -39,7 +40,7 @@ class HabitsScreen extends StatelessWidget {
         final quran = QuranService.instance;
         return ListView(
           padding: const EdgeInsets.all(16),
-          children: [
+          children: staggered([
             _Section(
               title: 'readingGoal'.tr,
               children: [
@@ -231,7 +232,7 @@ class HabitsScreen extends StatelessWidget {
                     ),
               ],
             ),
-          ],
+          ]),
         );
       }),
     );

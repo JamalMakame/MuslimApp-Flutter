@@ -203,6 +203,8 @@ class DeenTranslations extends Translations {
       'licences': 'Credits & licences',
       'licencesDesc': 'Quran font, page layout and adhan recording',
       'hadithN': 'Hadith @n',
+      'readingGoalDone': 'Today\'s reading goal reached, masha\'Allah!',
+      'tasbeehLapDone': 'Round @n complete, subhanAllah!',
       'prayerNotYet': '@prayer starts at @time. You can mark it then.',
       'prayerFrom': 'From @time',
       'prayerTracker': 'Prayer tracker',
@@ -718,6 +720,8 @@ class DeenTranslations extends Translations {
       'licences': 'الحقوق والتراخيص',
       'licencesDesc': 'خط المصحف وترتيب الصفحات وتسجيل الأذان',
       'hadithN': 'الحديث @n',
+      'readingGoalDone': 'بلغت هدف القراءة اليوم، ما شاء الله!',
+      'tasbeehLapDone': 'اكتملت الجولة @n، سبحان الله!',
       'prayerNotYet': 'يدخل وقت @prayer الساعة @time، ويمكنك تسجيلها حينها.',
       'prayerFrom': 'من @time',
       'prayerTracker': 'متابعة الصلاة',
@@ -1227,6 +1231,8 @@ class DeenTranslations extends Translations {
       'licencesDesc':
           'Hati ya Qur\'ani, mpangilio wa kurasa na sauti ya adhana',
       'hadithN': 'Hadithi @n',
+      'readingGoalDone': 'Umefikia lengo la kusoma la leo, masha\'Allah!',
+      'tasbeehLapDone': 'Mzunguko wa @n umekamilika, subhanAllah!',
       'prayerNotYet':
           '@prayer inaanza saa @time. Utaweza kuiwekea alama wakati huo.',
       'prayerFrom': 'Kuanzia @time',

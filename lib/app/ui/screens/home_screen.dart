@@ -15,6 +15,7 @@ import '../../services/prayer_service.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
+import '../widgets/motion.dart';
 import 'habits_screen.dart' show openPage;
 import 'prayer_tracker_screen.dart';
 
@@ -43,7 +44,7 @@ class HomeScreen extends GetView<HomeController> {
               '${hijri.hYear}';
           return ListView(
             padding: const EdgeInsets.fromLTRB(24, 8, 24, 110),
-            children: [
+            children: staggered([
               // ---- Header -------------------------------------------------
               Row(
                 children: [
@@ -574,7 +575,7 @@ class HomeScreen extends GetView<HomeController> {
                   ),
                 ],
               ),
-            ],
+            ]),
           );
         }),
       ),
@@ -589,7 +590,7 @@ class _Card extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    final card = Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
@@ -597,6 +598,7 @@ class _Card extends StatelessWidget {
         child: Container(decoration: appCardDecoration(), child: child),
       ),
     );
+    return onTap == null ? card : Pressable(child: card);
   }
 }
 

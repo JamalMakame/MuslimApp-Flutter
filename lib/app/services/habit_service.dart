@@ -141,12 +141,14 @@ class HabitService {
   int pagesOn(DateTime d) => _log[key(d)]?.length ?? 0;
 
   /// Counts [page] as read today (once per day) and towards the Khatmah.
-  Future<void> recordPage(int page, [DateTime? now]) async {
-    if (page < 1 || page > Khatmah.pages) return;
+  /// True when this page met today's goal.
+  Future<bool> recordPage(int page, [DateTime? now]) async {
+    if (page < 1 || page > Khatmah.pages) return false;
     final today = now ?? DateTime.now();
     final log = _log;
     final day = log.putIfAbsent(key(today), () => <int>{});
     var changed = day.add(page);
+    final metGoal = changed && goal > 0 && day.length == goal;
     if (changed) {
       final oldest = _date(today).subtract(const Duration(days: 400));
       log.removeWhere((k, _) => parse(k).isBefore(oldest));
@@ -160,6 +162,7 @@ class HabitService {
       changed = true;
     }
     if (changed) _bump();
+    return metGoal;
   }
 
   int get goal => _s.readInt(StorageService.kReadGoal);
