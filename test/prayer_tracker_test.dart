@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart' show SemanticsAction;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:fquran_app/app/i18n/app_translations.dart';
@@ -11,6 +12,7 @@ import 'package:fquran_app/app/services/storage_service.dart';
 import 'package:fquran_app/app/ui/screens/prayer_tracker_screen.dart';
 import 'package:get/get.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -205,6 +207,17 @@ void main() {
     await t.scrollUntilVisible(old, 200, scrollable: page);
     await t.ensureVisible(old);
     await t.pumpAndSettle();
+    final handle = t.ensureSemantics();
+    final yesterday = DateTime(now.year, now.month, now.day - 1);
+    final node = t.getSemantics(
+      find.bySemanticsLabel(
+        RegExp('^${DateFormat('d MMM', 'en').format(yesterday)}:'),
+      ),
+    );
+    expect(node.getSemanticsData().hasAction(SemanticsAction.tap), isTrue);
+    expect(node.label, endsWith(': 3/5'));
+    handle.dispose();
+
     await t.tap(old);
     await t.pumpAndSettle();
     await t.scrollUntilVisible(

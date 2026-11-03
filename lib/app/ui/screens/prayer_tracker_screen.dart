@@ -542,11 +542,13 @@ class _History extends StatelessWidget {
             builder: (_) {
               final d = DateTime(today.year, today.month, today.day - i);
               final n = log.prayedOn(d).length;
-              final label = '${DateFormat('d MMM').format(d)}: $n/5';
+              final label =
+                  '${DateFormat('d MMM', Get.locale?.languageCode ?? 'en').format(d)}: $n/5';
               return Semantics(
                 button: true,
                 selected: i == selected,
                 label: label,
+                onTap: () => onSelect(i),
                 excludeSemantics: true,
                 child: Tooltip(
                   message: label,
