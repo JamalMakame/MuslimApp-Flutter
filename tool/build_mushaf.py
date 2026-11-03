@@ -13,7 +13,8 @@ starting and ending on its official line.
 
 It also sets the "page" of every ayah in assets/json/quran_ar_uthmani.json to
 the page the Complex gives, so page numbers agree everywhere in the app (the
-older bundled data placed 56 ayahs on a neighbouring page).
+older bundled data placed 56 ayahs on a neighbouring page), and each surah's
+page range in assets/json/surahs.json to match.
 
 Output: a list of 604 pages; each page is a list of [line, kind, value]:
 kind 0 = text (string), 1 = surah header (surah number), 2 = basmala (its
@@ -154,5 +155,18 @@ for i, line in enumerate(text):
         moved += 1
 open(app, 'w', encoding='utf-8').write('\n'.join(text))
 print(f'{moved} ayahs moved to their KFGQPC page in {app}')
+surahs = 'assets/json/surahs.json'
+span = {}
+for a in ayahs:
+    lo, hi = span.get(a['sura_no'], (a['page'], a['page']))
+    span[a['sura_no']] = (min(lo, a['page']), max(hi, a['page']))
+meta = open(surahs, encoding='utf-8').read()
+meta, n = re.subn(
+    r'(\{"number": (\d+),[^{}]*?"pages": )\[\d+, \d+\]',
+    lambda m: f'{m[1]}[{span[int(m[2])][0]}, {span[int(m[2])][1]}]',
+    meta,
+)
+assert n == 114
+open(surahs, 'w', encoding='utf-8').write(meta)
 shared = sum(1 for p in pages for l in p if l[1] == 3)
 print(f'wrote {out}: {sum(len(p) for p in pages)} lines on {len(pages)} pages, {shared} shared header lines')

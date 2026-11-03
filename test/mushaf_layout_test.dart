@@ -70,6 +70,25 @@ void main() {
     }
   });
 
+  test('each surah\'s page range matches the pages of its ayahs', () {
+    final quran = QuranService.instance;
+    for (var n = 1; n <= 114; n++) {
+      final surah = quran.surah(n);
+      expect(quran.ayahAt(n, 1)!.page, surah.pageStart, reason: 'surah $n');
+      expect(
+        quran.ayahAt(n, surah.ayahs)!.page,
+        surah.pageEnd,
+        reason: 'surah $n',
+      );
+    }
+  });
+
+  test('a last-read page saved before the page fix follows the ayah', () async {
+    final quran = QuranService.instance;
+    await quran.saveLastRead(5, 77, 121);
+    expect(quran.lastRead, (5, 77, 120));
+  });
+
   test('page 2 opens Al-Baqarah with header, basmala, then 2:1 on line 3', () {
     final page = layout.page(2);
     expect(page[0].kind, MushafLineKind.surah);
