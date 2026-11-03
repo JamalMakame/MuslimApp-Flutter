@@ -15,6 +15,7 @@ import '../../services/quran_service.dart';
 import '../../services/storage_service.dart';
 import '../../theme/app_theme.dart';
 import '../widgets/floating_nav_pill.dart';
+import '../widgets/motion.dart';
 
 /// Settings — all local. Sections: Prayer / Appearance / Quran & Audio /
 /// Data & Privacy, per the Stitch mockup.
@@ -389,6 +390,59 @@ class SettingsScreen extends GetView<SettingsController> {
                   ),
                 ),
               ],
+            ),
+            const SizedBox(height: 20),
+
+            // Dedication
+            GestureDetector(
+              onTap: () => Get.toNamed(Routes.dedication),
+              child: Pressable(
+                child: Container(
+                  key: const ValueKey('settings-dedication'),
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(16),
+                    gradient: const LinearGradient(
+                      colors: [AppColors.brand, AppColors.brandDeep],
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.favorite_rounded,
+                        color: AppColors.gold,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'dedication'.tr,
+                              style: AppTheme.headline(
+                                14,
+                                color: AppColors.onBrand,
+                              ),
+                            ),
+                            Text(
+                              'dedicationDesc'.tr,
+                              style: AppTheme.body(
+                                12,
+                                color: AppColors.onBrand,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const Icon(
+                        Icons.chevron_right_rounded,
+                        color: AppColors.gold,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
             const SizedBox(height: 20),
 

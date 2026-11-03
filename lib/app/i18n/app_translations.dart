@@ -200,6 +200,21 @@ class DeenTranslations extends Translations {
       'adhanSound': 'Adhan sound',
       'adhanSoundDesc':
           'Play the adhan at each prayer time instead of the normal tone (iPhone plays the first 26 seconds).',
+      'dedication': 'Dedication',
+      'dedicationDesc': 'To my parents and my wife',
+      'dedicationIntro':
+          'I, Jamal Makame, made Deen, and I dedicate it to my parents.',
+      'dedicationFather': 'My father',
+      'dedicationMothers': 'My mothers',
+      'dedicationThawab':
+          'May the reward of every benefit anyone draws from this app reach them.',
+      'dedicationWife': 'A special dedication to my wife',
+      'dedicationThanks':
+          'And to everyone who has lent a hand in my life: thank you.',
+      'dedicationVerse':
+          '"My Lord, have mercy upon them as they brought me up when I was small."',
+      'dedicationVerseRef': 'Al-Isra 17:24',
+      'dedicationRole': 'Developer of Deen',
       'licences': 'Credits & licences',
       'licencesDesc': 'Quran font, page layout and adhan recording',
       'hadithN': 'Hadith @n',
@@ -717,6 +732,19 @@ class DeenTranslations extends Translations {
       'adhanSound': 'صوت الأذان',
       'adhanSoundDesc':
           'تشغيل الأذان عند كل صلاة بدل النغمة العادية (يشغّل الآيفون أول ٢٦ ثانية).',
+      'dedication': 'إهداء',
+      'dedicationDesc': 'إلى والديّ وزوجتي',
+      'dedicationIntro':
+          'أنا Jamal Makame، صنعتُ تطبيق Deen، وأهديه إلى والديّ.',
+      'dedicationFather': 'والدي',
+      'dedicationMothers': 'أمهاتي',
+      'dedicationThawab':
+          'أسأل الله أن يبلّغهم ثواب كل نفعٍ ينتفع به أيُّ مستخدمٍ لهذا التطبيق.',
+      'dedicationWife': 'وإهداء خاص إلى زوجتي',
+      'dedicationThanks': 'وإلى كل من مدّ لي يد العون في حياتي: شكرًا لكم.',
+      'dedicationVerse': '',
+      'dedicationVerseRef': 'الإسراء ١٧:٢٤',
+      'dedicationRole': 'مطوّر تطبيق Deen',
       'licences': 'الحقوق والتراخيص',
       'licencesDesc': 'خط المصحف وترتيب الصفحات وتسجيل الأذان',
       'hadithN': 'الحديث @n',
@@ -1227,6 +1255,21 @@ class DeenTranslations extends Translations {
       'adhanSound': 'Sauti ya adhana',
       'adhanSoundDesc':
           'Cheza adhana kila wakati wa sala badala ya mlio wa kawaida (iPhone hucheza sekunde 26 za kwanza).',
+      'dedication': 'Tabaruku',
+      'dedicationDesc': 'Kwa wazazi wangu na mke wangu',
+      'dedicationIntro':
+          'Mimi, Jamal Makame, nimetengeneza Deen, na ninaitabaruku kwa wazazi wangu.',
+      'dedicationFather': 'Baba yangu',
+      'dedicationMothers': 'Mama zangu',
+      'dedicationThawab':
+          'Kila atakayenufaika na programu hii, Mwenyezi Mungu awafikishie wao thawabu zake.',
+      'dedicationWife': 'Tabaruku maalumu kwa mke wangu',
+      'dedicationThanks':
+          'Na kwa kila aliyenishika mkono maishani mwangu: asanteni.',
+      'dedicationVerse':
+          '"Mola wangu Mlezi! Warehemu kama walivyonilea utotoni."',
+      'dedicationVerseRef': 'Al-Israa 17:24',
+      'dedicationRole': 'Msanidi wa Deen',
       'licences': 'Shukrani na leseni',
       'licencesDesc':
           'Hati ya Qur\'ani, mpangilio wa kurasa na sauti ya adhana',
