@@ -41,6 +41,7 @@ class SettingsController extends GetxController {
   final prayerOffsets = <String, int>{}.obs;
   final prayerLeads = <String, int>{}.obs;
   final azkarReminders = false.obs;
+  final adhanSound = false.obs;
   final showTranslations = true.obs;
   final azkarTranslit = false.obs;
   final ayahAudio = false.obs;
@@ -75,6 +76,7 @@ class SettingsController extends GetxController {
     prayerOffsets.assignAll(_s.readIntMap(StorageService.kPrayerOffsets));
     prayerLeads.assignAll(_s.readIntMap(StorageService.kPrayerLeads));
     azkarReminders.value = _s.readBool(StorageService.kAzkarReminders, false);
+    adhanSound.value = _s.readBool(StorageService.kAdhanSound, false);
     showTranslations.value = _s.readBool(
       StorageService.kShowTranslations,
       true,
@@ -127,6 +129,8 @@ class SettingsController extends GetxController {
       _persist(highLatRule, v, StorageService.kHighLatRule);
   Future<void> setAzkarReminders(bool v) =>
       _persist(azkarReminders, v, StorageService.kAzkarReminders);
+  Future<void> setAdhanSound(bool v) =>
+      _persist(adhanSound, v, StorageService.kAdhanSound);
 
   /// Minutes added to [prayer]'s computed time (-30..30).
   Future<void> setPrayerOffset(String prayer, int minutes) async {

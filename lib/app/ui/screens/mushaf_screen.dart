@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../data/models.dart';
 import '../../routes/app_pages.dart';
 import '../../services/habit_service.dart';
+import '../../services/mushaf_layout.dart';
 import '../../services/quran_service.dart';
 import '../../theme/app_theme.dart';
 
@@ -25,11 +26,17 @@ class _MushafScreenState extends State<MushafScreen> {
   final _quran = QuranService.instance;
   late int _page = widget.initialPage.clamp(1, QuranService.pageCount);
   late final _controller = PageController(initialPage: _page - 1);
+  MushafLayout? _layout = MushafLayout.loaded;
 
   @override
   void initState() {
     super.initState();
     _save();
+    if (_layout == null) {
+      MushafLayout.load().then((l) {
+        if (mounted) setState(() => _layout = l);
+      }, onError: (Object e) => debugPrint('Mushaf layout not loaded: $e'));
+    }
   }
 
   @override
@@ -120,6 +127,7 @@ class _MushafScreenState extends State<MushafScreen> {
                   onPageChanged: _changed,
                   itemBuilder: (_, i) => _MushafPage(
                     page: i + 1,
+                    layout: _layout,
                     finished: _finished,
                     onFinish: _finish,
                   ),
@@ -143,15 +151,41 @@ class _MushafScreenState extends State<MushafScreen> {
 class _MushafPage extends StatelessWidget {
   const _MushafPage({
     required this.page,
+    required this.layout,
     required this.finished,
     required this.onFinish,
   });
   final int page;
+  final MushafLayout? layout;
   final bool finished;
   final VoidCallback onFinish;
 
+  Widget get _done => FilledButton.icon(
+    key: const ValueKey('mushaf-finish'),
+    onPressed: finished ? null : onFinish,
+    icon: Icon(finished ? Icons.check_circle : Icons.check),
+    label: Text('done'.tr),
+  );
+
   @override
   Widget build(BuildContext context) {
+    final layout = this.layout;
+    if (layout != null) {
+      return Column(
+        children: [
+          Expanded(
+            child: _PrintedPage(page: page, lines: layout.page(page)),
+          ),
+          if (page == QuranService.pageCount)
+            Padding(padding: const EdgeInsets.only(top: 8), child: _done),
+        ],
+      );
+    }
+    return _flowing();
+  }
+
+  /// Plain flowing text, shown only if the bundled layout can't be read.
+  Widget _flowing() {
     final quran = QuranService.instance;
     final groups = <(int, List<Ayah>)>[];
     for (final (s, a) in quran.ayahsOnPage(page)) {
@@ -199,16 +233,176 @@ class _MushafPage extends StatelessWidget {
         if (page == QuranService.pageCount)
           Padding(
             padding: const EdgeInsets.only(top: 16),
-            child: Center(
-              child: FilledButton.icon(
-                key: const ValueKey('mushaf-finish'),
-                onPressed: finished ? null : onFinish,
-                icon: Icon(finished ? Icons.check_circle : Icons.check),
-                label: Text('done'.tr),
-              ),
-            ),
+            child: Center(child: _done),
           ),
       ],
     );
   }
+}
+
+/// One page laid out as the printed Madinah mushaf: 15 lines of equal
+/// height (8, centred, on pages 1 and 2), each stretched to the full width
+/// like the printed line, inside a framed page.
+class _PrintedPage extends StatelessWidget {
+  const _PrintedPage({required this.page, required this.lines});
+  final int page;
+  final List<MushafLine> lines;
+
+  @override
+  Widget build(BuildContext context) {
+    final opening = page <= 2;
+    final byLine = {for (final l in lines) l.line: l};
+    return Container(
+      key: ValueKey('mushaf-printed-$page'),
+      margin: const EdgeInsets.fromLTRB(10, 4, 10, 4),
+      padding: const EdgeInsets.all(3),
+      decoration: BoxDecoration(
+        border: Border.all(color: AppColors.goldInk, width: 1.4),
+        borderRadius: BorderRadius.circular(6),
+      ),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+        decoration: BoxDecoration(
+          color: AppColors.surface,
+          border: Border.all(color: AppColors.goldInk.withValues(alpha: 0.5)),
+          borderRadius: BorderRadius.circular(4),
+        ),
+        child: LayoutBuilder(
+          builder: (_, box) {
+            final slot = box.maxHeight / 15;
+            final width = opening ? box.maxWidth * 0.78 : box.maxWidth;
+            return Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                for (var i = 1; i <= MushafLayout.linesOn(page); i++)
+                  SizedBox(
+                    key: ValueKey('mushaf-line-$page-$i'),
+                    height: slot,
+                    width: width,
+                    child: switch (byLine[i]) {
+                      null => const SizedBox.shrink(),
+                      final l => _PrintedLine(
+                        line: l,
+                        height: slot,
+                        justify: !opening,
+                      ),
+                    },
+                  ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class _PrintedLine extends StatelessWidget {
+  const _PrintedLine({
+    required this.line,
+    required this.height,
+    required this.justify,
+  });
+  final MushafLine line;
+  final double height;
+  final bool justify;
+
+  static TextStyle _style(double size, {String? font, Color? color}) =>
+      TextStyle(
+        fontFamily: font ?? AppFonts.mushaf,
+        fontSize: size,
+        color: color ?? AppColors.ink,
+        height: 1.0,
+      );
+
+  /// The largest font size up to 60% of the slot whose line box still fits.
+  static double _fit(double height, String font) {
+    final probe = TextPainter(
+      text: TextSpan(
+        text: 'بِسۡمِ',
+        style: _style(100, font: font),
+      ),
+      textDirection: TextDirection.rtl,
+      textScaler: TextScaler.noScaling,
+    )..layout();
+    final size = (100 * height * 0.92 / probe.height).clamp(6.0, height * 0.6);
+    probe.dispose();
+    return size;
+  }
+
+  Widget _centred(String text, TextStyle style) => Center(
+    child: FittedBox(
+      fit: BoxFit.scaleDown,
+      child: Text(
+        text,
+        textDirection: TextDirection.rtl,
+        textScaler: TextScaler.noScaling,
+        maxLines: 1,
+        softWrap: false,
+        style: style,
+      ),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {
+    switch (line.kind) {
+      case MushafLineKind.surahWithBasmala:
+        return Column(
+          children: [
+            SizedBox(height: height * 0.6, child: _header(height * 0.6)),
+            Expanded(
+              child: _centred(
+                line.text,
+                _style(_fit(height * 0.4, AppFonts.mushaf)),
+              ),
+            ),
+          ],
+        );
+      case MushafLineKind.surah:
+        return _header(height);
+      case MushafLineKind.basmala:
+        return _centred(line.text, _style(_fit(height, AppFonts.mushaf)));
+      case MushafLineKind.text:
+        return _text();
+    }
+  }
+
+  Widget _header(double height) {
+    final name = QuranService.instance.surah(line.surah).nameArabic;
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: height * 0.08),
+      decoration: BoxDecoration(
+        color: AppColors.emeraldTint,
+        borderRadius: BorderRadius.circular(height),
+        border: Border.all(color: AppColors.goldInk, width: 1.2),
+      ),
+      child: _centred(
+        'سُورَةُ $name',
+        _style(
+          _fit(height * 0.84, AppFonts.quran),
+          font: AppFonts.quran,
+          color: AppColors.emeraldDeep,
+        ),
+      ),
+    );
+  }
+
+  Widget _text() => LayoutBuilder(
+    builder: (_, box) {
+      final style = _style(_fit(height, AppFonts.mushaf));
+      final painter = TextPainter(
+        text: TextSpan(text: line.text, style: style),
+        textDirection: TextDirection.rtl,
+        textScaler: TextScaler.noScaling,
+        maxLines: 1,
+      )..layout();
+      final natural = painter.width;
+      painter.dispose();
+      final gaps = ' '.allMatches(line.text).length;
+      final spare = box.maxWidth - natural;
+      final spacing = justify && gaps > 0 && spare > 0 ? spare / gaps : 0.0;
+      return _centred(line.text, style.copyWith(wordSpacing: spacing));
+    },
+  );
 }

@@ -372,11 +372,10 @@ class QuranService {
   (int surah, int ayah, int page)? get lastRead {
     final s = _s.readInt(StorageService.kLastReadSurah);
     if (s == 0) return null;
-    return (
-      s,
-      _s.readInt(StorageService.kLastReadAyah),
-      _s.readInt(StorageService.kLastReadPage),
-    );
+    final a = _s.readInt(StorageService.kLastReadAyah);
+    final saved = _s.readInt(StorageService.kLastReadPage);
+    // Page numbers of a few ayahs changed in an update: trust the ayah.
+    return (s, a, ayahAt(s, a)?.page ?? saved);
   }
 
   /// [lastRead], kept current so Home and the index follow the reader.

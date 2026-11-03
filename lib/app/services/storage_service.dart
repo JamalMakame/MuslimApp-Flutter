@@ -25,6 +25,7 @@ class StorageService {
   static const kPrayerOffsets = 'prayer_offsets'; // {prayer: minutes}
   static const kPrayerLeads = 'prayer_leads'; // {prayer: min before, -1 off}
   static const kAzkarReminders = 'azkar_reminders';
+  static const kAdhanSound = 'adhan_sound';
   static const kShowTranslations = 'show_translations';
   static const kAyahAudio = 'ayah_audio';
   static const kTranslationLang = 'translation_lang'; // 'en' | 'sw' | 'ar'

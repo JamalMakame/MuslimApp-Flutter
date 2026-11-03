@@ -31,6 +31,7 @@ abstract class AppFonts {
   static const headline = 'Plus Jakarta Sans';
   static const body = 'Manrope';
   static const quran = 'Amiri';
+  static const mushaf = 'KFGQPC Hafs';
 }
 
 abstract class AppTheme {

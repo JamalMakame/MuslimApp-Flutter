@@ -197,7 +197,7 @@ Diyanet, Tehran, Moonsighting Committee), a high-latitude rule, per-prayer
 ± minutes, per-prayer reminders (off, at the time, or 5–30 min before),
 morning/evening azkar reminders 20 min after Fajr/Asr, a shareable
 monthly timetable, and a "you've moved" prompt (> 30 km, GPS only).
-Still open: P3 adhan sound, P6 widget.
+Since then: optional adhan sound (P3) and the Android widget (P6).
 
 **Limits before phase 4.** No high-latitude rule, no per-prayer minute adjustments,
 fewer methods than users expect (Tehran, Gulf, Kuwait, Qatar, Singapore,

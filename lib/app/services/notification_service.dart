@@ -45,6 +45,40 @@ class NotificationService {
   static const days = 7;
   static const _channelId = 'prayer_times';
   static const _channelName = 'Prayer Times';
+  static const adhanChannelId = 'prayer_adhan';
+  static const _adhanChannelName = 'Adhan';
+
+  /// Bundled recording: `res/raw/adhan.mp3` (full) and `Runner/adhan.caf`
+  /// (first 26 s; iOS plays at most 30 s of a notification sound).
+  static const adhanSoundIos = 'adhan.caf';
+  static const adhanSoundAndroid = 'adhan';
+
+  /// The adhan plays only at a prayer's own time, not for early, azkar or
+  /// reading reminders.
+  static bool usesAdhan(PrayerReminder r, {required bool adhan}) =>
+      adhan && r.lead == 0 && _prayers.contains(r.key);
+
+  static NotificationDetails details(PrayerReminder r, {required bool adhan}) {
+    final withAdhan = usesAdhan(r, adhan: adhan);
+    return NotificationDetails(
+      iOS: DarwinNotificationDetails(
+        presentSound: true,
+        sound: withAdhan ? adhanSoundIos : null,
+      ),
+      android: AndroidNotificationDetails(
+        withAdhan ? adhanChannelId : _channelId,
+        withAdhan ? _adhanChannelName : _channelName,
+        importance: Importance.high,
+        priority: Priority.high,
+        category: AndroidNotificationCategory.reminder,
+        color: const Color(0xFF0E6B5C),
+        sound: withAdhan
+            ? const RawResourceAndroidNotificationSound(adhanSoundAndroid)
+            : null,
+      ),
+    );
+  }
+
   static const _prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
   Future<void> init() async {
@@ -151,6 +185,7 @@ class NotificationService {
     required List<PrayerReminder> reminders,
     required String Function(PrayerReminder r) title,
     required String Function(PrayerReminder r) body,
+    bool adhan = false,
   }) => _serial(() async {
     if (signature == _scheduledFor) return;
     await init();
@@ -166,17 +201,7 @@ class NotificationService {
         title(r),
         body(r),
         tz.TZDateTime.from(r.time, tz.UTC),
-        const NotificationDetails(
-          iOS: DarwinNotificationDetails(presentSound: true),
-          android: AndroidNotificationDetails(
-            _channelId,
-            _channelName,
-            importance: Importance.high,
-            priority: Priority.high,
-            category: AndroidNotificationCategory.reminder,
-            color: Color(0xFF0E6B5C),
-          ),
-        ),
+        details(r, adhan: adhan),
         uiLocalNotificationDateInterpretation:
             UILocalNotificationDateInterpretation.absoluteTime,
         androidScheduleMode: exact

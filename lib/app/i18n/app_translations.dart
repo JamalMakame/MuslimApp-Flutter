@@ -197,6 +197,11 @@ class DeenTranslations extends Translations {
       'shareReport': 'Share',
       'clearReports': 'Clear',
       'problemReportsCount': '@n saved',
+      'adhanSound': 'Adhan sound',
+      'adhanSoundDesc':
+          'Play the adhan at each prayer time instead of the normal tone (iPhone plays the first 26 seconds).',
+      'licences': 'Credits & licences',
+      'licencesDesc': 'Quran font, page layout and adhan recording',
       'hadithN': 'Hadith @n',
       'offlineTafsir': 'Offline tafsir',
       'offlineTafsirDesc': '@n / 114 surahs saved',
@@ -655,6 +660,11 @@ class DeenTranslations extends Translations {
       'shareReport': 'مشاركة',
       'clearReports': 'مسح',
       'problemReportsCount': '@n محفوظة',
+      'adhanSound': 'صوت الأذان',
+      'adhanSoundDesc':
+          'تشغيل الأذان عند كل صلاة بدل النغمة العادية (يشغّل الآيفون أول ٢٦ ثانية).',
+      'licences': 'الحقوق والتراخيص',
+      'licencesDesc': 'خط المصحف وترتيب الصفحات وتسجيل الأذان',
       'hadithN': 'الحديث @n',
       'offlineTafsir': 'التفسير دون اتصال',
       'offlineTafsirDesc': '@n / 114 سورة محفوظة',
@@ -1113,6 +1123,12 @@ class DeenTranslations extends Translations {
       'shareReport': 'Shiriki',
       'clearReports': 'Futa',
       'problemReportsCount': '@n zimehifadhiwa',
+      'adhanSound': 'Sauti ya adhana',
+      'adhanSoundDesc':
+          'Cheza adhana kila wakati wa sala badala ya mlio wa kawaida (iPhone hucheza sekunde 26 za kwanza).',
+      'licences': 'Shukrani na leseni',
+      'licencesDesc':
+          'Hati ya Qur\'ani, mpangilio wa kurasa na sauti ya adhana',
       'hadithN': 'Hadithi @n',
       'offlineTafsir': 'Tafsiri bila mtandao',
       'offlineTafsirDesc': 'Sura @n / 114 zimehifadhiwa',
