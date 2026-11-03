@@ -24,6 +24,19 @@ class PrayerReminderController extends GetxController
   void onInit() {
     super.onInit();
     WidgetsBinding.instance.addObserver(this);
+    PrayerLogService.startTimes = (day) => !settings.hasLocation
+        ? const {}
+        : {
+            for (final s in _prayers.slotsOn(
+              day,
+              lat: settings.latitude.value ?? 0,
+              lng: settings.longitude.value ?? 0,
+              method: settings.calcMethod.value,
+              madhab: settings.madhab.value,
+              tuning: settings.tuning,
+            ))
+              s.key: s.time,
+          };
     everAll([
       settings.latitude,
       settings.longitude,

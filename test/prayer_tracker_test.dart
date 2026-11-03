@@ -69,6 +69,70 @@ void main() {
     expect(log.prayedOn(now), {'fajr', 'dhuhr', 'maghrib', 'isha'});
   });
 
+  test(
+    'today\'s prayers open at their time; past days are always open',
+    () async {
+      final now = DateTime(2026, 11, 2, 13);
+      PrayerLogService.startTimes = (d) => {
+        'fajr': DateTime(d.year, d.month, d.day, 5),
+        'dhuhr': DateTime(d.year, d.month, d.day, 12, 30),
+        'asr': DateTime(d.year, d.month, d.day, 15, 45),
+        'maghrib': DateTime(d.year, d.month, d.day, 18, 30),
+        'isha': DateTime(d.year, d.month, d.day, 19, 45),
+      };
+      addTearDown(() => PrayerLogService.startTimes = null);
+      expect(log.isOpen(now, 'dhuhr', now), isTrue);
+      expect(log.isOpen(now, 'asr', now), isFalse);
+      expect(await log.toggle(now, 'asr', now), isFalse);
+      expect(log.prayedOn(now), isEmpty);
+      expect(await log.toggle(now, 'dhuhr', now), isFalse);
+      expect(log.prayedOn(now), {'dhuhr'});
+      final yesterday = DateTime(2026, 11, 1);
+      expect(log.isOpen(yesterday, 'isha', now), isTrue);
+      await mark(yesterday, all, now);
+      expect(log.isComplete(yesterday), isTrue);
+      final later = DateTime(2026, 11, 2, 16);
+      expect(await log.toggle(now, 'asr', later), isFalse);
+      expect(log.prayedOn(now), {'dhuhr', 'asr'});
+    },
+  );
+
+  testWidgets('a prayer whose time hasn\'t come is locked and says when', (
+    t,
+  ) async {
+    t.view.physicalSize = const Size(1080, 2400);
+    t.view.devicePixelRatio = 2.5;
+    addTearDown(t.view.reset);
+    final now = DateTime.now();
+    final soon = now.add(const Duration(hours: 2));
+    PrayerLogService.startTimes = (d) => {
+      for (final p in all) p: p == 'isha' ? soon : now,
+    };
+    addTearDown(() => PrayerLogService.startTimes = null);
+    await t.pumpWidget(
+      GetMaterialApp(
+        translations: DeenTranslations(),
+        locale: const Locale('en'),
+        home: const PrayerTrackerScreen(),
+      ),
+    );
+    await t.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byKey(const ValueKey('track-isha')),
+        matching: find.byType(PrayerLocked),
+      ),
+      findsOneWidget,
+    );
+    await t.tap(find.byKey(const ValueKey('track-isha')));
+    await t.pump();
+    expect(find.byKey(const ValueKey('prayer-not-yet')), findsOneWidget);
+    expect(log.prayedOn(now), isEmpty);
+    await t.tap(find.byKey(const ValueKey('track-fajr')));
+    await t.pumpAndSettle();
+    expect(log.prayedOn(now), {'fajr'});
+  });
+
   test('streaks count full days, and today only once complete', () async {
     final now = DateTime(2026, 11, 10, 9);
     for (final d in [1, 2, 3, 6, 7, 8, 9]) {

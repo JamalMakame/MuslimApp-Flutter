@@ -205,6 +205,8 @@ class DeenTranslations extends Translations {
       'hadithN': 'Hadith @n',
       'readingGoalDone': 'Today\'s reading goal reached, masha\'Allah!',
       'tasbeehLapDone': 'Round @n complete, subhanAllah!',
+      'prayerNotYet': '@prayer starts at @time. You can mark it then.',
+      'prayerFrom': 'From @time',
       'prayerTracker': 'Prayer tracker',
       'prayerTrackerDesc':
           'Mark your five daily prayers and see how you\'re doing',
@@ -720,6 +722,8 @@ class DeenTranslations extends Translations {
       'hadithN': 'الحديث @n',
       'readingGoalDone': 'بلغت هدف القراءة اليوم، ما شاء الله!',
       'tasbeehLapDone': 'اكتملت الجولة @n، سبحان الله!',
+      'prayerNotYet': 'يدخل وقت @prayer الساعة @time، ويمكنك تسجيلها حينها.',
+      'prayerFrom': 'من @time',
       'prayerTracker': 'متابعة الصلاة',
       'prayerTrackerDesc': 'سجّل صلواتك الخمس وتابع التزامك',
       'didYouPrayToday': 'هل صليت اليوم؟',
@@ -1229,6 +1233,9 @@ class DeenTranslations extends Translations {
       'hadithN': 'Hadithi @n',
       'readingGoalDone': 'Umefikia lengo la kusoma la leo, masha\'Allah!',
       'tasbeehLapDone': 'Mzunguko wa @n umekamilika, subhanAllah!',
+      'prayerNotYet':
+          '@prayer inaanza saa @time. Utaweza kuiwekea alama wakati huo.',
+      'prayerFrom': 'Kuanzia @time',
       'prayerTracker': 'Kufuatilia sala',
       'prayerTrackerDesc':
           'Weka alama kwa sala tano za kila siku na uone unavyoendelea',
