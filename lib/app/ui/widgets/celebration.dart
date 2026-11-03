@@ -10,13 +10,14 @@ import 'motion.dart';
 
 /// A burst of confetti over the whole screen with [message] in a banner,
 /// gone after a few seconds. Plays `assets/rive/celebration.riv` instead of
-/// the confetti when it is bundled. Does nothing without an overlay.
-void celebrate(BuildContext? context, String message) {
+/// the confetti when it is bundled, with a [haptic] tap. Does nothing
+/// without an overlay.
+void celebrate(BuildContext? context, String message, {bool haptic = true}) {
   final overlay = context == null
       ? null
       : Overlay.maybeOf(context, rootOverlay: true);
   if (overlay == null) return;
-  HapticFeedback.mediumImpact();
+  if (haptic) HapticFeedback.mediumImpact();
   late final OverlayEntry entry;
   entry = OverlayEntry(
     builder: (_) => _Celebration(message: message, onDone: entry.remove),
@@ -25,8 +26,8 @@ void celebrate(BuildContext? context, String message) {
 }
 
 /// [celebrate] with [message] when [reached] is true.
-void celebrateIf(bool reached, String message) {
-  if (reached) celebrate(Get.overlayContext, message);
+void celebrateIf(bool reached, String message, {bool haptic = true}) {
+  if (reached) celebrate(Get.overlayContext, message, haptic: haptic);
 }
 
 class _Celebration extends StatefulWidget {

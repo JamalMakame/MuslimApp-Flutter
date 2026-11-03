@@ -106,7 +106,12 @@ class TasbeehController extends GetxController {
     if (count.value >= target.value) {
       count.value = 0;
       lap.value++;
-      celebrateIf(true, 'tasbeehLapDone'.trParams({'n': '${lap.value - 1}'}));
+      // The tap above already gave the round's haptic when haptics are on.
+      celebrateIf(
+        true,
+        'tasbeehLapDone'.trParams({'n': '${lap.value - 1}'}),
+        haptic: false,
+      );
     }
     await _persist();
   }
