@@ -14,6 +14,12 @@ A beautiful **Flutter Islamic App** that helps you stay connected with your fait
 
 ---
 
+## 📥 Download for Android
+
+**[Download the latest Deen APK](https://github.com/JamalMakame/MuslimApp-Flutter/releases/latest)**: open the link on your phone, download `Deen-x.y.z.apk`, open it, and allow installing unknown apps if Android asks. Needs Android 7.0 or newer.
+
+---
+
 ## 📱 Screenshots
 
 <p align="center">
