@@ -185,7 +185,7 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                       key: ValueKey('track-$p'),
                       prayer: p,
                       prayed: prayed.contains(p),
-                      opensAt: log.isOpen(day, p, now)
+                      opensAt: prayed.contains(p) || log.isOpen(day, p, now)
                           ? null
                           : log.startOf(day, p),
                       onTap: () => togglePrayer(context, day, p),
