@@ -49,6 +49,10 @@ class PrayerLogService {
 
   static const prayers = ['fajr', 'dhuhr', 'asr', 'maghrib', 'isha'];
 
+  /// When each prayer's time starts on a day, from the user's location and
+  /// method; set by the app. Without it every prayer of today is open.
+  static Map<String, DateTime> Function(DateTime day)? startTimes;
+
   final _s = StorageService.instance;
 
   /// Bumped on every change so `Obx` widgets rebuild.
@@ -77,11 +81,30 @@ class PrayerLogService {
     return keys.isEmpty ? null : HabitService.parse(keys.first);
   }
 
-  /// Marks [prayer] on [day] as prayed, or unmarks it. Future days are
-  /// refused. Returns true when this completed all five for that day.
+  /// When [prayer] starts on [day], when known.
+  DateTime? startOf(DateTime day, String prayer) =>
+      startTimes?.call(_date(day))[prayer];
+
+  /// Whether [prayer] on [day] can be marked: any past day, and today once
+  /// its time has started.
+  bool isOpen(DateTime day, String prayer, [DateTime? now]) {
+    final at = now ?? DateTime.now();
+    final d = _date(day), today = _date(at);
+    if (d.isAfter(today)) return false;
+    if (d.isBefore(today)) return true;
+    final start = startOf(day, prayer);
+    return start == null || !at.isBefore(start);
+  }
+
+  /// Marks [prayer] on [day] as prayed, or unmarks it. Future days and
+  /// prayers whose time hasn't started are refused (unmarking always
+  /// works). Returns true when this completed all five for that day.
   Future<bool> toggle(DateTime day, String prayer, [DateTime? now]) async {
     final today = _date(now ?? DateTime.now());
     if (!prayers.contains(prayer) || _date(day).isAfter(today)) return false;
+    if (!prayedOn(day).contains(prayer) && !isOpen(day, prayer, now)) {
+      return false;
+    }
     final log = _log;
     final set = log.putIfAbsent(HabitService.key(day), () => <String>{});
     if (!set.remove(prayer)) set.add(prayer);

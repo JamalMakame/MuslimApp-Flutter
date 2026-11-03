@@ -203,6 +203,8 @@ class DeenTranslations extends Translations {
       'licences': 'Credits & licences',
       'licencesDesc': 'Quran font, page layout and adhan recording',
       'hadithN': 'Hadith @n',
+      'prayerNotYet': '@prayer starts at @time. You can mark it then.',
+      'prayerFrom': 'From @time',
       'prayerTracker': 'Prayer tracker',
       'prayerTrackerDesc':
           'Mark your five daily prayers and see how you\'re doing',
@@ -716,6 +718,8 @@ class DeenTranslations extends Translations {
       'licences': 'الحقوق والتراخيص',
       'licencesDesc': 'خط المصحف وترتيب الصفحات وتسجيل الأذان',
       'hadithN': 'الحديث @n',
+      'prayerNotYet': 'يدخل وقت @prayer الساعة @time، ويمكنك تسجيلها حينها.',
+      'prayerFrom': 'من @time',
       'prayerTracker': 'متابعة الصلاة',
       'prayerTrackerDesc': 'سجّل صلواتك الخمس وتابع التزامك',
       'didYouPrayToday': 'هل صليت اليوم؟',
@@ -1223,6 +1227,9 @@ class DeenTranslations extends Translations {
       'licencesDesc':
           'Hati ya Qur\'ani, mpangilio wa kurasa na sauti ya adhana',
       'hadithN': 'Hadithi @n',
+      'prayerNotYet':
+          '@prayer inaanza saa @time. Utaweza kuiwekea alama wakati huo.',
+      'prayerFrom': 'Kuanzia @time',
       'prayerTracker': 'Kufuatilia sala',
       'prayerTrackerDesc':
           'Weka alama kwa sala tano za kila siku na uone unavyoendelea',

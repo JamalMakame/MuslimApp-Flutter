@@ -34,12 +34,42 @@ String standingMessage(PrayerStats stats) {
 }
 
 /// Toggles [prayer] on [day] and celebrates when that completes the day.
+/// A prayer of today whose time ([opensAt], or the computed start) hasn't
+/// come yet can't be marked: says when it can instead.
 Future<void> togglePrayer(
   BuildContext context,
   DateTime day,
-  String prayer,
-) async {
-  final done = await PrayerLogService.instance.toggle(day, prayer);
+  String prayer, {
+  DateTime? opensAt,
+}) async {
+  final log = PrayerLogService.instance;
+  final now = DateTime.now();
+  final start = opensAt ?? log.startOf(day, prayer);
+  final early =
+      !log.prayedOn(day).contains(prayer) &&
+      DateUtils.isSameDay(day, now) &&
+      start != null &&
+      now.isBefore(start);
+  if (early) {
+    ScaffoldMessenger.maybeOf(context)
+      ?..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(
+          key: const ValueKey('prayer-not-yet'),
+          content: Text(
+            'prayerNotYet'.trParams({
+              'prayer': prayer.tr,
+              'time': DateFormat(
+                'h:mm a',
+                Get.locale?.languageCode ?? 'en',
+              ).format(start),
+            }),
+          ),
+        ),
+      );
+    return;
+  }
+  final done = await log.toggle(day, prayer);
   if (done && context.mounted) celebrate(context, 'allFiveDone'.tr);
 }
 
@@ -155,6 +185,9 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                       key: ValueKey('track-$p'),
                       prayer: p,
                       prayed: prayed.contains(p),
+                      opensAt: log.isOpen(day, p, now)
+                          ? null
+                          : log.startOf(day, p),
                       onTap: () => togglePrayer(context, day, p),
                     ),
                 ],
@@ -261,10 +294,14 @@ class PrayerCheckTile extends StatelessWidget {
     required this.prayer,
     required this.prayed,
     required this.onTap,
+    this.opensAt,
   });
   final String prayer;
   final bool prayed;
   final VoidCallback onTap;
+
+  /// Set while today's [prayer] hasn't started: it is shown locked.
+  final DateTime? opensAt;
 
   @override
   Widget build(BuildContext context) => InkWell(
@@ -275,19 +312,54 @@ class PrayerCheckTile extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              prayer.tr,
-              style: AppTheme.body(
-                15,
-                weight: FontWeight.w700,
-                color: AppColors.ink,
-              ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  prayer.tr,
+                  style: AppTheme.body(
+                    15,
+                    weight: FontWeight.w700,
+                    color: opensAt == null ? AppColors.ink : AppColors.sage,
+                  ),
+                ),
+                if (opensAt case final at?)
+                  Text(
+                    'prayerFrom'.trParams({
+                      'time': DateFormat(
+                        'h:mm a',
+                        Get.locale?.languageCode ?? 'en',
+                      ).format(at),
+                    }),
+                    style: AppTheme.body(11.5, color: AppColors.sage),
+                  ),
+              ],
             ),
           ),
-          PrayedCheck(prayed: prayed),
+          if (opensAt == null)
+            PrayedCheck(prayed: prayed)
+          else
+            const PrayerLocked(),
         ],
       ),
     ),
+  );
+}
+
+/// A dimmed circle with a lock, for a prayer whose time hasn't started.
+class PrayerLocked extends StatelessWidget {
+  const PrayerLocked({super.key, this.size = 30});
+  final double size;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: size,
+    height: size,
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(color: AppColors.hairline, width: 2),
+    ),
+    child: Icon(Icons.lock_clock, size: size * 0.55, color: AppColors.sage),
   );
 }
 
