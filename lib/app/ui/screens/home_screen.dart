@@ -181,8 +181,13 @@ class HomeScreen extends GetView<HomeController> {
                                     .prayedOn(day.now)
                                     .contains(day.slots[i].key)
                               : null,
-                          onToggle: () =>
-                              togglePrayer(context, day.now, day.slots[i].key),
+                          onToggle: () => togglePrayer(
+                            context,
+                            day.now,
+                            day.slots[i].key,
+                            opensAt: day.slots[i].time,
+                          ),
+                          locked: day.slots[i].time.isAfter(day.now),
                           slot: day.slots[i],
                           isCurrent:
                               day.slots[i].key == day.currentKey ||
@@ -735,6 +740,7 @@ class _PrayerTile extends StatelessWidget {
   const _PrayerTile({
     required this.prayed,
     required this.onToggle,
+    required this.locked,
     required this.slot,
     required this.isCurrent,
     required this.isNext,
@@ -744,6 +750,9 @@ class _PrayerTile extends StatelessWidget {
   /// Whether it was marked prayed today; null for sunrise.
   final bool? prayed;
   final VoidCallback onToggle;
+
+  /// Its time hasn't started yet, so it can't be marked.
+  final bool locked;
   final PrayerSlot slot;
   final bool isCurrent;
   final bool isNext;
@@ -844,7 +853,9 @@ class _PrayerTile extends StatelessWidget {
                 key: ValueKey('home-prayed-${slot.key}'),
                 behavior: HitTestBehavior.opaque,
                 onTap: onToggle,
-                child: PrayedCheck(prayed: prayed!, size: 26),
+                child: locked && !prayed!
+                    ? const PrayerLocked(size: 26)
+                    : PrayedCheck(prayed: prayed!, size: 26),
               ),
             ),
           ],
