@@ -1,5 +1,8 @@
+import 'dart:io' show Platform;
+
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:rive/rive.dart';
@@ -22,10 +25,16 @@ class DeenRive extends StatefulWidget {
 
   static final _files = <String, RiveFile?>{};
 
+  // Rive's native text library isn't in `flutter test`, and its load error
+  // escapes the try below, so tests always see the fallbacks.
+  static final _underTest =
+      !kIsWeb && Platform.environment.containsKey('FLUTTER_TEST');
+
   /// The bundled Rive file for [name], or null; looked up once per name.
   static Future<RiveFile?> load(String name) async {
     if (_files.containsKey(name)) return _files[name];
     RiveFile? file;
+    if (_underTest) return _files[name] = null;
     try {
       final data = await rootBundle.load('assets/rive/$name.riv');
       await RiveFile.initialize();

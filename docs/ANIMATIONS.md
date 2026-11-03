@@ -1,7 +1,10 @@
 # Animations
 
-Deen animates with Flutter itself and can play Rive files instead wherever a
-designer supplies one.
+Deen animates with Flutter itself and plays Rive files in three places. The
+three bundled files are Deen's own artwork, generated from code by
+`tool/build_rive.py` (no editor or third-party art; same licence as the app).
+Change the drawing or timing there and run `python3 tool/build_rive.py`; a
+designer's file with the same name can replace any of them.
 
 ## Rive slots
 
@@ -19,7 +22,24 @@ autoplays); without one, the artboard's first animation plays.
 | `celebration.riv` | Full screen, over everything, for 4 s: all five prayers marked, daily reading goal met, a tasbeeh round finished | Play once (about 3 s): burst from the top, transparent background; the banner text is drawn by the app | Full screen (cover) | Confetti in gold, emerald and white |
 | `empty.riv` | Empty bookmarks, no search results | Loop, gentle; transparent background | 140 × 120 | An icon that pops in |
 
-Rive files are only shipped if their licence allows it; record each one's
+**Bundled now** (`tool/build_rive.py`):
+
+- `splash.riv` (256 × 256, 4 s loop): an emerald and gold eight-point star
+  rosette turning in opposite directions around a crescent with a small star,
+  a breathing gold glow and eight orbiting dots that light up in turn.
+- `celebration.riv` (360 × 640, 3.5 s, once): a gold star with an emerald
+  centre pops and spins away, a gold ring expands, and 44 pieces of confetti
+  (strips, dots and stars in the Deen palette) burst out, flutter and fall.
+- `empty.riv` (200 × 160, 3 s loop): an open book bobbing under a crescent
+  with twinkling four-point sparkles.
+
+The script writes the Rive runtime binary format (v7) directly; the type and
+property keys come from the `rive` package's `lib/src/generated/` sources.
+The runtime draws the first drawable on top, so the script reverses sibling
+shapes when writing. Rive's native code doesn't load in `flutter test`, so
+preview a change in a browser with `@rive-app/canvas` or on a device.
+
+A file from anywhere else is only shipped if its licence allows it; record each one's
 source and licence in `assets/licenses/` and register it in `lib/main.dart`
 `_registerLicences`.
 
