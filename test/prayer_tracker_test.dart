@@ -195,5 +195,31 @@ void main() {
       (t.widget(find.byKey(const ValueKey('tracker-count'))) as Text).data,
       '3/5',
     );
+
+    final old = find.byKey(const ValueKey('tracker-history-20'));
+    final page = find
+        .byWidgetPredicate(
+          (w) => w is Scrollable && w.axisDirection == AxisDirection.down,
+        )
+        .first;
+    await t.scrollUntilVisible(old, 200, scrollable: page);
+    await t.ensureVisible(old);
+    await t.pumpAndSettle();
+    await t.tap(old);
+    await t.pumpAndSettle();
+    await t.scrollUntilVisible(
+      find.byKey(const ValueKey('track-asr')),
+      -200,
+      scrollable: page,
+    );
+    expect(
+      (t.widget(find.byKey(const ValueKey('tracker-count'))) as Text).data,
+      '0/5',
+    );
+    await t.ensureVisible(find.byKey(const ValueKey('track-asr')));
+    await t.pumpAndSettle();
+    await t.tap(find.byKey(const ValueKey('track-asr')));
+    await t.pumpAndSettle();
+    expect(log.prayedOn(DateTime(now.year, now.month, now.day - 20)), {'asr'});
   });
 }

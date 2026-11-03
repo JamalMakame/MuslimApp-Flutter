@@ -74,7 +74,8 @@ best streak, full days, each prayer's percentage, and a 5-week history.
 At 90 % or more the app encourages; at 70–89 % it points to the prayer
 missed most; below 70 % it warns and lists tips for that prayer plus general
 ones. Completing all five for a day shows confetti. An optional evening
-check-in notification (on by default) comes an hour after Isha on days not
+check-in notification (it follows the prayer reminder switch until changed
+in Settings) comes an hour after Isha on days not
 yet complete.
 
 **Content.** Azkar come in 15 named buckets plus Other (whose cards show the

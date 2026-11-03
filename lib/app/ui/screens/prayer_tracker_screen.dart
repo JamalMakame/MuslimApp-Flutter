@@ -223,7 +223,11 @@ class _PrayerTrackerScreenState extends State<PrayerTrackerScreen> {
                 children: [
                   Text('last5Weeks'.tr, style: AppTheme.headline(16)),
                   const SizedBox(height: 10),
-                  _History(today: today),
+                  _History(
+                    today: today,
+                    selected: _dayOffset,
+                    onSelect: (i) => setState(() => _dayOffset = i),
+                  ),
                 ],
               ),
             ),
@@ -510,10 +514,17 @@ class _RateBar extends StatelessWidget {
   }
 }
 
-/// The last 35 days, oldest first, shaded by how many prayers were marked.
+/// The last 35 days, oldest first, shaded by how many prayers were marked;
+/// tapping one opens it for marking.
 class _History extends StatelessWidget {
-  const _History({required this.today});
+  const _History({
+    required this.today,
+    required this.selected,
+    required this.onSelect,
+  });
   final DateTime today;
+  final int selected;
+  final ValueChanged<int> onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -531,15 +542,20 @@ class _History extends StatelessWidget {
             builder: (_) {
               final d = DateTime(today.year, today.month, today.day - i);
               final n = log.prayedOn(d).length;
-              return Tooltip(
-                message: '${DateFormat('d MMM').format(d)}: $n/5',
+              return GestureDetector(
+                key: ValueKey('tracker-history-$i'),
+                onTap: () => onSelect(i),
                 child: Container(
                   decoration: BoxDecoration(
                     color: n == 0
                         ? AppColors.hairline.withValues(alpha: 0.5)
                         : AppColors.emerald.withValues(alpha: 0.2 + n * 0.16),
                     borderRadius: BorderRadius.circular(6),
-                    border: i == 0 ? Border.all(color: AppColors.gold) : null,
+                    border: i == selected
+                        ? Border.all(color: AppColors.ink, width: 2)
+                        : i == 0
+                        ? Border.all(color: AppColors.gold)
+                        : null,
                   ),
                   alignment: Alignment.center,
                   child: Text(

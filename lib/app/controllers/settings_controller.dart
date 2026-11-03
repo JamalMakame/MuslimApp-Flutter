@@ -42,7 +42,7 @@ class SettingsController extends GetxController {
   final prayerLeads = <String, int>{}.obs;
   final azkarReminders = false.obs;
   final adhanSound = false.obs;
-  final prayerCheckIn = true.obs;
+  final prayerCheckIn = false.obs;
   final showTranslations = true.obs;
   final azkarTranslit = false.obs;
   final ayahAudio = false.obs;
@@ -78,7 +78,12 @@ class SettingsController extends GetxController {
     prayerLeads.assignAll(_s.readIntMap(StorageService.kPrayerLeads));
     azkarReminders.value = _s.readBool(StorageService.kAzkarReminders, false);
     adhanSound.value = _s.readBool(StorageService.kAdhanSound, false);
-    prayerCheckIn.value = _s.readBool(StorageService.kPrayerCheckIn, true);
+    // Follows the prayer reminder switch until changed on its own, so it
+    // never asks for notification permission by itself.
+    prayerCheckIn.value = _s.readBool(
+      StorageService.kPrayerCheckIn,
+      notifyPrayers.value,
+    );
     showTranslations.value = _s.readBool(
       StorageService.kShowTranslations,
       true,
@@ -125,8 +130,11 @@ class SettingsController extends GetxController {
       _persist(themeMode, m, StorageService.kThemeMode);
   Future<void> setTextScale(int v) =>
       _persist(textScale, v, StorageService.kTextScale);
-  Future<void> setNotifyPrayers(bool v) =>
-      _persist(notifyPrayers, v, StorageService.kNotifyPrayers);
+  Future<void> setNotifyPrayers(bool v) async {
+    if (!_s.has(StorageService.kPrayerCheckIn)) prayerCheckIn.value = v;
+    await _persist(notifyPrayers, v, StorageService.kNotifyPrayers);
+  }
+
   Future<void> setHighLatRule(String v) =>
       _persist(highLatRule, v, StorageService.kHighLatRule);
   Future<void> setAzkarReminders(bool v) =>
