@@ -122,24 +122,34 @@ class NotificationService {
 
   static const reading = 'readNotify';
 
+  /// The evening "have you prayed all five?" check-in, [checkInDelay]
+  /// minutes after Isha on days not yet complete.
+  static const prayerCheck = 'prayerCheckNotify';
+  static const checkInDelay = 60;
+
   /// The next [days] days of reminders after [now], in time order. Starts
   /// one calendar day back so a location far from the device's time zone
   /// still gets a full week. [leads] gives minutes before each prayer
   /// (missing = at its time, negative = off); [azkar] adds the morning and
   /// evening azkar reminders; [readingAt] (minutes after midnight) adds a
-  /// daily Quran reading reminder. Ids are stable per (day offset, slot).
+  /// daily Quran reading reminder; [checkIn] adds the prayer check-in on
+  /// days [checkedIn] doesn't report complete. Ids are stable per (day
+  /// offset, slot).
   static List<PrayerReminder> plan(
     List<PrayerSlot> Function(DateTime date) slotsOn,
     DateTime now, {
     Map<String, int> leads = const {},
     bool azkar = false,
     int? readingAt,
+    bool checkIn = false,
+    bool Function(DateTime date)? checkedIn,
   }) {
     final out = <PrayerReminder>[];
     final per =
         _prayers.where((p) => (leads[p] ?? 0) >= 0).length +
         (azkar ? 2 : 0) +
-        (readingAt != null ? 1 : 0);
+        (readingAt != null ? 1 : 0) +
+        (checkIn ? 1 : 0);
     for (var d = -1; d <= days; d++) {
       final date = DateTime(now.year, now.month, now.day + d);
       if (readingAt != null) {
@@ -155,6 +165,14 @@ class NotificationService {
       for (final slot in slotsOn(date)) {
         final i = _prayers.indexOf(slot.key);
         if (i < 0) continue;
+        if (checkIn &&
+            slot.key == 'isha' &&
+            !(checkedIn?.call(date) ?? false)) {
+          final at = slot.time.add(const Duration(minutes: checkInDelay));
+          if (at.isAfter(now)) {
+            out.add(PrayerReminder(410 + d, prayerCheck, at));
+          }
+        }
         final lead = leads[slot.key] ?? 0;
         final at = slot.time.subtract(Duration(minutes: lead));
         if (lead >= 0 && at.isAfter(now)) {

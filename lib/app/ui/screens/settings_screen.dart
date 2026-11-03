@@ -6,6 +6,7 @@ import '../../routes/app_pages.dart';
 
 import '../../controllers/settings_controller.dart';
 import '../../services/habit_service.dart';
+import '../../services/prayer_log_service.dart';
 import '../../services/audio_cache_service.dart';
 import '../../services/crash_log.dart';
 import '../../services/location_service.dart';
@@ -137,6 +138,21 @@ class SettingsScreen extends GetView<SettingsController> {
                     value: controller.adhanSound.value,
                     onChanged: controller.setAdhanSound,
                   ),
+                ),
+                Obx(
+                  () => _SettingsSwitch(
+                    key: const ValueKey('settings-prayer-check-in'),
+                    title: 'prayerCheckIn'.tr,
+                    subtitle: 'prayerCheckInDesc'.tr,
+                    value: controller.prayerCheckIn.value,
+                    onChanged: controller.setPrayerCheckIn,
+                  ),
+                ),
+                _SettingsRow(
+                  key: const ValueKey('settings-prayer-tracker'),
+                  title: 'prayerTracker'.tr,
+                  subtitle: 'prayerTrackerDesc'.tr,
+                  onTap: () => Get.toNamed(Routes.prayerTracker),
                 ),
                 _SettingsRow(
                   key: const ValueKey('settings-prayer-tuning'),
@@ -651,6 +667,7 @@ class SettingsScreen extends GetView<SettingsController> {
                 await StorageService.instance.clearAll();
                 QuranService.instance.resetUserState();
                 HabitService.instance.reset();
+                PrayerLogService.instance.reset();
                 controller.reload();
                 Get.updateLocale(controller.locale);
                 await NotificationService.instance.cancelAll();

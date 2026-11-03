@@ -89,6 +89,9 @@ availability are critical.
   pages with a Start button), daily page goal + streak, daily reading
   reminder, Hifz self-test (reveal word by word, memorised / needs review)
   with a spaced-review list ([docs/FEATURE_REVIEW.md](docs/FEATURE_REVIEW.md) phase 5)
+- ✅ Prayer tracker: mark the five prayers each day, streaks, per-prayer
+  consistency, 5-week history, encouragement or a warning with tips for the
+  prayer missed most, confetti on a full day, evening check-in reminder
 - ✅ Quran text stays Arabic; bundled **translation layer** — English
   (Sahih International) and Swahili (Al-Barwani), or Arabic only
 - ✅ UI chrome (surah index, sort, search, bookmarks) localized; surah

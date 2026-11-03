@@ -203,6 +203,56 @@ class DeenTranslations extends Translations {
       'licences': 'Credits & licences',
       'licencesDesc': 'Quran font, page layout and adhan recording',
       'hadithN': 'Hadith @n',
+      'prayerTracker': 'Prayer tracker',
+      'prayerTrackerDesc':
+          'Mark your five daily prayers and see how you\'re doing',
+      'didYouPrayToday': 'Did you pray today?',
+      'markPrayed': 'Mark as prayed',
+      'allFiveDone': 'All five prayers today, alhamdulillah!',
+      'howYouAreDoing': 'How you\'re doing',
+      'days7': '7 days',
+      'days30': '30 days',
+      'streakLabel': 'Day streak',
+      'bestStreak': 'Best streak',
+      'fullDays': 'Full days',
+      'last5Weeks': 'Last 5 weeks',
+      'waysToImprove': 'Ways to improve',
+      'standingGoodTitle': 'Keep it up',
+      'standingWarnTitle': 'Your prayers need attention',
+      'standingNone':
+          'Mark each prayer after you pray it, and this is where you\'ll see how you\'re doing.',
+      'standingStrong':
+          'Masha\'Allah, you prayed @pct% of your prayers in the last @d days. The Prophet ﷺ said the deeds most beloved to Allah are the regular ones, even if small. Keep going!',
+      'standingSteady':
+          'Good work: @pct% in the last @d days. A little more care with @prayer will make it complete.',
+      'standingSlipping':
+          '@n prayers went unmarked in the last @d days, most often @prayer. Prayer is the first deed we will be asked about on the Day of Judgement. Let\'s get back on track, starting with the next one.',
+      'standingStruggling':
+          'Most prayers went unmarked in the last @d days (@n missed). Don\'t lose hope in Allah\'s mercy: pray the next prayer on time, and make up the ones you missed.',
+      'tipFajr1': 'Sleep earlier and put the phone away an hour before bed.',
+      'tipFajr2':
+          'Set an alarm a few minutes before Fajr and place it across the room.',
+      'tipFajr3': 'Make wudu before sleeping and intend to wake for Fajr.',
+      'tipDhuhr1':
+          'Block Dhuhr time in your work or school day like a meeting.',
+      'tipDhuhr2':
+          'Keep a prayer mat at work or school, and turn on an early reminder for Dhuhr.',
+      'tipAsr1':
+          'Pray Asr as soon as it comes in, before the afternoon gets busy.',
+      'tipAsr2': 'Turn on an early reminder for Asr in Prayer settings.',
+      'tipMaghrib1': 'Maghrib time is short: pray soon after the adhan.',
+      'tipMaghrib2': 'Plan to be home or near a masjid at sunset.',
+      'tipIsha1': 'Pray Isha before relaxing or watching anything.',
+      'tipIsha2': 'Don\'t leave Isha until you\'re too tired; pray it early.',
+      'tipGeneral1': 'Pray with family or friends and remind each other.',
+      'tipGeneral2':
+          'Make this dua often: "My Lord, make me one who establishes prayer" (14:40).',
+      'prayerCheckIn': 'Evening prayer check-in',
+      'prayerCheckInDesc':
+          'An hour after Isha, if today\'s five aren\'t all marked',
+      'prayerCheckNotify': 'Have you prayed all five today?',
+      'prayerCheckBody':
+          'Mark your prayers in Deen. If one was missed, there\'s still time to make it up.',
       'offlineTafsir': 'Offline tafsir',
       'offlineTafsirDesc': '@n / 114 surahs saved',
       'downloadAll': 'Download all',
@@ -666,6 +716,49 @@ class DeenTranslations extends Translations {
       'licences': 'الحقوق والتراخيص',
       'licencesDesc': 'خط المصحف وترتيب الصفحات وتسجيل الأذان',
       'hadithN': 'الحديث @n',
+      'prayerTracker': 'متابعة الصلاة',
+      'prayerTrackerDesc': 'سجّل صلواتك الخمس وتابع التزامك',
+      'didYouPrayToday': 'هل صليت اليوم؟',
+      'markPrayed': 'تسجيل الصلاة',
+      'allFiveDone': 'الصلوات الخمس اليوم، الحمد لله!',
+      'howYouAreDoing': 'مدى التزامك',
+      'days7': '٧ أيام',
+      'days30': '٣٠ يومًا',
+      'streakLabel': 'أيام متتالية',
+      'bestStreak': 'أطول سلسلة',
+      'fullDays': 'أيام كاملة',
+      'last5Weeks': 'آخر ٥ أسابيع',
+      'waysToImprove': 'طرق للتحسن',
+      'standingGoodTitle': 'واصل',
+      'standingWarnTitle': 'صلاتك تحتاج إلى اهتمام',
+      'standingNone': 'سجّل كل صلاة بعد أدائها، وهنا سترى مدى التزامك.',
+      'standingStrong':
+          'ما شاء الله، أدّيت @pct% من صلواتك في آخر @d أيام. قال النبي ﷺ: «أحب الأعمال إلى الله أدومها وإن قل». واصل!',
+      'standingSteady':
+          'أحسنت: @pct% في آخر @d أيام. قليل من العناية بصلاة @prayer وتكتمل.',
+      'standingSlipping':
+          'لم تُسجَّل @n صلاة في آخر @d أيام، وأكثرها @prayer. الصلاة أول ما يُحاسب عليه العبد يوم القيامة، فلنعد إليها بدءًا بالصلاة القادمة.',
+      'standingStruggling':
+          'لم تُسجَّل أغلب الصلوات في آخر @d أيام (فاتتك @n). لا تقنط من رحمة الله: صلِّ الصلاة القادمة في وقتها، واقضِ ما فاتك.',
+      'tipFajr1': 'نَم مبكرًا وأبعد الهاتف قبل النوم بساعة.',
+      'tipFajr2': 'اضبط منبهًا قبل الفجر بدقائق وضعه بعيدًا عن السرير.',
+      'tipFajr3': 'توضأ قبل النوم وانوِ القيام لصلاة الفجر.',
+      'tipDhuhr1': 'خصّص وقت الظهر في يوم عملك أو دراستك كأنه موعد.',
+      'tipDhuhr2':
+          'احتفظ بسجادة صلاة في العمل أو المدرسة، وفعّل تذكيرًا مبكرًا للظهر.',
+      'tipAsr1': 'صلِّ العصر أول وقتها قبل أن ينشغل يومك.',
+      'tipAsr2': 'فعّل تذكيرًا مبكرًا للعصر من إعدادات الصلاة.',
+      'tipMaghrib1': 'وقت المغرب قصير: صلِّ بعد الأذان مباشرة.',
+      'tipMaghrib2': 'خطط لتكون في البيت أو قرب مسجد عند الغروب.',
+      'tipIsha1': 'صلِّ العشاء قبل الاسترخاء أو مشاهدة أي شيء.',
+      'tipIsha2': 'لا تؤخر العشاء حتى يغلبك التعب، صلّها مبكرًا.',
+      'tipGeneral1': 'صلِّ مع أهلك أو أصدقائك وذكّروا بعضكم.',
+      'tipGeneral2': 'أكثر من الدعاء: «رب اجعلني مقيم الصلاة» (إبراهيم ٤٠).',
+      'prayerCheckIn': 'تذكير مسائي بالصلاة',
+      'prayerCheckInDesc': 'بعد العشاء بساعة إن لم تُسجَّل الصلوات الخمس',
+      'prayerCheckNotify': 'هل صليت الخمس اليوم؟',
+      'prayerCheckBody':
+          'سجّل صلواتك في التطبيق، وإن فاتتك صلاة فما زال هناك وقت لقضائها.',
       'offlineTafsir': 'التفسير دون اتصال',
       'offlineTafsirDesc': '@n / 114 سورة محفوظة',
       'downloadAll': 'تنزيل الكل',
@@ -1130,6 +1223,58 @@ class DeenTranslations extends Translations {
       'licencesDesc':
           'Hati ya Qur\'ani, mpangilio wa kurasa na sauti ya adhana',
       'hadithN': 'Hadithi @n',
+      'prayerTracker': 'Kufuatilia sala',
+      'prayerTrackerDesc':
+          'Weka alama kwa sala tano za kila siku na uone unavyoendelea',
+      'didYouPrayToday': 'Umesali leo?',
+      'markPrayed': 'Weka alama umesali',
+      'allFiveDone': 'Sala zote tano leo, alhamdulillah!',
+      'howYouAreDoing': 'Unavyoendelea',
+      'days7': 'Siku 7',
+      'days30': 'Siku 30',
+      'streakLabel': 'Siku mfululizo',
+      'bestStreak': 'Mfululizo bora',
+      'fullDays': 'Siku kamili',
+      'last5Weeks': 'Wiki 5 zilizopita',
+      'waysToImprove': 'Njia za kuboresha',
+      'standingGoodTitle': 'Endelea hivyo',
+      'standingWarnTitle': 'Sala zako zinahitaji uangalifu',
+      'standingNone':
+          'Weka alama kila sala baada ya kusali, na hapa utaona unavyoendelea.',
+      'standingStrong':
+          'Masha\'Allah, umesali @pct% ya sala zako katika siku @d zilizopita. Mtume ﷺ alisema matendo yanayopendwa zaidi na Allah ni yale ya kudumu hata kama ni machache. Endelea!',
+      'standingSteady':
+          'Kazi nzuri: @pct% katika siku @d zilizopita. Uangalifu kidogo zaidi kwa sala ya @prayer utaikamilisha.',
+      'standingSlipping':
+          'Sala @n hazikuwekwa alama katika siku @d zilizopita, mara nyingi @prayer. Sala ndiyo jambo la kwanza tutakaloulizwa Siku ya Kiyama. Turudi kwenye njia, tukianza na sala ijayo.',
+      'standingStruggling':
+          'Sala nyingi hazikuwekwa alama katika siku @d zilizopita (@n zimekosekana). Usikate tamaa na rehema ya Allah: sali sala ijayo kwa wakati wake, na ulipe zile ulizokosa.',
+      'tipFajr1': 'Lala mapema na weka simu mbali saa moja kabla ya kulala.',
+      'tipFajr2':
+          'Weka kengele dakika chache kabla ya Alfajiri na iweke mbali na kitanda.',
+      'tipFajr3': 'Tawadha kabla ya kulala na nuia kuamka kwa Alfajiri.',
+      'tipDhuhr1':
+          'Tenga wakati wa Adhuhuri katika siku yako ya kazi au shule kama mkutano.',
+      'tipDhuhr2':
+          'Weka mswala kazini au shuleni, na washa kikumbusho cha mapema cha Adhuhuri.',
+      'tipAsr1':
+          'Sali Alasiri mara tu wakati wake unapoingia, kabla mchana haujajaa shughuli.',
+      'tipAsr2':
+          'Washa kikumbusho cha mapema cha Alasiri katika mipangilio ya sala.',
+      'tipMaghrib1': 'Wakati wa Magharibi ni mfupi: sali mara baada ya adhana.',
+      'tipMaghrib2':
+          'Panga kuwa nyumbani au karibu na msikiti wakati wa machweo.',
+      'tipIsha1': 'Sali Isha kabla ya kupumzika au kutazama chochote.',
+      'tipIsha2': 'Usiiache Isha hadi uchoke sana; isali mapema.',
+      'tipGeneral1': 'Sali pamoja na familia au marafiki na mkumbushane.',
+      'tipGeneral2':
+          'Omba dua hii mara kwa mara: "Mola wangu, nijaalie niwe msimamishaji wa sala" (14:40).',
+      'prayerCheckIn': 'Ukaguzi wa sala jioni',
+      'prayerCheckInDesc':
+          'Saa moja baada ya Isha, kama sala tano za leo hazijawekwa alama zote',
+      'prayerCheckNotify': 'Umesali sala zote tano leo?',
+      'prayerCheckBody':
+          'Weka alama sala zako katika Deen. Kama umekosa moja, bado kuna wakati wa kuilipa.',
       'offlineTafsir': 'Tafsiri bila mtandao',
       'offlineTafsirDesc': 'Sura @n / 114 zimehifadhiwa',
       'downloadAll': 'Pakua zote',

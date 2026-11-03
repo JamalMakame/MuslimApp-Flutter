@@ -14,6 +14,7 @@ import '../controllers/tasbeeh_controller.dart';
 import '../ui/screens/azkar_categories_screen.dart';
 import '../ui/screens/azkar_detail_screen.dart';
 import '../ui/screens/bookmarks_screen.dart';
+import '../ui/screens/prayer_tracker_screen.dart';
 import '../ui/screens/prayer_tuning_screen.dart';
 import '../ui/screens/timetable_screen.dart';
 import '../ui/screens/habits_screen.dart';
@@ -50,6 +51,7 @@ abstract class Routes {
   static const prayerTuning = '/prayer-tuning';
   static const timetable = '/timetable';
   static const habits = '/habits';
+  static const prayerTracker = '/prayer-tracker';
   static const hadith = '/hadith';
   static String mushaf(int page) => '/mushaf?page=$page';
 }
@@ -121,6 +123,10 @@ class AppPages {
     GetPage(name: Routes.prayerTuning, page: () => const PrayerTuningScreen()),
     GetPage(name: Routes.timetable, page: () => const TimetableScreen()),
     GetPage(name: Routes.habits, page: () => const HabitsScreen()),
+    GetPage(
+      name: Routes.prayerTracker,
+      page: () => const PrayerTrackerScreen(),
+    ),
     GetPage(name: Routes.hadith, page: () => const HadithScreen()),
     GetPage(
       name: '/mushaf',
